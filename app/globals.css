@@ -3,13 +3,20 @@
 @tailwind utilities;
 
 :root {
+  --primary-color: #22b14c;
+  --hovering-color: #39fd72;
+
+  --player1-color: #ff6b00;
+  --player2-color: #4073f4;
+  --error-color: #ee4444;
+
   --background: #ffffff;
   --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #033205;
     --foreground: #ededed;
   }
 }

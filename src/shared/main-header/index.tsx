@@ -1,12 +1,15 @@
 import Link from 'next/link';
 
 import AlternativeHeader from './alternative';
+import { HEIGHT_AMOUNT } from './constants';
 import NavLink from './nav-link';
 
 export default function MainHeader() {
   return (
     <>
-      <header className="w-full h-32 flex flex-row items-center justify-between px-12 bg-primary">
+      <header
+        className={`w-full h-${HEIGHT_AMOUNT} flex flex-col items-center justify-end sm:flex-row sm:items-end sm:justify-between px-12 pb-4 bg-primary`}
+      >
         <Link href="/" className="text-white text-2xl">
           YSOArcadeRecords
         </Link>

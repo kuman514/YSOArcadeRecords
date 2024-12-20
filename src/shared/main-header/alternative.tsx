@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { HEIGHT_AMOUNT } from './constants';
+
 export default function AlternativeHeader() {
   const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -9,7 +11,8 @@ export default function AlternativeHeader() {
     function handleOnScroll() {
       if (
         window.scrollY >=
-        8 * parseFloat(getComputedStyle(document.documentElement).fontSize)
+        (HEIGHT_AMOUNT / 4) *
+          parseFloat(getComputedStyle(document.documentElement).fontSize)
       ) {
         setIsShow(true);
       } else {

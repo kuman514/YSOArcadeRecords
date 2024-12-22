@@ -27,6 +27,12 @@ export interface Commentable {
 
 // ===========================================
 
+export interface HavingThumbnail {
+  thumbnailUrl: string;
+}
+
+// ===========================================
+
 export interface HavingImages {
   imageUrls: string[];
 }
@@ -34,5 +40,5 @@ export interface HavingImages {
 // ===========================================
 
 export interface HavingYouTube {
-  youTubeUrl: string;
+  youTubeId?: string;
 }

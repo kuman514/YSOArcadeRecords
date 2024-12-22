@@ -1,8 +1,14 @@
-export interface ArcadeRecord {
-  /**
-   * ID of the arcade game.
-   */
-  typeId: string;
+import {
+  HavingArcadeInfo,
+  HavingMethod,
+  HavingPlayerInfo,
+} from './arcade-record-compositions';
+
+export interface ArcadeRecord
+  extends HavingArcadeInfo,
+    HavingPlayerInfo,
+    HavingMethod {
+  arcadeRecordId: string;
 
   /**
    * Value on the criterion of the arcade game.
@@ -10,17 +16,6 @@ export interface ArcadeRecord {
    * For example, score in Shmups or time taken to clear in TGM3.
    */
   evaluation: string;
-
-  /**
-   * The number of players of the play.
-   */
-  players: number;
-
-  /**
-   * The played side of the play.
-   * For example, if the player played on Player 2, the value will be `2`.
-   */
-  playerSide: number;
 
   /**
    * The stage at the end of play.

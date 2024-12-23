@@ -16,3 +16,8 @@
 - yarn berry 대신 npm 사용
   - 사유: Next.js 15의 Turbopack에서 yarn berry의 Plug'n Play를 사용하지 못함.
     - 근거: [Turbopack Unsupported Features](https://nextjs.org/docs/app/api-reference/turbopack#unsupported-features)의 Yarn PnP 항목에, `We are currently not planning to support Yarn PnP in Next.js with Turbopack. (저희는 현재 Next.js Turbopack에 대한 Yarn PnP를 지원할 계획이 없습니다.)`라고 적혀 있다.
+
+## 트러블슈팅 목록
+- Next Image에 fill 속성을 부여했는데 이미지가 페이지를 전부 다 덮는 문제.
+  - Next Image 컴포넌트에 fill 속성을 부여할 때, style에 `position:absolute; height:100%; width:100%; left:0; top:0; right:0; bottom:0; color:transparent;` 값이 적용되기 때문이다.
+  - 이를 해결하려면, 부모 컴포넌트의 style에 `position: relative`를 부여하자.

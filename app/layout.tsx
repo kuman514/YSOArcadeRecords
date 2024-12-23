@@ -29,7 +29,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen min-h-dvh`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen min-h-dvh flex flex-col items-center`}
       >
         <MainHeader />
         {children}

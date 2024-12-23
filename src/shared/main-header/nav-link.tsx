@@ -12,7 +12,9 @@ interface Props {
 export default function NavLink({ href, children }: Props) {
   const pathName = usePathname();
 
-  const className = pathName?.startsWith(href) ? 'text-hovering' : 'text-white';
+  const className = pathName?.startsWith(href)
+    ? 'text-hovering drop-shadow-[0_0_12px_rgba(255,255,255,0.8)]'
+    : 'text-white';
 
   return (
     <Link href={href} className={`text-2xl ${className}`}>

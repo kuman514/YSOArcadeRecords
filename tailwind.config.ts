@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 export default {
   content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './src/**/*.{js,ts,jsx,tsx,mdx}'],
@@ -19,5 +20,17 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.drag-none': {
+          '-webkit-user-drag': 'none',
+          '-khtml-user-drag': 'none',
+          '-moz-user-drag': 'none',
+          '-o-user-drag': 'none',
+          'user-drag': 'none',
+        },
+      });
+    }),
+  ],
 } satisfies Config;

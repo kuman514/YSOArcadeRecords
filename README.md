@@ -17,6 +17,53 @@
   - 사유: Next.js 15의 Turbopack에서 yarn berry의 Plug'n Play를 사용하지 못함.
     - 근거: [Turbopack Unsupported Features](https://nextjs.org/docs/app/api-reference/turbopack#unsupported-features)의 Yarn PnP 항목에, `We are currently not planning to support Yarn PnP in Next.js with Turbopack. (저희는 현재 Next.js Turbopack에 대한 Yarn PnP를 지원할 계획이 없습니다.)`라고 적혀 있다.
 
+## 태스크 브레이크다운
+- YSOArcadeRecords 완성하기
+  - YSOShmupRecords로부터 승계되는 페이지
+    - 대문 페이지
+      - 대문용 로고
+      - 대문용 캐치프레이즈
+      - 대문용 링크
+    - 소개 페이지
+      - 이 곳은 뭐하는 곳인가
+      - YSO(kuman514)는 누구인가
+      - 통산 최고 성과는 무엇인가 (링크와 함께 제공)
+    - 기록 목록 페이지
+    - 기록 상세 페이지
+  - 신규 추가 페이지
+    - 리뷰 목록 페이지
+    - 리뷰 상세 페이지
+    - 갤러리 목록 페이지
+    - 갤러리 페이지
+    - 포스트 쓰기 페이지
+  - YSOShmupRecords로부터 승계되는 컴포넌트
+    - 페이지 헤더
+      - 메인 헤더
+      - 스크롤 시 보일 대체 헤더
+    - 게시물 목록 아이템
+    - 비순서형 리스트
+    - 모달
+      - 모달 콘텐츠 오버레이
+      - 클릭 에리어
+    - 이미지 컨트롤러
+      - 이미지 줌 컨트롤러
+      - 이전/다음 이미지 컨트롤러
+  - 신규 추가 컴포넌트
+    - 포스트 폼
+      - 아케이드 기록 포스트 폼
+      - 리뷰 포스트 폼
+      - 갤러리 포스트 폼
+  - 그 외
+    - 아케이드 기록 구성 요소 타입 정의
+    - 리뷰 구성 요소 타입 정의
+    - 갤러리 구성 요소 타입 정의
+    - 포스트 구성 요소 타입 정의
+    - 데이터베이스 및 파일 스토리지 정하기
+    - 아케이드 기록 데이터베이스 구축
+    - 리뷰 데이터베이스 구축
+    - 갤러리 데이터베이스 구축
+    - 관리자 로그인 기능 구축
+
 ## 트러블슈팅 목록
 - Next Image에 fill 속성을 부여했는데 이미지가 페이지를 전부 다 덮는 문제.
   - Next Image 컴포넌트에 fill 속성을 부여할 때, style에 `position:absolute; height:100%; width:100%; left:0; top:0; right:0; bottom:0; color:transparent;` 값이 적용되기 때문이다.

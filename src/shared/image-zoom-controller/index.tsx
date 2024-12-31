@@ -19,13 +19,6 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
     setScale(1);
   }, [imageUrl]);
 
-  useEffect(() => {
-    document.body.style.overflowY = 'hidden';
-    return () => {
-      document.body.style.overflowY = 'auto';
-    };
-  }, []);
-
   function moveImage(dx: number, dy: number) {
     setPosition([
       position[0] + dx * (1 / scale),
@@ -35,7 +28,7 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
 
   return (
     <div
-      className="fixed left-0 top-0 w-screen h-dvh cursor-grab"
+      className="w-full h-full cursor-grab"
       onClick={(event) => {
         event.stopPropagation();
         event.nativeEvent.stopPropagation();

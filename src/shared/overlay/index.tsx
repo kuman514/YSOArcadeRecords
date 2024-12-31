@@ -7,10 +7,15 @@ import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 
 interface Props {
   children: ReactNode;
+  surfaceClassName?: string;
   overlayContent: ReactNode;
 }
 
-export default function Overlay({ children, overlayContent }: Props) {
+export default function Overlay({
+  children,
+  surfaceClassName,
+  overlayContent,
+}: Props) {
   const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false);
 
   useEffect(() => {
@@ -26,6 +31,8 @@ export default function Overlay({ children, overlayContent }: Props) {
   return (
     <>
       <button
+        className={surfaceClassName}
+        type="button"
         onClick={() => {
           setIsShowOverlay(true);
         }}

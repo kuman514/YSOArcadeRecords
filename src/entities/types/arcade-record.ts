@@ -36,4 +36,11 @@ export interface ArcadeRecord
    * For example, `m3` in TGM3 Master Mode or `Iron Condor` in G-Darius.
    */
   rank?: string;
+
+  /**
+   * `Optional`
+   * The information other than main ones like score and clear time.
+   * For example, lives or bombs left in shmups.
+   */
+  note?: string;
 }

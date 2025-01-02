@@ -21,7 +21,7 @@ export function parseEvaluationByScore(evaluation: string) {
 
 export function parseEvaluationByTime(evaluation: string) {
   const matchResult = evaluation.match(TIME_REG);
-  if (!matchResult || !TIME_REG.test(evaluation)) {
+  if (!matchResult) {
     throw new Error(
       `The evalutaion value ${evaluation} is not fit to time. The time must have hours (optional), minutes, and seconds (milliseconds optional). (ex: 1:20:33, 3:18.56, or 2:44:23.788)`
     );

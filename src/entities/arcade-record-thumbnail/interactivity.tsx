@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import ImageZoomController from '^/src/shared/image-zoom-controller';
 import Overlay from '^/src/shared/overlay';
+import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
+import ArrowSquareRightSvgRepoComSvg from '^/public/icons/arrow-square-right-svgrepo-com.svg';
 
 interface Props {
   originalImageUrls: string[];
@@ -23,9 +25,10 @@ export default function ArcadeRecordThumbnailInteractivity({
             imageUrl={originalImageUrls[currentShowIndex]}
             alt="Test"
           />
-          <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center">
+          <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
             <button
               type="button"
+              className="w-20 h-20 pointer-events-auto"
               onClick={() => {
                 setCurrentShowIndex(
                   (currentShowIndex + originalImageUrls.length - 1) %
@@ -33,25 +36,26 @@ export default function ArcadeRecordThumbnailInteractivity({
                 );
               }}
             >
-              {/**
-               * @todo
-               * Get & apply prev button appearance
-               */}
-              PREV
+              <ArrowSquareLeftSvgRepoComSvg
+                width="100%"
+                height="100%"
+                stroke="#FFFFFF"
+              />
             </button>
             <button
               type="button"
+              className="w-20 h-20 pointer-events-auto"
               onClick={() => {
                 setCurrentShowIndex(
                   (currentShowIndex + 1) % originalImageUrls.length
                 );
               }}
             >
-              {/**
-               * @todo
-               * Get & apply next button appearance
-               */}
-              NEXT
+              <ArrowSquareRightSvgRepoComSvg
+                width="100%"
+                height="100%"
+                stroke="#FFFFFF"
+              />
             </button>
           </div>
         </>

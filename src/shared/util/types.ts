@@ -1,4 +1,4 @@
-export enum ParseEvaluationCriterion {
+export enum EvaluationCriterion {
   SCORE = 'score',
   TIME = 'time',
 }

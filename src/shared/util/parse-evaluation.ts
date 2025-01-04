@@ -1,5 +1,4 @@
 import { TIME_REG } from './constants';
-import { ParseEvaluationCriterion } from './types';
 
 export function parseEvaluationByScore(evaluation: string) {
   if (Number.isNaN(Number(evaluation))) {
@@ -30,16 +29,14 @@ export function parseEvaluationByTime(evaluation: string) {
   return matchResult[0];
 }
 
-export function parseEvaluation(
-  evaluation: string,
-  criterion: ParseEvaluationCriterion
-) {
-  switch (criterion) {
-    case ParseEvaluationCriterion.SCORE:
-      return parseEvaluationByScore(evaluation);
-    case ParseEvaluationCriterion.TIME:
-      return parseEvaluationByTime(evaluation);
-    default:
-      throw new Error('Wrong criterion to parse evaluation.');
+export function parseEvaluation(evaluation: string) {
+  if (!Number.isNaN(Number(evaluation))) {
+    return parseEvaluationByScore(evaluation);
+  } else if (TIME_REG.test(evaluation)) {
+    return parseEvaluationByTime(evaluation);
   }
+
+  throw new Error(
+    `The evalutaion value ${evaluation} is not fit to score or time. If the evaluation was supposed to be a score, it must be a number. If the evaluation was supposed to be time, it must have hours (optional), minutes, and seconds (milliseconds optional). (ex: 1:20:33, 3:18.56, or 2:44:23.788)`
+  );
 }

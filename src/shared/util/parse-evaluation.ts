@@ -1,4 +1,5 @@
 import { TIME_REG } from './constants';
+import { EvaluationCriterion } from './types';
 
 export function parseEvaluationByScore(evaluation: string) {
   if (Number.isNaN(Number(evaluation))) {
@@ -31,9 +32,15 @@ export function parseEvaluationByTime(evaluation: string) {
 
 export function parseEvaluation(evaluation: string) {
   if (!Number.isNaN(Number(evaluation))) {
-    return parseEvaluationByScore(evaluation);
+    return {
+      evaluationCriterion: EvaluationCriterion.SCORE,
+      value: parseEvaluationByScore(evaluation),
+    };
   } else if (TIME_REG.test(evaluation)) {
-    return parseEvaluationByTime(evaluation);
+    return {
+      evaluationCriterion: EvaluationCriterion.TIME,
+      value: parseEvaluationByTime(evaluation),
+    };
   }
 
   throw new Error(

@@ -12,7 +12,7 @@ export default function ArcadeRecordThumbnail({
   originalImageUrls,
 }: Props) {
   return (
-    <div className="relative w-80 h-80">
+    <div className="relative w-full sm:w-80 h-80">
       <Image
         src={thumbnailUrl}
         alt="Test thumbnail"

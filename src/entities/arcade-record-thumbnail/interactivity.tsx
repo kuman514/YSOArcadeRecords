@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-import ImageZoomController from '^/src/shared/image-zoom-controller';
-import Overlay from '^/src/shared/overlay';
 import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
 import ArrowSquareRightSvgRepoComSvg from '^/public/icons/arrow-square-right-svgrepo-com.svg';
+import ImageZoomController from '^/src/shared/image-zoom-controller';
+import Overlay from '^/src/shared/overlay';
 
 interface Props {
   originalImageUrls: string[];
@@ -28,7 +28,7 @@ export default function ArcadeRecordThumbnailInteractivity({
           <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
             <button
               type="button"
-              className="w-20 h-20 pointer-events-auto"
+              className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg"
               onClick={() => {
                 setCurrentShowIndex(
                   (currentShowIndex + originalImageUrls.length - 1) %
@@ -44,7 +44,7 @@ export default function ArcadeRecordThumbnailInteractivity({
             </button>
             <button
               type="button"
-              className="w-20 h-20 pointer-events-auto"
+              className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg"
               onClick={() => {
                 setCurrentShowIndex(
                   (currentShowIndex + 1) % originalImageUrls.length

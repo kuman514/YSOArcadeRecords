@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 
 import StackSvgRepoComSvg from '^/public/icons/stack-svgrepo-com.svg';
 
-import { HEIGHT_AMOUNT } from './constants';
-
 export default function AlternativeHeader() {
   const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -14,8 +12,7 @@ export default function AlternativeHeader() {
     function handleOnScroll() {
       if (
         window.scrollY >=
-        (HEIGHT_AMOUNT / 4) *
-          parseFloat(getComputedStyle(document.documentElement).fontSize)
+        4 * parseFloat(getComputedStyle(document.documentElement).fontSize)
       ) {
         setIsShow(true);
       } else {

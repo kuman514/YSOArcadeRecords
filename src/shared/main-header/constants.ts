@@ -1,7 +1,5 @@
 import { LinkTreeNode } from './types';
 
-export const HEIGHT_AMOUNT = 32;
-
 export const LINK_TREES: LinkTreeNode[] = [
   {
     href: '/',

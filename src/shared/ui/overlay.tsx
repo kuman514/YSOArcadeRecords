@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
+import { usePathname } from 'next/navigation';
 
 interface Props {
   children: ReactNode;
@@ -16,7 +17,12 @@ export default function Overlay({
   surfaceClassName,
   overlayContent,
 }: Props) {
+  const path = usePathname();
   const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsShowOverlay(false);
+  }, [path]);
 
   useEffect(() => {
     if (isShowOverlay) {

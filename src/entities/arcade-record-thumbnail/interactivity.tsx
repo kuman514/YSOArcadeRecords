@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
 import ArrowSquareRightSvgRepoComSvg from '^/public/icons/arrow-square-right-svgrepo-com.svg';
 import ImageZoomController from '^/src/shared/image-zoom-controller';
-import Overlay from '^/src/shared/overlay';
+import Overlay from '^/src/shared/ui/overlay';
 
 interface Props {
   originalImageUrls: string[];

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import StackSvgRepoComSvg from '^/public/icons/stack-svgrepo-com.svg';
+import SidebarCaller from './sidebar-caller';
 
 export default function AlternativeHeader() {
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -33,17 +33,7 @@ export default function AlternativeHeader() {
         isShow ? '' : 'hidden'
       } fixed top-0 left-0 w-full h-16 flex flex-row items-center px-2 gap-2 bg-primary z-50`}
     >
-      <button
-        className="w-12 h-12 p-2"
-        onClick={() => {
-          /**
-           * @todo
-           * Add showing menu sidebar
-           */
-        }}
-      >
-        <StackSvgRepoComSvg width="100%" height="100%" fill="#ffffff" />
-      </button>
+      <SidebarCaller />
       <Link href="/" className="text-white">
         YSOArcadeRecords
       </Link>

@@ -9,7 +9,7 @@ import {
 } from './post-compositions';
 
 export interface BasePost extends HavingAuthor, Commentable, Taggable {
-  postId: string;
+  postId: number;
   title: string;
   createdAt: Date;
   modifiedAt: Date;

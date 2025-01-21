@@ -5,7 +5,7 @@ import RasisWebp from '^/public/temp/rasis.webp';
 import YuukaPng from '^/public/temp/yuuka.png';
 
 export const temporaryArcadeRecordArticle: ArcadeRecordPost = {
-  postId: 'koishi',
+  postId: 123,
   arcadeRecordId: 'aggiekoishi--3',
   title: '우리우리 애기코이시',
   author: {

@@ -1,22 +1,23 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
-import UnorderedList from '^/src/shared/unordered-list';
 import HomeBackgroundJpg from '^/public/background/home-background.jpg';
 import LogoPng from '^/public/logo/logo.png';
+import UnorderedList from '^/src/shared/unordered-list';
 
 export default function HomePage() {
   return (
-    <main className="w-full h-full flex flex-col items-center justify-center pb-32 gap-12">
+    <main className="w-full h-full flex flex-col items-center justify-center pb-32 gap-24">
       <div className="w-full h-80 relative">
         <Image
           src={HomeBackgroundJpg}
           alt="YSOArcadeRecords home background"
           fill
           className="object-cover"
+          priority
         />
         <div className="w-full h-full flex justify-center items-center absolute left-0 top-0 bg-[rgba(0,0,0,0.4)] px-4">
-          <Image src={LogoPng} alt="YSOArcadeRecords logo" />
+          <Image src={LogoPng} alt="YSOArcadeRecords logo" priority />
         </div>
       </div>
 

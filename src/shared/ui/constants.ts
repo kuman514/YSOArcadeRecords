@@ -4,16 +4,6 @@ export const LINK_TREES: LinkTreeNode[] = [
   {
     href: '/',
     label: 'YSOArcadeRecords',
-    children: [
-      {
-        href: '/introduction',
-        label: '소개',
-      },
-      {
-        href: '/condition',
-        label: '조건',
-      },
-    ],
   },
   {
     href: '/records',
@@ -40,5 +30,13 @@ export const LINK_TREES: LinkTreeNode[] = [
         label: 'TGM3 월드 룰 마스터 모드',
       },
     ],
+  },
+  {
+    href: '/reviews',
+    label: '아케이드 관련 리뷰',
+  },
+  {
+    href: '/gallery',
+    label: '아케이드 관련 갤러리',
   },
 ];

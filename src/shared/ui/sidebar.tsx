@@ -5,7 +5,7 @@ export default function Sidebar() {
   return (
     <div className="w-full h-full bg-primary text-white max-w-[40rem] grid grid-rows-[4rem_1fr_4rem]">
       <div></div>
-      <div className="flex flex-col justify-start items-center gap-2 sm:flex-row sm:flex-wrap sm:justify-center sm:items-start">
+      <div className="flex flex-col justify-start items-center gap-4 overflow-y-scroll">
         {LINK_TREES.map((linkTree, index) => (
           <LinkTree key={`link-tree-${index}`} node={linkTree} />
         ))}

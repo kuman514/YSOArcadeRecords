@@ -27,10 +27,50 @@ db.exec(`CREATE TABLE IF NOT EXISTS sessions (
 )`);
 
 /**
- * @todo
- * Add arcade record post database
- * Add review post database
- * Add gallery post database
+ * @desc
+ * Arcade record post database
  */
+db.exec(`CREATE TABLE IF NOT EXISTS records (
+  id INTEGER PRIMARY KEY,
+  arcadeRecordId TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  authorId INTEGER NOT NULL,
+  arcadeId TEXT NOT NULL,
+  methodId TEXT NOT NULL,
+  players INTEGER NOT NULL,
+  playerSide INTEGER NOT NULL,
+  evaluation TEXT NOT NULL,
+  stage TEXT NOT NULL,
+  comment TEXT NOT NULL,
+  tagIds TEXT NOT NULL,
+  note TEXT,
+  youTubeId TEXT,
+  thumbnailUrl TEXT NOT NULL,
+  imageUrls TEXT NOT NULL,
+  achievedAt TEXT NOT NULL,
+  createdAt TEXT NOT NULL,
+  modifiedAt TEXT NOT NULL,
+  FOREIGN KEY (authorId) REFERENCES users(id)
+)`);
+
+/**
+ * @desc
+ * Review post database
+ *
+ * @todo
+ * Finish creating table about review posts
+ */
+// db.exec(`CREATE TABLE IF NOT EXISTS reviews (
+// )`);
+
+/**
+ * @desc
+ * Gallery post database
+ *
+ * @todo
+ * Finish creating table about gallery posts
+ */
+// db.exec(`CREATE TABLE IF NOT EXISTS gallery (
+// )`);
 
 export default db;

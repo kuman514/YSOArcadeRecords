@@ -9,7 +9,7 @@ export const temporaryArcadeRecordArticle: ArcadeRecordPost = {
   arcadeRecordId: 'aggiekoishi--3',
   title: '우리우리 애기코이시',
   author: {
-    authorId: 'kuman514',
+    authorId: 514,
     name: 'YSO(kuman514)',
     email: 'hadjadj0@gmail.com',
   },

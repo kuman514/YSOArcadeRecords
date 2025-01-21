@@ -1,5 +1,5 @@
 export interface Author {
-  authorId: string;
+  authorId: number;
   name: string;
   email: string;
 }

@@ -1,15 +1,30 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 import UnorderedList from '^/src/shared/unordered-list';
+import HomeBackgroundJpg from '^/public/background/home-background.jpg';
+import LogoPng from '^/public/logo/logo.png';
 
 export default function HomePage() {
   return (
-    <main className="w-full h-full max-w-4xl flex flex-col items-start px-4 sm:px-8 py-32 gap-12">
-      <h1 className="w-full text-4xl font-bold text-center">
+    <main className="w-full h-full flex flex-col items-center justify-center pb-32 gap-12">
+      <div className="w-full h-80 relative">
+        <Image
+          src={HomeBackgroundJpg}
+          alt="YSOArcadeRecords home background"
+          fill
+          className="object-cover"
+        />
+        <div className="w-full h-full flex justify-center items-center absolute left-0 top-0 bg-[rgba(0,0,0,0.4)] px-4">
+          <Image src={LogoPng} alt="YSOArcadeRecords logo" />
+        </div>
+      </div>
+
+      <h1 className="w-full text-4xl font-bold text-center px-4 sm:px-8">
         YSOArcadeRecords에 오신 것을 환영합니다!
       </h1>
 
-      <nav className="w-full flex justify-center align-center">
+      <nav className="w-full flex justify-center align-center px-4 sm:px-8">
         <ul className="flex flex-row gap-x-6 gap-y-2">
           <li>
             <Link href="/records" className="text-3xl hover:text-hovering">
@@ -29,8 +44,8 @@ export default function HomePage() {
         </ul>
       </nav>
 
-      <section>
-        <h2 className="text-2xl font-bold">이 사이트의 목적</h2>
+      <section className="w-full max-w-4xl px-4 sm:px-8">
+        <h2 className="text-2xl font-bold mb-4">이 사이트의 목적</h2>
         <p className="text-xl first-letter:ms-4">
           이 사이트는 본인 YSO(kuman514)가 겪은 다양한 아케이드 게임 경험을
           공유하기 위해 만들어졌습니다.
@@ -43,8 +58,8 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-bold">개인 통산 최고 성과</h2>
+      <section className="w-full max-w-4xl px-4 sm:px-8">
+        <h2 className="text-2xl font-bold mb-4">개인 통산 최고 성과</h2>
         <UnorderedList>
           <li>
             <span className="text-xl">

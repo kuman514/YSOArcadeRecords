@@ -1,5 +1,9 @@
 import sql from 'better-sqlite3';
 
+import KoishiPng from '^/public/temp/koishi.png';
+import RasisWebp from '^/public/temp/rasis.webp';
+import YuukaPng from '^/public/temp/yuuka.png';
+
 const db = sql('yso-arcade-records-local-temp.db');
 
 /**
@@ -49,9 +53,22 @@ db.exec(`CREATE TABLE IF NOT EXISTS records (
   imageUrls TEXT NOT NULL,
   achievedAt TEXT NOT NULL,
   createdAt TEXT NOT NULL,
-  modifiedAt TEXT NOT NULL,
-  FOREIGN KEY (authorId) REFERENCES users(id)
+  modifiedAt TEXT NOT NULL
 )`);
+
+const isHaveArcadeRecordPosts =
+  db
+    .prepare<void[], { 'COUNT(*)': number }>('SELECT COUNT(*) FROM records')
+    .get()!['COUNT(*)'] > 0;
+
+if (!isHaveArcadeRecordPosts) {
+  db.exec(`
+    INSERT INTO records (arcadeRecordId, title, authorId, arcadeId, methodId, players, playerSide, evaluation, stage, comment, tagIds, note, youTubeId, thumbnailUrl, imageUrls, achievedAt, createdAt, modifiedAt)
+    VALUES
+      ('dodonpachi-cshot--2025-01-22', '도돈파치(1997) 드디어 2-6 진출!', 1, 'dodonpachi-cshot', 'arcade-akatronics', 1, 1, '123456789', '2-6', '드디어 진출!', '["loop1-no-miss"]', '4미스', null, '${KoishiPng.src}', '["${KoishiPng.src}","${RasisWebp.src}","${YuukaPng.src}"]', '2025-01-22', '2025-01-23', '2025-01-24'),
+      ('galagaarrangement--2025-01-22', '갤러그 어레인지먼트 130만점!', 1, 'galagaarrangement', 'arcade-akatronics', 1, 1, '1300000', 'ALL', '드디어 달성!', '["no-miss-all", "shop-record"]', '잔기 5개', null, '${RasisWebp.src}', '["${KoishiPng.src}","${RasisWebp.src}","${YuukaPng.src}"]', '2025-01-22', '2025-01-23', '2025-01-24');
+  `);
+}
 
 /**
  * @desc

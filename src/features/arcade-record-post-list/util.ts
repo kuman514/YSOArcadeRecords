@@ -31,10 +31,6 @@ export function convertArcadeRecordPostDBColumnToItems({
   const parsedTagIds: Tag['tagId'][] = JSON.parse(tagIds);
   const parsedImageUrls: ArcadeRecordPost['imageUrls'] = JSON.parse(imageUrls);
 
-  /**
-   * @todo
-   * Add dictionary for arcades, methods, and tags.
-   */
   return {
     postId: id,
     arcadeRecordId,

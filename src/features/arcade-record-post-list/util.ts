@@ -1,3 +1,6 @@
+import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
+import { methodDictionary } from '^/src/entities/dictionary/method';
+import { tagDictionary } from '^/src/entities/dictionary/tag';
 import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
@@ -43,11 +46,11 @@ export function convertArcadeRecordPostDBColumnToItems({
     },
     arcade: {
       arcadeId,
-      label: '',
+      label: arcadeDictionary[arcadeId] ?? arcadeId,
     },
     method: {
       methodId,
-      label: '',
+      label: methodDictionary[methodId] ?? methodId,
     },
     playerInfo: {
       players,
@@ -58,7 +61,7 @@ export function convertArcadeRecordPostDBColumnToItems({
     comment,
     tags: parsedTagIds.map((tagId) => ({
       tagId,
-      label: '',
+      label: tagDictionary[tagId] ?? tagId,
     })),
     note,
     youTubeId,

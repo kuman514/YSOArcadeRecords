@@ -12,10 +12,12 @@ import { checkIsPasswordValid } from '^/src/shared/lib/password';
 export async function signUp(_: unknown, formData: FormData) {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
+  const name = formData.get('name')?.toString();
 
   const errors: {
     email?: string;
     password?: string;
+    name?: string;
   } = {};
 
   const emailValidationResult = checkIsEmailValid(email ?? '');
@@ -28,14 +30,18 @@ export async function signUp(_: unknown, formData: FormData) {
     errors.password = passwordValidationResult.reason ?? '';
   }
 
-  if (!email || !password || Object.keys(errors).length > 0) {
+  if (!name) {
+    errors.name = 'Please write your name.';
+  }
+
+  if (!email || !password || !name || Object.keys(errors).length > 0) {
     return { errors };
   }
 
   const hashedPassword = hashUserPassword(password);
 
   try {
-    const id = createUser(email, hashedPassword);
+    const id = createUser(email, hashedPassword, name);
     await createAuthSession(id);
     redirect('/training');
   } catch (error) {

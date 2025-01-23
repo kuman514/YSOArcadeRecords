@@ -1,28 +1,23 @@
-import db from '../../shared/lib/db';
+import { UserDBColumn } from '^/src/entities/types/user';
+import db from '^/src/shared/lib/db';
 
-export function createUser(email: string, password: string) {
+export function createUser(email: string, password: string, name: string) {
   const result = db
-    .prepare('INSERT INTO users (email, password, name) VALUES (?, ?)')
-    .run(email, password);
+    .prepare('INSERT INTO users (email, password, name) VALUES (?, ?, ?)')
+    .run(email, password, name);
   return Number(result.lastInsertRowid);
 }
 
 export function getUserByEmail(email: string) {
   const result = db
-    .prepare<
-      string,
-      { id: number; email: string; password: string; name: string }
-    >('SELECT * FROM users WHERE email = ?')
+    .prepare<string, UserDBColumn>('SELECT * FROM users WHERE email = ?')
     .get(email);
   return result;
 }
 
 export function getUserById(userId: string) {
   const result = db
-    .prepare<
-      string,
-      { id: number; email: string; password: string; name: string }
-    >('SELECT * FROM users WHERE id = ?')
+    .prepare<string, UserDBColumn>('SELECT * FROM users WHERE id = ?')
     .get(userId);
   return result;
 }

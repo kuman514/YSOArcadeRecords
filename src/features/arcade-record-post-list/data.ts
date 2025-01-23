@@ -1,6 +1,6 @@
 import { ArcadeInfo } from '^/src/entities/types/arcade-record-compositions';
 import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
-import db from '^/src/shared/db';
+import db from '^/src/shared/lib/db';
 
 export function getArcadeRecordPostList() {
   const statement = db.prepare<void[], ArcadeRecordPostDBColumn>(

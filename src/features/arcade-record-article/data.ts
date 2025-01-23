@@ -3,7 +3,7 @@ import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
-import db from '^/src/shared/db';
+import db from '^/src/shared/lib/db';
 
 export function getArcadeRecordPostArticle(
   arcadeId: ArcadeInfo['arcadeId'],

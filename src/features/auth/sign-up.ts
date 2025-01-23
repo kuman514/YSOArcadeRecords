@@ -9,7 +9,9 @@ import { checkIsHaveErrorCode } from '^/src/shared/lib/error';
 import { hashUserPassword } from '^/src/shared/lib/hash';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
 
-export async function signUp(_: unknown, formData: FormData) {
+import { AuthActionState } from './action-state';
+
+export async function signUp(_: AuthActionState, formData: FormData) {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
   const name = formData.get('name')?.toString();

@@ -10,7 +10,9 @@ import { checkIsEmailValid } from '^/src/shared/lib/email';
 import { hashUserPassword } from '^/src/shared/lib/hash';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
 
-export async function changePassword(_: unknown, formData: FormData) {
+import { AuthActionState } from './action-state';
+
+export async function changePassword(_: AuthActionState, formData: FormData) {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
 

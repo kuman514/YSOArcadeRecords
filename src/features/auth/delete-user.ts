@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 import { deleteUserById, getUserById } from '^/src/features/auth/user';
 import { destroySession } from '^/src/shared/lib/auth';
 
-export async function deleteUser(_: unknown, formData: FormData) {
+import { AuthActionState } from './action-state';
+
+export async function deleteUser(_: AuthActionState, formData: FormData) {
   const id = formData.get('userId')?.toString();
 
   if (!id) {

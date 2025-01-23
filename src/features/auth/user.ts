@@ -1,19 +1,29 @@
-import db from './db';
+import db from '../../shared/lib/db';
 
 export function createUser(email: string, password: string) {
   const result = db
     .prepare('INSERT INTO users (email, password, name) VALUES (?, ?)')
     .run(email, password);
-  return result.lastInsertRowid;
+  return Number(result.lastInsertRowid);
 }
 
 export function getUserByEmail(email: string) {
-  const result = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+  const result = db
+    .prepare<
+      string,
+      { id: number; email: string; password: string; name: string }
+    >('SELECT * FROM users WHERE email = ?')
+    .get(email);
   return result;
 }
 
 export function getUserById(userId: string) {
-  const result = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+  const result = db
+    .prepare<
+      string,
+      { id: number; email: string; password: string; name: string }
+    >('SELECT * FROM users WHERE id = ?')
+    .get(userId);
   return result;
 }
 

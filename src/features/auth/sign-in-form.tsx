@@ -1,5 +1,7 @@
 'use client';
 
+import FormInput from '^/src/shared/ui/form-input';
+
 export default function SignInForm() {
   /**
    * @todo
@@ -10,21 +12,11 @@ export default function SignInForm() {
     <form className="w-full flex flex-col justify-center items-start gap-8 px-16">
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="email">이메일</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="w-full px-4 py-2 border border-primary rounded"
-        />
+        <FormInput type="email" id="email" name="email" />
       </p>
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="password">비밀번호</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          className="w-full px-4 py-2 border border-primary rounded"
-        />
+        <FormInput type="password" id="password" name="password" />
       </p>
       <button
         type="submit"

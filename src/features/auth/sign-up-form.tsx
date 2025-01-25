@@ -5,6 +5,8 @@ import { useActionState, useState } from 'react';
 import { checkIsEmailValid } from '^/src/shared/lib/email';
 
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
+import FormInput from '^/src/shared/ui/form-input';
+
 import { AuthActionState } from './action-state';
 import { signUp } from './sign-up';
 
@@ -32,11 +34,10 @@ export default function SignUpForm() {
     >
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="email">이메일</label>
-        <input
+        <FormInput
           type="email"
           id="email"
           name="email"
-          className="w-full px-4 py-2 border border-primary rounded"
           value={email}
           onChange={(event) => {
             setEmail(event.currentTarget.value);
@@ -45,11 +46,10 @@ export default function SignUpForm() {
       </p>
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="name">닉네임</label>
-        <input
+        <FormInput
           type="text"
           id="name"
           name="name"
-          className="w-full px-4 py-2 border border-primary rounded"
           value={name}
           onChange={(event) => {
             setName(event.currentTarget.value);
@@ -58,11 +58,10 @@ export default function SignUpForm() {
       </p>
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="password">비밀번호</label>
-        <input
+        <FormInput
           type="password"
           id="password"
           name="password"
-          className="w-full px-4 py-2 border border-primary rounded"
           value={password}
           onChange={(event) => {
             setPassword(event.currentTarget.value);
@@ -71,11 +70,10 @@ export default function SignUpForm() {
       </p>
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="passwordConfirm">비밀번호 확인</label>
-        <input
+        <FormInput
           type="password"
           id="passwordConfirm"
           name="passwordConfirm"
-          className="w-full px-4 py-2 border border-primary rounded"
           value={passwordConfirm}
           onChange={(event) => {
             setPasswordConfirm(event.currentTarget.value);

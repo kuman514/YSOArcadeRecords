@@ -49,7 +49,7 @@ export async function changePassword(_: AuthActionState, formData: FormData) {
 
   try {
     changePasswordByEmail(email, hashedPassword);
-    redirect('/training');
+    redirect('/');
   } catch (error) {
     throw error;
   }

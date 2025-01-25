@@ -54,5 +54,5 @@ export async function signIn(_: AuthActionState, formData: FormData) {
   }
 
   await createAuthSession(existingUser.id);
-  redirect('/training');
+  redirect('/');
 }

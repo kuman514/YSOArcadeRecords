@@ -45,7 +45,7 @@ export async function signUp(_: AuthActionState, formData: FormData) {
   try {
     const id = createUser(email, hashedPassword, name);
     await createAuthSession(id);
-    redirect('/training');
+    redirect('/');
   } catch (error) {
     if (
       checkIsHaveErrorCode(error) &&

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
+import NavLink from '^/src/shared/ui/nav-link';
+
 import AlternativeHeader from './alternative-header';
-import NavLink from './nav-link';
 import SidebarCaller from './sidebar-caller';
 
 export default function MainHeader() {

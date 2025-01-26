@@ -1,4 +1,4 @@
-import { LinkTreeNode } from './types';
+import { LinkTreeNode } from '^/src/shared/ui/types';
 
 export const LINK_TREES: LinkTreeNode[] = [
   {

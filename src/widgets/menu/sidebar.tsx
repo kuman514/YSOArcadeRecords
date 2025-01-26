@@ -1,5 +1,6 @@
+import LinkTree from '^/src/shared/ui/link-tree';
+
 import { LINK_TREES } from './constants';
-import LinkTree from './link-tree';
 
 export default function Sidebar() {
   return (

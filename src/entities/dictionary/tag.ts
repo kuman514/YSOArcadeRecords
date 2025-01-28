@@ -1,6 +1,6 @@
 export const tagDictionary: Record<string, string> = {
   // Dictionary about no miss or no bomb
-  'no-bomb': '노봄 ALL',
+  'no-bomb-all': '노봄 ALL',
   'no-miss-all': '노미스 ALL',
   'loop1-no-miss': '1주 노미스',
 

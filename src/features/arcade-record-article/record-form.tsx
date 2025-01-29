@@ -40,7 +40,15 @@ export default function RecordForm({ post }: Props) {
 
   const [imageUrls, setImageUrls] = useState<string[]>(post?.imageUrls ?? []);
 
-  const isSubmittable = true;
+  const isSubmittable =
+    title.length > 0 &&
+    arcadeDictionary[arcadeId] !== undefined &&
+    methodDictionary[methodId] !== undefined &&
+    evaluation.length > 0 &&
+    stage.length > 0 &&
+    comment.length > 0 &&
+    thumbnailUrl.length > 0 &&
+    imageUrls.length > 0;
 
   const renderArcadeSelectOptions = useMemo(
     () =>

@@ -277,7 +277,7 @@ export default function RecordForm({ post }: Props) {
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
         disabled={!isSubmittable}
       >
-        {post ? '등록하기' : '수정하기'}
+        {post ? '수정하기' : '등록하기'}
       </button>
     </form>
   );

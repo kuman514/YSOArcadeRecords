@@ -12,15 +12,18 @@ export default function SingleImagePicker({ name }: Props) {
 
   const [pickedImage, setPickedImage] = useState<string | null>(null);
 
-  function handleOnClick() {
+  function handleOnClickLoad() {
     imageInputRef.current?.click();
+  }
+
+  function handleOnClickClear() {
+    setPickedImage(null);
   }
 
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
     if (!file) {
-      setPickedImage(null);
       return;
     }
 
@@ -33,7 +36,7 @@ export default function SingleImagePicker({ name }: Props) {
   }
 
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-row gap-4 flex-wrap">
       <div className="w-40 h-40 border border-primary rounded relative flex justify-center items-center overflow-hidden">
         {pickedImage ? (
           <Image src={pickedImage} alt="유저 선택 이미지" fill />
@@ -51,13 +54,22 @@ export default function SingleImagePicker({ name }: Props) {
         onChange={handleOnChange}
         required
       />
-      <button
-        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded"
-        type="button"
-        onClick={handleOnClick}
-      >
-        이미지 불러오기
-      </button>
+      <div className="flex flex-row gap-4 flex-wrap">
+        <button
+          className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded"
+          type="button"
+          onClick={handleOnClickLoad}
+        >
+          이미지 불러오기
+        </button>
+        <button
+          className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded"
+          type="button"
+          onClick={handleOnClickClear}
+        >
+          이미지 삭제하기
+        </button>
+      </div>
     </div>
   );
 }

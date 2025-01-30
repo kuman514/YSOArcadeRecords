@@ -6,6 +6,7 @@ import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { methodDictionary } from '^/src/entities/dictionary/method';
 import { tagDictionary } from '^/src/entities/dictionary/tag';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 
@@ -34,11 +35,11 @@ export default function RecordForm({ post }: Props) {
   //   post?.tags.map((tag) => tag.tagId) ?? []
   // );
 
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>(
-    post?.thumbnailUrl ?? ''
-  );
+  // const [thumbnailUrl, setThumbnailUrl] = useState<string>(
+  //   post?.thumbnailUrl ?? ''
+  // );
 
-  const [imageUrls, setImageUrls] = useState<string[]>(post?.imageUrls ?? []);
+  // const [imageUrls, setImageUrls] = useState<string[]>(post?.imageUrls ?? []);
 
   const isSubmittable =
     title.length > 0 &&
@@ -46,9 +47,7 @@ export default function RecordForm({ post }: Props) {
     methodDictionary[methodId] !== undefined &&
     evaluation.length > 0 &&
     stage.length > 0 &&
-    comment.length > 0 &&
-    thumbnailUrl.length > 0 &&
-    imageUrls.length > 0;
+    comment.length > 0;
 
   const renderArcadeSelectOptions = useMemo(
     () =>
@@ -260,49 +259,18 @@ export default function RecordForm({ post }: Props) {
         />
       </p>
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="youTubeId">썸네일 URL</label>
-        <FormInput
-          type="text"
-          id="thumbnailUrl"
-          name="thumbnailUrl"
-          value={thumbnailUrl}
-          onChange={(event) => {
-            setThumbnailUrl(event.currentTarget.value);
-          }}
-        />
-      </p>
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="thumbnail">썸네일</label>
+        <SingleImagePicker name="thumbnail" />
+      </div>
 
-      <p className="w-full flex flex-col gap-2">
+      {/**
+       * @todo
+       * Add multiple image picker
+       */}
+      {/* <p className="w-full flex flex-col gap-2">
         <label htmlFor="imageUrls">원본 이미지 URL</label>
-        <input
-          type="hidden"
-          id="imageUrls"
-          name="imageUrls"
-          value={JSON.stringify(imageUrls)}
-        />
-        {imageUrls.map((imageUrl, index) => (
-          <FormInput
-            key={`image-url-${index}`}
-            type="text"
-            value={imageUrl}
-            onChange={(event) => {
-              const newImageUrls = Array.from(imageUrls);
-              newImageUrls[index] = event.currentTarget.value;
-              setImageUrls(newImageUrls);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
-          onClick={() => {
-            setImageUrls(imageUrls.concat(['']));
-          }}
-        >
-          원본 이미지 추가하기
-        </button>
-      </p>
+      </p> */}
 
       <button
         type="submit"

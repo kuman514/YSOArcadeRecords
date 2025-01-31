@@ -8,11 +8,11 @@ import { checkIsPasswordValid } from '^/src/shared/lib/password';
 import FormInput from '^/src/shared/ui/form-input';
 
 import { AuthActionState } from './action-state';
-import { signUp } from './sign-up';
+import { signUpAction } from './sign-up';
 
 export default function SignUpForm() {
   const [formState, formAction] = useActionState<AuthActionState, FormData>(
-    signUp,
+    signUpAction,
     {}
   );
 

@@ -7,7 +7,7 @@ import { destroySession } from '^/src/shared/lib/auth';
 
 import { AuthActionState } from './action-state';
 
-export async function deleteUser(_: AuthActionState, formData: FormData) {
+export async function deleteUserAction(_: AuthActionState, formData: FormData) {
   const id = formData.get('userId')?.toString();
 
   if (!id) {

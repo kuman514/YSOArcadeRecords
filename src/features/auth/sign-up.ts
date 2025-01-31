@@ -11,7 +11,7 @@ import { checkIsPasswordValid } from '^/src/shared/lib/password';
 
 import { AuthActionState } from './action-state';
 
-export async function signUp(_: AuthActionState, formData: FormData) {
+export async function signUpAction(_: AuthActionState, formData: FormData) {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
   const name = formData.get('name')?.toString();

@@ -10,7 +10,7 @@ import { checkIsPasswordValid } from '^/src/shared/lib/password';
 
 import { AuthActionState } from './action-state';
 
-export async function signIn(_: AuthActionState, formData: FormData) {
+export async function signInAction(_: AuthActionState, formData: FormData) {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
 

@@ -12,7 +12,10 @@ import { checkIsPasswordValid } from '^/src/shared/lib/password';
 
 import { AuthActionState } from './action-state';
 
-export async function changePassword(_: AuthActionState, formData: FormData) {
+export async function changePasswordAction(
+  _: AuthActionState,
+  formData: FormData
+) {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
 

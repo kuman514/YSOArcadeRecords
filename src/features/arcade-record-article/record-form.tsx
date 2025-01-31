@@ -6,6 +6,7 @@ import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { methodDictionary } from '^/src/entities/dictionary/method';
 import { tagDictionary } from '^/src/entities/dictionary/tag';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
@@ -264,13 +265,10 @@ export default function RecordForm({ post }: Props) {
         <SingleImagePicker name="thumbnail" />
       </div>
 
-      {/**
-       * @todo
-       * Add multiple image picker
-       */}
-      {/* <p className="w-full flex flex-col gap-2">
-        <label htmlFor="imageUrls">원본 이미지 URL</label>
-      </p> */}
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="thumbnail">원본 이미지 (여러 개 첨부)</label>
+        <MultipleImagePicker name="originalImages" />
+      </div>
 
       <button
         type="submit"

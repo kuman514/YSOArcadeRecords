@@ -8,7 +8,7 @@ import { checkIsPasswordValid } from '^/src/shared/lib/password';
 import FormInput from '^/src/shared/ui/form-input';
 
 import { AuthActionState } from './action-state';
-import { signUpAction } from './sign-up';
+import { signUpAction } from './sign-up-action';
 
 export default function SignUpForm() {
   const [formState, formAction] = useActionState<AuthActionState, FormData>(

@@ -7,7 +7,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import { checkIsEmailValid } from '^/src/shared/lib/email';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
 import { AuthActionState } from './action-state';
-import { signInAction } from './sign-in';
+import { signInAction } from './sign-in-action';
 
 export default function SignInForm() {
   const [formState, formAction] = useActionState<AuthActionState, FormData>(

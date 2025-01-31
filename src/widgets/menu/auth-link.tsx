@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { signOutAction } from '^/src/features/auth/sign-out';
+import { signOutAction } from '^/src/features/auth/sign-out-action';
 import { verifyAuth } from '^/src/shared/lib/auth';
 
 export default async function AuthLink() {

@@ -12,7 +12,7 @@ export default function FormInput(props: Props) {
   return (
     <input
       {...props}
-      className="w-full px-4 py-2 border border-primary rounded"
+      className="w-full px-4 py-2 border border-primary rounded text-black"
     />
   );
 }

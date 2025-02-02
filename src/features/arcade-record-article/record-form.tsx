@@ -87,15 +87,9 @@ export default function RecordForm({ post }: Props) {
     )
   );
 
-  const renderErrors = formState.errors
-    ? Object.entries(formState.errors).map(([key, reason]) => (
-        <p key={key}>{reason}</p>
-      ))
-    : null;
-
   return (
     <form
-      className="w-full flex flex-col justify-center items-start gap-8 px-16"
+      className="w-full flex flex-col justify-center items-start gap-8 sm:px-16"
       action={formAction}
     >
       <p className="w-full flex flex-col gap-2">
@@ -110,6 +104,7 @@ export default function RecordForm({ post }: Props) {
           }}
         />
       </p>
+      {formState.errors?.title && <p>{formState.errors.title}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="arcadeId">아케이드 부문</label>
@@ -124,6 +119,7 @@ export default function RecordForm({ post }: Props) {
           {renderArcadeSelectOptions}
         </FormDropdown>
       </p>
+      {formState.errors?.arcadeId && <p>{formState.errors.arcadeId}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="methodId">수단</label>
@@ -138,6 +134,7 @@ export default function RecordForm({ post }: Props) {
           {renderMethodSelectOptions}
         </FormDropdown>
       </p>
+      {formState.errors?.methodId && <p>{formState.errors.methodId}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
@@ -154,6 +151,7 @@ export default function RecordForm({ post }: Props) {
           }}
         />
       </p>
+      {formState.errors?.achievedAt && <p>{formState.errors.achievedAt}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="players">플레이어 수</label>
@@ -171,6 +169,7 @@ export default function RecordForm({ post }: Props) {
           <option value={4}>4명</option>
         </FormDropdown>
       </p>
+      {formState.errors?.players && <p>{formState.errors.players}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="players">작성자의 플레이 사이드</label>
@@ -188,6 +187,7 @@ export default function RecordForm({ post }: Props) {
           <option value={4}>4P</option>
         </FormDropdown>
       </p>
+      {formState.errors?.playerSide && <p>{formState.errors.playerSide}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="evaluation">점수 / 클리어 타임</label>
@@ -201,6 +201,7 @@ export default function RecordForm({ post }: Props) {
           }}
         />
       </p>
+      {formState.errors?.evaluation && <p>{formState.errors.evaluation}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
@@ -214,6 +215,7 @@ export default function RecordForm({ post }: Props) {
           }}
         />
       </p>
+      {formState.errors?.stage && <p>{formState.errors.stage}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="comment">코멘터리</label>
@@ -227,9 +229,10 @@ export default function RecordForm({ post }: Props) {
           }}
         />
       </p>
+      {formState.errors?.comment && <p>{formState.errors.comment}</p>}
 
       <p className="w-full flex flex-col gap-2">
-        <label htmlFor="comment">태그</label>
+        <label>태그</label>
         {renderTagSelectOptions}
       </p>
 
@@ -263,13 +266,17 @@ export default function RecordForm({ post }: Props) {
         <label htmlFor="thumbnail">썸네일</label>
         <SingleImagePicker name="thumbnail" />
       </div>
+      {formState.errors?.thumbnailUrl && <p>{formState.errors.thumbnailUrl}</p>}
 
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">원본 이미지 (여러 개 첨부)</label>
         <MultipleImagePicker name="originalImages" />
       </div>
+      {formState.errors?.imageUrls && <p>{formState.errors.imageUrls}</p>}
 
-      {renderErrors}
+      {Object.keys(formState.errors ?? {}).length > 0 && (
+        <p>완료되지 않은 입력이 있습니다. 확인하여 주십시오.</p>
+      )}
 
       <button
         type="submit"

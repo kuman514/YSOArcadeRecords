@@ -92,7 +92,6 @@ export default function MultipleImagePicker({ name }: Props) {
         name={name}
         onChange={handleOnChange}
         multiple
-        required
       />
       <div className="flex flex-row gap-4 flex-wrap">
         <button

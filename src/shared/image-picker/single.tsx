@@ -52,7 +52,6 @@ export default function SingleImagePicker({ name }: Props) {
         accept="image/png, image/jpeg"
         name={name}
         onChange={handleOnChange}
-        required
       />
       <div className="flex flex-row gap-4 flex-wrap">
         <button

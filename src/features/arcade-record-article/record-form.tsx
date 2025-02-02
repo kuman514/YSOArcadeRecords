@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useActionState, useMemo, useState } from 'react';
 
 import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { methodDictionary } from '^/src/entities/dictionary/method';
@@ -11,11 +11,19 @@ import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 
+import { postArcadeRecordAction } from './post-arcade-record-action';
+import { ArcadeRecordActionState } from './types';
+
 interface Props {
   post?: ArcadeRecordPost;
 }
 
 export default function RecordForm({ post }: Props) {
+  const [formState, formAction] = useActionState<
+    ArcadeRecordActionState,
+    FormData
+  >(postArcadeRecordAction, {});
+
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [arcadeId, setArcadeId] = useState<string>(post?.arcade.arcadeId ?? '');
   const [methodId, setMethodId] = useState<string>(post?.method.methodId ?? '');
@@ -31,24 +39,6 @@ export default function RecordForm({ post }: Props) {
   const [comment, setComment] = useState<string>(post?.comment ?? '');
   const [note, setNote] = useState<string>(post?.note ?? '');
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
-
-  // const [tagIds, setTagIds] = useState<string[]>(
-  //   post?.tags.map((tag) => tag.tagId) ?? []
-  // );
-
-  // const [thumbnailUrl, setThumbnailUrl] = useState<string>(
-  //   post?.thumbnailUrl ?? ''
-  // );
-
-  // const [imageUrls, setImageUrls] = useState<string[]>(post?.imageUrls ?? []);
-
-  const isSubmittable =
-    title.length > 0 &&
-    arcadeDictionary[arcadeId] !== undefined &&
-    methodDictionary[methodId] !== undefined &&
-    evaluation.length > 0 &&
-    stage.length > 0 &&
-    comment.length > 0;
 
   const renderArcadeSelectOptions = useMemo(
     () =>
@@ -97,8 +87,17 @@ export default function RecordForm({ post }: Props) {
     )
   );
 
+  const renderErrors = formState.errors
+    ? Object.entries(formState.errors).map(([key, reason]) => (
+        <p key={key}>{reason}</p>
+      ))
+    : null;
+
   return (
-    <form className="w-full flex flex-col justify-center items-start gap-8 px-16">
+    <form
+      className="w-full flex flex-col justify-center items-start gap-8 px-16"
+      action={formAction}
+    >
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">기록 제목</label>
         <FormInput
@@ -270,10 +269,11 @@ export default function RecordForm({ post }: Props) {
         <MultipleImagePicker name="originalImages" />
       </div>
 
+      {renderErrors}
+
       <button
         type="submit"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
-        disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}
       </button>

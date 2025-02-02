@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useMemo, useState } from 'react';
+import Image from 'next/image';
 
 import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { methodDictionary } from '^/src/entities/dictionary/method';
@@ -10,6 +11,7 @@ import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
+import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
 
 import { postArcadeRecordAction } from './post-arcade-record-action';
 import { ArcadeRecordActionState } from './types';
@@ -22,7 +24,7 @@ export default function RecordForm({ post }: Props) {
   const [formState, formAction] = useActionState<
     ArcadeRecordActionState,
     FormData
-  >(postArcadeRecordAction, {});
+  >(post ? putArcadeRecordAction : postArcadeRecordAction, {});
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [arcadeId, setArcadeId] = useState<string>(post?.arcade.arcadeId ?? '');
@@ -92,6 +94,17 @@ export default function RecordForm({ post }: Props) {
       className="w-full flex flex-col justify-center items-start gap-8 sm:px-16"
       action={formAction}
     >
+      {post?.arcadeRecordId && (
+        <input
+          type="hidden"
+          id="arcadeRecordId"
+          name="arcadeRecordId"
+          value={post.arcadeRecordId}
+          readOnly
+        />
+      )}
+      {formState.errors?.arcadeId && <p>{formState.errors.arcadeId}</p>}
+
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">기록 제목</label>
         <FormInput
@@ -262,11 +275,52 @@ export default function RecordForm({ post }: Props) {
         />
       </p>
 
+      {post?.thumbnailUrl && (
+        <div className="w-full flex flex-col gap-2">
+          <label htmlFor="presentThumbnailUrl">기존 썸네일</label>
+          <div className="w-40 h-40 border border-primary rounded relative flex justify-center items-center overflow-hidden">
+            <Image src={post.thumbnailUrl} alt="기존 썸네일 이미지" fill />
+          </div>
+          <input
+            id="presentThumbnailUrl"
+            name="presentThumbnailUrl"
+            type="hidden"
+            value={post.thumbnailUrl}
+            readOnly
+          />
+        </div>
+      )}
+
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">썸네일</label>
         <SingleImagePicker name="thumbnail" />
       </div>
       {formState.errors?.thumbnailUrl && <p>{formState.errors.thumbnailUrl}</p>}
+
+      {post?.imageUrls && (
+        <div className="w-full flex flex-col gap-2">
+          <label htmlFor="presentImageUrls">기존 원본 이미지</label>
+          <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
+            {post.imageUrls.map((imageUrl) => (
+              <div key={imageUrl} className="flex flex-row gap-2">
+                <div className="w-40 h-40 relative">
+                  <Image src={imageUrl} alt="유저 선택 이미지" fill />
+                </div>
+                {/* <button type="button" onClick={handleOnClickDelete(index)}>
+                  X
+                </button> */}
+              </div>
+            ))}
+          </div>
+          <input
+            id="presentImageUrls"
+            name="presentImageUrls"
+            type="hidden"
+            value={JSON.stringify(post.imageUrls)}
+            readOnly
+          />
+        </div>
+      )}
 
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">원본 이미지 (여러 개 첨부)</label>

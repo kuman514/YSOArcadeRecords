@@ -74,11 +74,16 @@ export async function postArcadeRecordAction(
     errors.comment = 'Comment required.';
   }
 
-  if (!thumbnail) {
+  if (!thumbnail.name || thumbnail.name === 'undefined') {
     errors.thumbnailUrl = 'Thumbnail required.';
   }
 
-  if (!originalImages || originalImages.length === 0) {
+  if (
+    !originalImages ||
+    originalImages.length === 0 ||
+    !originalImages[0].name ||
+    originalImages[0].name === 'undefined'
+  ) {
     errors.imageUrls = 'Original images required.';
   }
 
@@ -94,8 +99,9 @@ export async function postArcadeRecordAction(
     'records'
   );
 
+  const validImages = originalImages.filter((image) => image.size > 0);
   const originalImageUrls = await Promise.all<string>(
-    originalImages.map((file, index) =>
+    validImages.map((file, index) =>
       saveImage(
         file,
         `${arcadeId}--${arcadeRecordId}--original-${index + 1}`,

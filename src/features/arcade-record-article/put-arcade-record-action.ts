@@ -30,7 +30,9 @@ export async function putArcadeRecordAction(
 
   const presentThumbnailUrl =
     formData.get('presentThumbnailUrl')?.toString() ?? '';
-  const presentImageUrls = formData.get('presentImageUrls')?.toString() ?? '';
+  const presentImageUrls = JSON.parse(
+    formData.get('presentImageUrls')?.toString() ?? '[]'
+  ) as string[];
 
   const thumbnail = formData.get('thumbnail') as File;
   const originalImages = formData.getAll('originalImages') as File[];
@@ -83,22 +85,38 @@ export async function putArcadeRecordAction(
     errors.comment = 'Comment required.';
   }
 
+  if (
+    (!thumbnail.name || thumbnail.name === 'undefined') &&
+    !presentThumbnailUrl
+  ) {
+    errors.thumbnailUrl = 'Thumbnail required.';
+  }
+
+  if (
+    (!originalImages ||
+      originalImages.length === 0 ||
+      !originalImages[0].name ||
+      originalImages[0].name === 'undefined') &&
+    presentImageUrls.length === 0
+  ) {
+    errors.imageUrls = 'Original images required.';
+  }
+
   if (Object.keys(errors).length > 0) {
     return { errors };
   }
 
-  console.log(originalImages);
+  const thumbnailUrl =
+    thumbnail.name !== 'undefined'
+      ? await saveImage(
+          thumbnail,
+          `${arcadeId}--${arcadeRecordId}--thumbnail`,
+          'records'
+        )
+      : presentThumbnailUrl;
 
-  const thumbnailUrl = thumbnail.name
-    ? await saveImage(
-        thumbnail,
-        `${arcadeId}--${arcadeRecordId}--thumbnail`,
-        'records'
-      )
-    : presentThumbnailUrl;
-
-  const validImages = originalImages.filter((image) => Boolean(image.name));
-  const originalImageUrls = JSON.parse(presentImageUrls).concat(
+  const validImages = originalImages.filter((image) => image.size > 0);
+  const originalImageUrls = presentImageUrls.concat(
     await Promise.all<string>(
       validImages.map((file, index) =>
         saveImage(

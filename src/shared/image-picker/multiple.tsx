@@ -18,14 +18,6 @@ export default function MultipleImagePicker({ name }: Props) {
     imageInputRef.current?.click();
   }
 
-  // function handleOnClickDelete(index: number) {
-  //   return () => {
-  //     const newPickedImages = Array.from(pickedImages);
-  //     newPickedImages.splice(index, 1);
-  //     setPickedImages(newPickedImages);
-  //   };
-  // }
-
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
 
@@ -74,9 +66,6 @@ export default function MultipleImagePicker({ name }: Props) {
                   fill
                 />
               </div>
-              {/* <button type="button" onClick={handleOnClickDelete(index)}>
-                X
-              </button> */}
             </div>
           ))
         ) : (
@@ -93,15 +82,13 @@ export default function MultipleImagePicker({ name }: Props) {
         onChange={handleOnChange}
         multiple
       />
-      <div className="flex flex-row gap-4 flex-wrap">
-        <button
-          className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded"
-          type="button"
-          onClick={handleOnClickLoad}
-        >
-          이미지 추가하기
-        </button>
-      </div>
+      <button
+        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded"
+        type="button"
+        onClick={handleOnClickLoad}
+      >
+        이미지 추가하기
+      </button>
     </div>
   );
 }

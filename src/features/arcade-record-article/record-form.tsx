@@ -42,6 +42,18 @@ export default function RecordForm({ post }: Props) {
   const [note, setNote] = useState<string>(post?.note ?? '');
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
+  const [presentImageUrls, setPresentImageUrls] = useState<string[]>(
+    post?.imageUrls ?? []
+  );
+
+  function handleOnClickDeletePresentImageUrl(index: number) {
+    return () => {
+      const newPresentImageUrls = Array.from(presentImageUrls);
+      newPresentImageUrls.splice(index, 1);
+      setPresentImageUrls(newPresentImageUrls);
+    };
+  }
+
   const renderArcadeSelectOptions = useMemo(
     () =>
       Object.entries(arcadeDictionary).map(
@@ -277,7 +289,7 @@ export default function RecordForm({ post }: Props) {
 
       {post?.thumbnailUrl && (
         <div className="w-full flex flex-col gap-2">
-          <label htmlFor="presentThumbnailUrl">기존 썸네일</label>
+          <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
           <div className="w-40 h-40 border border-primary rounded relative flex justify-center items-center overflow-hidden">
             <Image src={post.thumbnailUrl} alt="기존 썸네일 이미지" fill />
           </div>
@@ -292,38 +304,43 @@ export default function RecordForm({ post }: Props) {
       )}
 
       <div className="w-full flex flex-col gap-2">
-        <label htmlFor="thumbnail">썸네일</label>
+        <label htmlFor="thumbnail">새로운 썸네일</label>
         <SingleImagePicker name="thumbnail" />
       </div>
       {formState.errors?.thumbnailUrl && <p>{formState.errors.thumbnailUrl}</p>}
 
-      {post?.imageUrls && (
+      {post && (
         <div className="w-full flex flex-col gap-2">
-          <label htmlFor="presentImageUrls">기존 원본 이미지</label>
+          <label htmlFor="presentImageUrls">등록된 원본 이미지</label>
           <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
-            {post.imageUrls.map((imageUrl) => (
-              <div key={imageUrl} className="flex flex-row gap-2">
-                <div className="w-40 h-40 relative">
-                  <Image src={imageUrl} alt="유저 선택 이미지" fill />
-                </div>
-                {/* <button type="button" onClick={handleOnClickDelete(index)}>
-                  X
-                </button> */}
-              </div>
-            ))}
+            {presentImageUrls.length > 0
+              ? presentImageUrls.map((imageUrl, index) => (
+                  <div key={imageUrl} className="flex flex-row gap-2">
+                    <div className="w-40 h-40 relative">
+                      <Image src={imageUrl} alt="유저 선택 이미지" fill />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleOnClickDeletePresentImageUrl(index)}
+                    >
+                      X
+                    </button>
+                  </div>
+                ))
+              : '이미지 없음'}
           </div>
           <input
             id="presentImageUrls"
             name="presentImageUrls"
             type="hidden"
-            value={JSON.stringify(post.imageUrls)}
+            value={JSON.stringify(presentImageUrls)}
             readOnly
           />
         </div>
       )}
 
       <div className="w-full flex flex-col gap-2">
-        <label htmlFor="thumbnail">원본 이미지 (여러 개 첨부)</label>
+        <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
         <MultipleImagePicker name="originalImages" />
       </div>
       {formState.errors?.imageUrls && <p>{formState.errors.imageUrls}</p>}

@@ -38,6 +38,7 @@ export default function RecordForm({ post }: Props) {
   );
   const [evaluation, setEvaluation] = useState<string>(post?.evaluation ?? '');
   const [stage, setStage] = useState<string>(post?.stage ?? '');
+  const [rank, setRank] = useState<string>(post?.rank ?? '');
   const [comment, setComment] = useState<string>(post?.comment ?? '');
   const [note, setNote] = useState<string>(post?.note ?? '');
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
@@ -241,6 +242,19 @@ export default function RecordForm({ post }: Props) {
         />
       </p>
       {formState.errors?.stage && <p>{formState.errors.stage}</p>}
+
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="rank">최종 등급</label>
+        <FormInput
+          type="text"
+          id="rank"
+          name="rank"
+          value={rank}
+          onChange={(event) => {
+            setRank(event.currentTarget.value);
+          }}
+        />
+      </p>
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="comment">코멘터리</label>

@@ -22,6 +22,7 @@ export async function postArcadeRecordAction(
   const playerSide = formData.get('playerSide')?.toString();
   const evaluation = formData.get('evaluation')?.toString();
   const stage = formData.get('stage')?.toString();
+  const rank = formData.get('rank')?.toString();
   const comment = formData.get('comment')?.toString();
   const note = formData.get('note')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
@@ -111,8 +112,8 @@ export async function postArcadeRecordAction(
   );
 
   const statement = db.prepare(`
-    INSERT INTO records (arcadeRecordId, title, authorId, arcadeId, methodId, players, playerSide, evaluation, stage, comment, tagIds, note, youTubeId, thumbnailUrl, imageUrls, achievedAt, createdAt, modifiedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO records (arcadeRecordId, title, authorId, arcadeId, methodId, players, playerSide, evaluation, stage, rank, comment, tagIds, note, youTubeId, thumbnailUrl, imageUrls, achievedAt, createdAt, modifiedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const createdDate = new Date();
@@ -130,6 +131,7 @@ export async function postArcadeRecordAction(
     playerSide,
     evaluation,
     stage,
+    rank,
     comment,
     tagIds ? JSON.stringify(tagIds) : null,
     note ?? null,

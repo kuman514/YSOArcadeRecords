@@ -35,6 +35,7 @@ export interface ArcadeRecordPostDBColumn {
   playerSide: PlayerInfo['playerSide'];
   evaluation: ArcadeRecordPost['evaluation'];
   stage: ArcadeRecordPost['stage'];
+  rank?: ArcadeRecordPost['rank'];
   comment: ArcadeRecordPost['comment'];
   tagIds: string;
   note?: ArcadeRecordPost['note'];

@@ -23,6 +23,7 @@ export async function putArcadeRecordAction(
   const playerSide = formData.get('playerSide')?.toString();
   const evaluation = formData.get('evaluation')?.toString();
   const stage = formData.get('stage')?.toString();
+  const rank = formData.get('rank')?.toString();
   const comment = formData.get('comment')?.toString();
   const note = formData.get('note')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
@@ -129,7 +130,7 @@ export async function putArcadeRecordAction(
   );
 
   const statement = db.prepare(`
-    UPDATE records SET title = ?, arcadeId = ?, methodId = ?, players = ?, playerSide = ?, evaluation = ?, stage = ?, comment = ?, tagIds = ?, note = ?, youTubeId = ?, thumbnailUrl = ?, imageUrls = ?, achievedAt = ?, modifiedAt = ? WHERE arcadeRecordId = ?
+    UPDATE records SET title = ?, arcadeId = ?, methodId = ?, players = ?, playerSide = ?, evaluation = ?, stage = ?, rank = ?, comment = ?, tagIds = ?, note = ?, youTubeId = ?, thumbnailUrl = ?, imageUrls = ?, achievedAt = ?, modifiedAt = ? WHERE arcadeRecordId = ?
   `);
 
   const createdDate = new Date();
@@ -145,6 +146,7 @@ export async function putArcadeRecordAction(
     playerSide,
     evaluation,
     stage,
+    rank,
     comment,
     tagIds ? JSON.stringify(tagIds) : null,
     note ?? null,

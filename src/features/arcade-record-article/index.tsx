@@ -67,6 +67,13 @@ export default function ArcadeRecordArticle({ post }: Props) {
     }
   })();
 
+  console.log(post.rank);
+  const renderRank = post.rank ? (
+    <li>
+      <span className="font-bold">등급</span>: {post.rank}
+    </li>
+  ) : null;
+
   const renderNote = post.note ? (
     <li>
       <span className="font-bold">비고</span>: {post.note}
@@ -133,6 +140,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
             <li>
               <span className="font-bold">최종 스테이지</span>: {post.stage}
             </li>
+            {renderRank}
             {renderNote}
           </UnorderedList>
         </div>

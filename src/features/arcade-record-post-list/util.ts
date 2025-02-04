@@ -18,6 +18,7 @@ export function convertArcadeRecordPostDBColumnToItems({
   playerSide,
   evaluation,
   stage,
+  rank,
   comment,
   tagIds,
   note,
@@ -54,6 +55,7 @@ export function convertArcadeRecordPostDBColumnToItems({
     },
     evaluation,
     stage,
+    rank,
     comment,
     tags: parsedTagIds.map((tagId) => ({
       tagId,

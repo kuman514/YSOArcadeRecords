@@ -5,6 +5,7 @@ import ArcadeRecordArticle from '^/src/features/arcade-record-article';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 import { verifyAuth } from '^/src/shared/lib/auth';
+import { deleteArcadeRecordAction } from '^/src/features/arcade-record-article/delete-arcade-record-action';
 
 interface Props {
   params: {
@@ -26,9 +27,18 @@ export default async function RecordArticlePage({
   const convertedData = convertArcadeRecordPostDBColumnToItems(data);
 
   const renderModifyButton = user.user ? (
-    <p className="w-full flex flex-row justify-end items-center">
+    <div className="w-full flex flex-row justify-end items-center gap-4">
       <Link href={`/records/${typeId}/${recordId}/modify`}>수정하기</Link>
-    </p>
+      <form action={deleteArcadeRecordAction}>
+        <input
+          type="hidden"
+          id="arcadeRecordId"
+          name="arcadeRecordId"
+          value={data.arcadeRecordId}
+        />
+        <button type="submit">삭제하기</button>
+      </form>
+    </div>
   ) : null;
 
   return (

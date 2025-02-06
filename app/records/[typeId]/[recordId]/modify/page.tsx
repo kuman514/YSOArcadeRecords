@@ -11,7 +11,7 @@ interface Props {
   };
 }
 
-export default function ModifyRecordPage({
+export default async function ModifyRecordPage({
   params: { typeId, recordId },
 }: Props) {
   const data = getArcadeRecordPostArticle(typeId, recordId);
@@ -23,7 +23,7 @@ export default function ModifyRecordPage({
   const convertedData = convertArcadeRecordPostDBColumnToItems(data);
 
   return (
-    <main className="w-full h-full max-w-3xl flex flex-col items-center px-4 sm:px-8 py-32 gap-8">
+    <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">기록 편집하기</h1>
       <RecordForm post={convertedData} />
     </main>

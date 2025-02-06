@@ -1,17 +1,17 @@
 'use client';
 
-import { useActionState, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { useActionState, useMemo, useState } from 'react';
 
 import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { methodDictionary } from '^/src/entities/dictionary/method';
 import { tagDictionary } from '^/src/entities/dictionary/tag';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
-import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
 
 import { postArcadeRecordAction } from './post-arcade-record-action';
 import { ArcadeRecordActionState } from './types';
@@ -104,7 +104,7 @@ export default function RecordForm({ post }: Props) {
 
   return (
     <form
-      className="w-full flex flex-col justify-center items-start gap-8 sm:px-16"
+      className="w-full flex flex-col justify-center items-start gap-8"
       action={formAction}
     >
       {post?.arcadeRecordId && (

@@ -83,3 +83,12 @@
 - Next Image에 fill 속성을 부여했는데 이미지가 페이지를 전부 다 덮는 문제.
   - Next Image 컴포넌트에 fill 속성을 부여할 때, style에 `position:absolute; height:100%; width:100%; left:0; top:0; right:0; bottom:0; color:transparent;` 값이 적용되기 때문이다.
   - 이를 해결하려면, 부모 컴포넌트의 style에 `position: relative`를 부여하자.
+- Dynamic path를 위해 페이지 컴포넌트에 Path Parameters를 Props(`params`)로 추가했을 때 await하라는 문제.
+  - `params should be awaited before using its properties.` 같은 에러가 발생한다.
+  - `params`와 `searchParams`는 Dynamic API 중 일부로, 페이지나 레이아웃, 메타데이터 API, 라우트 핸들러에 제공되는데, Next.js 15에서 Dynamic API를 비동기적으로 만들었기 때문이라고 한다.
+    - `params`와 `searchParams` 외에도, `next/headers` 패키지에 있는 `cookies()`, `draftMode()`, `headers()` 또한 Dynamic API라고 한다.
+  - 이를 해결하려면, 페이지 컴포넌트의 Props 중 `params`와 `searchParams`를 `Promise<{ 기존 파라미터 타입 }>` 타입으로 바꿔준 뒤, 각 `params`와 `searchParams`를 await하여 받아오는 로직을 함수 내용에 추가한다.
+    - 물론, Promise 객체를 await하는 내용을 추가하려면, 해당 페이지 컴포넌트를 async function으로 선언해야 한다.
+  - 근거
+    - https://nextjs.org/docs/messages/sync-dynamic-apis
+    - https://nextjs.org/docs/messages/sync-dynamic-apis#possible-ways-to-fix-it

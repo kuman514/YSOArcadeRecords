@@ -5,15 +5,14 @@ import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 
 interface Props {
-  params: {
+  params: Promise<{
     typeId: string;
     recordId: string;
-  };
+  }>;
 }
 
-export default async function ModifyRecordPage({
-  params: { typeId, recordId },
-}: Props) {
+export default async function ModifyRecordPage({ params }: Props) {
+  const { typeId, recordId } = await params;
   const data = getArcadeRecordPostArticle(typeId, recordId);
 
   if (!data) {

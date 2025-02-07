@@ -3,20 +3,19 @@ import { notFound } from 'next/navigation';
 
 import ArcadeRecordArticle from '^/src/features/arcade-record-article';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
+import { deleteArcadeRecordAction } from '^/src/features/arcade-record-article/delete-arcade-record-action';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 import { verifyAuth } from '^/src/shared/lib/auth';
-import { deleteArcadeRecordAction } from '^/src/features/arcade-record-article/delete-arcade-record-action';
 
 interface Props {
-  params: {
+  params: Promise<{
     typeId: string;
     recordId: string;
-  };
+  }>;
 }
 
-export default async function RecordArticlePage({
-  params: { typeId, recordId },
-}: Props) {
+export default async function RecordArticlePage({ params }: Props) {
+  const { typeId, recordId } = await params;
   const data = getArcadeRecordPostArticle(typeId, recordId);
   const user = await verifyAuth();
 

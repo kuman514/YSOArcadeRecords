@@ -1,0 +1,23 @@
+import Skeleton from '^/src/shared/skeleton';
+
+export default function RecordArticleLoadingPage() {
+  return (
+    <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
+      <Skeleton width="50%" height="2rem" borderRadius="0" />
+      <div className="w-full flex flex-col sm:flex-row sm:items-center gap-4">
+        <Skeleton width="12rem" height="12rem" borderRadius="0" />
+        <div className="w-1/2 flex flex-col gap-2">
+          <Skeleton width="100%" height="1rem" borderRadius="0" />
+          <Skeleton width="100%" height="1rem" borderRadius="0" />
+          <Skeleton width="100%" height="1rem" borderRadius="0" />
+          <Skeleton width="100%" height="1rem" borderRadius="0" />
+          <Skeleton width="100%" height="1rem" borderRadius="0" />
+        </div>
+      </div>
+      <div className="w-full flex flex-col gap-2">
+        <Skeleton width="50%" height="2rem" borderRadius="0" />
+        <Skeleton width="100%" height="12rem" borderRadius="0" />
+      </div>
+    </main>
+  );
+}

@@ -16,7 +16,7 @@ export async function deleteArcadeRecordAction(formData: FormData) {
   }
 
   const statement = db.prepare(`
-    DELETE FROM records WHERE arcadeRecordId = ?
+    DELETE FROM records WHERE arcade_record_id = ?
   `);
 
   statement.run(arcadeRecordId);

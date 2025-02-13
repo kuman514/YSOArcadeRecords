@@ -33,7 +33,7 @@ export default async function RecordArticlePage({ params }: Props) {
           type="hidden"
           id="arcadeRecordId"
           name="arcadeRecordId"
-          value={data.arcadeRecordId}
+          value={convertedData.arcadeRecordId}
         />
         <button type="submit">삭제하기</button>
       </form>

@@ -1,5 +1,5 @@
-import { ArcadeInfo, Method, PlayerInfo } from './arcade-record-compositions';
 import { ArcadeRecord } from './arcade-record';
+import { ArcadeInfo, Method, PlayerInfo } from './arcade-record-compositions';
 import {
   Author,
   Commentable,
@@ -26,23 +26,23 @@ export interface ArcadeRecordPost
 
 export interface ArcadeRecordPostDBColumn {
   id: ArcadeRecordPost['postId'];
-  arcadeRecordId: ArcadeRecordPost['arcadeRecordId'];
+  arcade_record_id: ArcadeRecordPost['arcadeRecordId'];
   title: ArcadeRecordPost['title'];
-  authorId: Author['authorId'];
-  arcadeId: ArcadeInfo['arcadeId'];
-  methodId: Method['methodId'];
+  author_id: Author['authorId'];
+  arcade_id: ArcadeInfo['arcadeId'];
+  method_id: Method['methodId'];
   players: PlayerInfo['players'];
-  playerSide: PlayerInfo['playerSide'];
+  player_side: PlayerInfo['playerSide'];
   evaluation: ArcadeRecordPost['evaluation'];
   stage: ArcadeRecordPost['stage'];
   rank?: ArcadeRecordPost['rank'];
   comment: ArcadeRecordPost['comment'];
-  tagIds: string;
+  tag_ids: string;
   note?: ArcadeRecordPost['note'];
-  youTubeId?: ArcadeRecordPost['youTubeId'];
-  thumbnailUrl: ArcadeRecordPost['thumbnailUrl'];
-  imageUrls: string;
-  achievedAt: string;
-  createdAt: string;
-  modifiedAt: string;
+  youtube_id?: ArcadeRecordPost['youTubeId'];
+  thumbnail_url: ArcadeRecordPost['thumbnailUrl'];
+  image_urls: string;
+  achieved_at: string;
+  created_at: string;
+  modified_at: string;
 }

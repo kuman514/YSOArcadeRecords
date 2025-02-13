@@ -12,6 +12,6 @@ export function getArcadeRecordPostArticle(
   const statement = db.prepare<
     [ArcadeInfo['arcadeId'], ArcadeRecordPost['arcadeRecordId']],
     ArcadeRecordPostDBColumn
-  >('SELECT * FROM records WHERE arcadeId = ? and arcadeRecordId = ?');
+  >('SELECT * FROM records WHERE arcade_id = ? and arcade_record_id = ?');
   return statement.get(arcadeId, arcadeRecordId);
 }

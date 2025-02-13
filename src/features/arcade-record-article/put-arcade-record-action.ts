@@ -130,7 +130,7 @@ export async function putArcadeRecordAction(
   );
 
   const statement = db.prepare(`
-    UPDATE records SET title = ?, arcadeId = ?, methodId = ?, players = ?, playerSide = ?, evaluation = ?, stage = ?, rank = ?, comment = ?, tagIds = ?, note = ?, youTubeId = ?, thumbnailUrl = ?, imageUrls = ?, achievedAt = ?, modifiedAt = ? WHERE arcadeRecordId = ?
+    UPDATE records SET title = ?, arcade_id = ?, method_id = ?, players = ?, player_side = ?, evaluation = ?, stage = ?, rank = ?, comment = ?, tag_ids = ?, note = ?, youtube_id = ?, thumbnail_url = ?, image_urls = ?, achieved_at = ?, modified_at = ? WHERE arcade_record_id = ?
   `);
 
   const createdDate = new Date();

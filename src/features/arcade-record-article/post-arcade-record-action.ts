@@ -112,7 +112,7 @@ export async function postArcadeRecordAction(
   );
 
   const statement = db.prepare(`
-    INSERT INTO records (arcadeRecordId, title, authorId, arcadeId, methodId, players, playerSide, evaluation, stage, rank, comment, tagIds, note, youTubeId, thumbnailUrl, imageUrls, achievedAt, createdAt, modifiedAt)
+    INSERT INTO records (arcade_record_id, title, author_id, arcade_id, method_id, players, player_side, evaluation, stage, rank, comment, tag_ids, note, youtube_id, thumbnail_url, image_urls, achieved_at, created_at, modified_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 

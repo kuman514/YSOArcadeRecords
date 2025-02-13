@@ -9,49 +9,49 @@ import { Tag } from '^/src/entities/types/post-compositions';
 
 export function convertArcadeRecordPostDBColumnToItems({
   id,
-  arcadeRecordId,
+  arcade_record_id,
   title,
-  authorId,
-  arcadeId,
-  methodId,
+  author_id,
+  arcade_id,
+  method_id,
   players,
-  playerSide,
+  player_side,
   evaluation,
   stage,
   rank,
   comment,
-  tagIds,
+  tag_ids,
   note,
-  youTubeId,
-  thumbnailUrl,
-  imageUrls,
-  achievedAt,
-  createdAt,
-  modifiedAt,
+  youtube_id,
+  thumbnail_url,
+  image_urls,
+  achieved_at,
+  created_at,
+  modified_at,
 }: ArcadeRecordPostDBColumn): ArcadeRecordPost {
-  const parsedTagIds: Tag['tagId'][] = JSON.parse(tagIds);
-  const parsedImageUrls: ArcadeRecordPost['imageUrls'] = JSON.parse(imageUrls);
+  const parsedTagIds: Tag['tagId'][] = JSON.parse(tag_ids);
+  const parsedImageUrls: ArcadeRecordPost['imageUrls'] = JSON.parse(image_urls);
 
   return {
     postId: id,
-    arcadeRecordId,
+    arcadeRecordId: arcade_record_id,
     title,
     author: {
-      authorId,
+      authorId: author_id,
       name: 'kuman514',
       email: 'hadjadj0@gmail.com',
     },
     arcade: {
-      arcadeId,
-      label: arcadeDictionary[arcadeId] ?? arcadeId,
+      arcadeId: arcade_id,
+      label: arcadeDictionary[arcade_id] ?? arcade_id,
     },
     method: {
-      methodId,
-      label: methodDictionary[methodId] ?? methodId,
+      methodId: method_id,
+      label: methodDictionary[method_id] ?? method_id,
     },
     playerInfo: {
       players,
-      playerSide,
+      playerSide: player_side,
     },
     evaluation,
     stage,
@@ -62,11 +62,11 @@ export function convertArcadeRecordPostDBColumnToItems({
       label: tagDictionary[tagId] ?? tagId,
     })),
     note,
-    youTubeId,
-    thumbnailUrl,
+    youTubeId: youtube_id,
+    thumbnailUrl: thumbnail_url,
     imageUrls: parsedImageUrls,
-    achievedAt: new Date(achievedAt),
-    createdAt: new Date(createdAt),
-    modifiedAt: new Date(modifiedAt),
+    achievedAt: new Date(achieved_at),
+    createdAt: new Date(created_at),
+    modifiedAt: new Date(modified_at),
   };
 }

@@ -15,6 +15,6 @@ export function getArcadeRecordPostListWithArcadeId(
   const statement = db.prepare<
     ArcadeInfo['arcadeId'],
     ArcadeRecordPostDBColumn
-  >('SELECT * FROM records WHERE arcadeId = ?');
+  >('SELECT * FROM records WHERE arcade_id = ?');
   return statement.all(arcadeId);
 }

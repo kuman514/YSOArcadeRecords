@@ -67,7 +67,6 @@ export default function ArcadeRecordArticle({ post }: Props) {
     }
   })();
 
-  console.log(post.rank);
   const renderRank = post.rank ? (
     <li>
       <span className="font-bold">등급</span>: {post.rank}

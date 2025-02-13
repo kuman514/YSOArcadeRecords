@@ -1,4 +1,3 @@
-import ArcadeRecordThumbnail from '^/src/entities/arcade-record-thumbnail';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import Tag from '^/src/shared/tag';
 import UnorderedList from '^/src/shared/unordered-list';
@@ -6,6 +5,7 @@ import { parseDateToString } from '^/src/shared/util/parse-date';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 
+import ArcadeRecordThumbnail from './arcade-record-thumbnail';
 import { PLAYER_CLASS } from './constants';
 
 interface Props {

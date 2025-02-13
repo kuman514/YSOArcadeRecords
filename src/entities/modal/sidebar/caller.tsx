@@ -1,0 +1,24 @@
+'use client';
+
+import StackSvgRepoComSvg from '^/public/icons/stack-svgrepo-com.svg';
+
+import { useModalStore } from '../store';
+import { ModalType } from '../types';
+
+export default function SidebarCaller() {
+  const setModal = useModalStore((state) => state.setModal);
+
+  return (
+    <button
+      type="button"
+      className="w-12 h-12 p-2"
+      onClick={() => {
+        setModal({
+          type: ModalType.SIDEBAR,
+        });
+      }}
+    >
+      <StackSvgRepoComSvg width="100%" height="100%" fill="white" />
+    </button>
+  );
+}

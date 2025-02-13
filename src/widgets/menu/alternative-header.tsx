@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import SidebarCaller from './sidebar-caller';
+import SidebarCaller from '^/src/entities/modal/sidebar/caller';
 
 export default function AlternativeHeader() {
   const [isShow, setIsShow] = useState<boolean>(false);

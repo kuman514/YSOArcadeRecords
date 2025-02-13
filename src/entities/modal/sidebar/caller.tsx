@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import StackSvgRepoComSvg from '^/public/icons/stack-svgrepo-com.svg';
 
 import { useModalStore } from '../store';
@@ -18,7 +20,11 @@ export default function SidebarCaller() {
         });
       }}
     >
-      <StackSvgRepoComSvg width="100%" height="100%" fill="white" />
+      <Image
+        src={StackSvgRepoComSvg}
+        className="w-full h-full fill-white"
+        alt="사이드바 열기"
+      />
     </button>
   );
 }

@@ -42,7 +42,7 @@ export default function PostListItem({
 
   const renderYouTubeMark = isHaveYouTube ? (
     <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-start items-end z-1 px-4 py-3">
-      <YouTubeMarkSvg />
+      <Image src={YouTubeMarkSvg} alt="YouTube 영상 포함" />
     </div>
   ) : null;
 

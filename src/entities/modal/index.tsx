@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect } from 'react';
 
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
@@ -42,7 +43,11 @@ export default function Modal() {
           setModal({ type: ModalType.OFF });
         }}
       >
-        <CloseSvgRepoComSvg width="100%" height="100%" fill="#ffffff" />
+        <Image
+          src={CloseSvgRepoComSvg}
+          className="w-full h-full fill-white"
+          alt="모달 닫기"
+        />
       </button>
     </div>
   ) : null;

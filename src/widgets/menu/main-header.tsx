@@ -12,10 +12,6 @@ export default function MainHeader() {
       <header
         className={`w-full h-32 flex flex-row items-end pl-6 pr-6 sm:pl-8 sm:pr-12 pb-4 bg-primary`}
       >
-        {/**
-         * @todo
-         * Resolve prerender error for sidebar caller.
-         */}
         <SidebarCaller />
         <div className="w-full flex flex-col">
           <AuthLink />
@@ -40,10 +36,6 @@ export default function MainHeader() {
           </div>
         </div>
       </header>
-      {/**
-       * @todo
-       * Resolve prerender error for alternative header.
-       */}
       <AlternativeHeader />
     </>
   );

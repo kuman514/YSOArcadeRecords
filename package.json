@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@lucia-auth/adapter-sqlite": "^3.0.2",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.48.1",
     "better-sqlite3": "^11.8.1",
     "lucia": "^3.2.2",
     "next": "15.1.1",

@@ -2,11 +2,9 @@
 
 import { redirect } from 'next/navigation';
 
-import { getUserByEmail } from '^/src/features/auth/user';
-import { createAuthSession } from '^/src/shared/lib/auth';
 import { checkIsEmailValid } from '^/src/shared/lib/email';
-import { verifyPassword } from '^/src/shared/lib/hash';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 import { AuthActionState } from './action-state';
 
@@ -33,26 +31,20 @@ export async function signInAction(_: AuthActionState, formData: FormData) {
     return { errors };
   }
 
-  const existingUser = getUserByEmail(email);
+  const supabase = await createServerSideClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  if (!existingUser) {
+  if (error) {
+    console.log(error.name);
     return {
       errors: {
-        email: 'This account does not exist.',
+        password: 'Failed to sign in.',
       },
     };
   }
 
-  const isValidPassword = verifyPassword(existingUser.password, password);
-
-  if (!isValidPassword) {
-    return {
-      errors: {
-        password: 'Wrong password.',
-      },
-    };
-  }
-
-  await createAuthSession(existingUser.id);
   redirect('/');
 }

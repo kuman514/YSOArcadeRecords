@@ -1,12 +1,15 @@
 import Link from 'next/link';
 
 import { signOutAction } from '^/src/features/auth/sign-out-action';
-import { verifyAuth } from '^/src/shared/lib/auth';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export default async function AuthLink() {
-  const result = await verifyAuth();
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
 
-  const renderLinkArea = result.user ? (
+  const isSignedIn = !(error || !data?.user);
+
+  const renderLinkArea = isSignedIn ? (
     <>
       <Link href="/create/records">새기록</Link>
       <Link href="/create/reviews">새리뷰</Link>

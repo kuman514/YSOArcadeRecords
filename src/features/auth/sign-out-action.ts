@@ -2,9 +2,11 @@
 
 import { redirect } from 'next/navigation';
 
-import { destroySession } from '^/src/shared/lib/auth';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function signOutAction() {
-  destroySession();
+  const supabase = await createServerSideClient();
+
+  await supabase.auth.signOut();
   redirect('/');
 }

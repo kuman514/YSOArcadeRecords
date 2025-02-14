@@ -1,13 +1,14 @@
 import { redirect } from 'next/navigation';
 
 import SignInForm from '^/src/features/auth/sign-in-form';
-import { verifyAuth } from '^/src/shared/lib/auth';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export default async function SignInPage() {
-  const result = await verifyAuth();
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
 
-  if (result.user) {
-    return redirect('/');
+  if (!error || data?.user) {
+    redirect('/');
   }
 
   return (

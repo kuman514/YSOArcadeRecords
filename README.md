@@ -97,3 +97,13 @@
   - 근거
     - https://nextjs.org/docs/messages/sync-dynamic-apis
     - https://nextjs.org/docs/messages/sync-dynamic-apis#possible-ways-to-fix-it
+- 계속된 렌더 트리 불일치 에러
+  - `npm run build`에서 자꾸 `Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object.` 같은게 뜨거나, `npm run build`가 성공하더라도 `npm run start`로 실행된 환경에서 [Minified React Error #130](https://react.dev/errors/130?args%5B%5D=object&args%5B%5D=)이 나오는 현상이 발생.
+    - 어떤 곳이든 전부 클라이언트 컴포넌트로 만들거나, 앱이 전역 상태를 사용하도록 구조를 변경해도, 동일한 현상이 발생한다.
+  - SVG가 사용된 부분을 모두 제거했더니 `npm run build`는 물론 `npm run start` 환경에서까지 잘 작동한다.
+  - 그래서 원인이 무엇이었나?
+    - 당시 SVG를 컴포넌트로 변경하기 위해 사용한 패키지가 `svgr-webpack`이었다.
+      - `next/image`에 SVG를 넣는 것보단 `svgr-webpack`을 사용하여 컴포넌트화 시키는 것이 `fill`이나 `stroke`같은 더욱 유연한 스타일링을 적용할 수 있었기에 설치 후 설정했었다.
+      - 확인해보니, `svgr-webpack`으로 전환된 SVG 컴포넌트들은 클라이언트 컴포넌트.
+      - `svgr-webpack`으로 전환된 SVG 컴포넌트를 제거하고 그 자리에 임시 텍스트를 넣으니, 빌드 환경에서의 동작까지 전부 에러 없이 진행되었다.
+    - 프로젝트 내에서의 SVG 또한, `fill`이나 `stroke`같은 스타일링을 각각 한 가지만 사용한지라, 유연한 스타일링이 필요하지 않을 것이라 판단, `svgr-webpack`을 제거하고 `next/image`에 SVG를 넣는 방법으로 회귀하였다.

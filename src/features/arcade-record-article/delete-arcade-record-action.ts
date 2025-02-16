@@ -3,15 +3,16 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { destroySession, verifyAuth } from '^/src/shared/lib/auth';
 import db from '^/src/shared/lib/db';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function deleteArcadeRecordAction(formData: FormData) {
   const arcadeRecordId = formData.get('arcadeRecordId')?.toString();
 
-  const userInfo = await verifyAuth();
-  if (!userInfo || !userInfo.user) {
-    destroySession();
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
     redirect('/');
   }
 

@@ -4,10 +4,10 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
-import { destroySession, verifyAuth } from '^/src/shared/lib/auth';
 import db from '^/src/shared/lib/db';
-import { saveImage } from '^/src/shared/lib/image';
 
+import { saveImage } from '^/src/shared/supabase/image';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ArcadeRecordActionState } from './types';
 
 export async function postArcadeRecordAction(
@@ -31,9 +31,10 @@ export async function postArcadeRecordAction(
   const thumbnail = formData.get('thumbnail') as File;
   const originalImages = formData.getAll('originalImages') as File[];
 
-  const userInfo = await verifyAuth();
-  if (!userInfo || !userInfo.user) {
-    destroySession();
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
     redirect('/');
   }
 
@@ -93,21 +94,19 @@ export async function postArcadeRecordAction(
   }
 
   const arcadeRecordId = uuidv4();
+  const directory = `${arcadeId}/${arcadeRecordId}`;
+  const timestamp = new Date().toISOString();
 
   const thumbnailUrl = await saveImage(
     thumbnail,
-    `${arcadeId}--${arcadeRecordId}--thumbnail`,
-    'records'
+    `thumbnail-${timestamp}`,
+    directory
   );
 
   const validImages = originalImages.filter((image) => image.size > 0);
   const originalImageUrls = await Promise.all<string>(
     validImages.map((file, index) =>
-      saveImage(
-        file,
-        `${arcadeId}--${arcadeRecordId}--original-${index + 1}`,
-        'records'
-      )
+      saveImage(file, `original-${timestamp}-${index + 1}`, directory)
     )
   );
 
@@ -124,7 +123,7 @@ export async function postArcadeRecordAction(
   statement.run(
     arcadeRecordId,
     title,
-    userInfo.user.id,
+    data.user.id,
     arcadeId,
     methodId,
     players,

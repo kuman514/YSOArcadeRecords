@@ -19,7 +19,7 @@ export async function saveImage(
 
   const {
     data: { publicUrl },
-  } = await supabase.storage
+  } = supabase.storage
     .from(process.env.NEXT_PUBLIC_SUPABASE_UPLOAD_BUCKET_ID!)
     .getPublicUrl(result.path);
 

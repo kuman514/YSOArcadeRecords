@@ -3,10 +3,10 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { destroySession, verifyAuth } from '^/src/shared/lib/auth';
 import db from '^/src/shared/lib/db';
-import { saveImage } from '^/src/shared/lib/image';
 
+import { saveImage } from '^/src/shared/supabase/image';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ArcadeRecordActionState } from './types';
 
 export async function putArcadeRecordAction(
@@ -38,9 +38,10 @@ export async function putArcadeRecordAction(
   const thumbnail = formData.get('thumbnail') as File;
   const originalImages = formData.getAll('originalImages') as File[];
 
-  const userInfo = await verifyAuth();
-  if (!userInfo || !userInfo.user) {
-    destroySession();
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
     redirect('/');
   }
 
@@ -107,24 +108,19 @@ export async function putArcadeRecordAction(
     return { errors };
   }
 
+  const directory = `${arcadeId}/${arcadeRecordId}`;
+  const timestamp = new Date().toISOString();
+
   const thumbnailUrl =
     thumbnail.name !== 'undefined'
-      ? await saveImage(
-          thumbnail,
-          `${arcadeId}--${arcadeRecordId}--thumbnail`,
-          'records'
-        )
+      ? await saveImage(thumbnail, `thumbnail-${timestamp}`, directory)
       : presentThumbnailUrl;
 
   const validImages = originalImages.filter((image) => image.size > 0);
   const originalImageUrls = presentImageUrls.concat(
     await Promise.all<string>(
       validImages.map((file, index) =>
-        saveImage(
-          file,
-          `${arcadeId}--${arcadeRecordId}--original-${index + 1}`,
-          'records'
-        )
+        saveImage(file, `original-${timestamp}-${index + 1}`, directory)
       )
     )
   );
@@ -158,6 +154,6 @@ export async function putArcadeRecordAction(
     arcadeRecordId
   );
 
-  revalidatePath('/records');
+  revalidatePath(`/records/${arcadeId}/${arcadeRecordId}`);
   redirect(`/records/${arcadeId}/${arcadeRecordId}`);
 }

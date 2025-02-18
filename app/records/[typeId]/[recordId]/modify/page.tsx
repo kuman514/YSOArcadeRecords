@@ -21,7 +21,7 @@ export default async function ModifyRecordPage({ params }: Props) {
   }
 
   const { typeId, recordId } = await params;
-  const article = getArcadeRecordPostArticle(typeId, recordId);
+  const article = await getArcadeRecordPostArticle(typeId, recordId);
 
   if (!article) {
     notFound();

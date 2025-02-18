@@ -29,7 +29,7 @@ export function convertArcadeRecordPostDBColumnToItems({
   created_at,
   modified_at,
 }: ArcadeRecordPostDBColumn): ArcadeRecordPost {
-  const parsedTagIds: Tag['tagId'][] = JSON.parse(tag_ids);
+  const parsedTagIds: Tag['tagId'][] = JSON.parse(tag_ids ?? '[]');
   const parsedImageUrls: ArcadeRecordPost['imageUrls'] = JSON.parse(image_urls);
 
   return {

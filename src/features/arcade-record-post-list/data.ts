@@ -1,20 +1,19 @@
 import { ArcadeInfo } from '^/src/entities/types/arcade-record-compositions';
 import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
-import db from '^/src/shared/lib/db';
+import { readData } from '^/src/shared/supabase/database';
 
-export function getArcadeRecordPostList() {
-  const statement = db.prepare<void[], ArcadeRecordPostDBColumn>(
-    'SELECT * FROM records'
-  );
-  return statement.all();
+export async function getArcadeRecordPostList() {
+  const result = await readData<ArcadeRecordPostDBColumn[]>('records');
+  return result;
 }
 
-export function getArcadeRecordPostListWithArcadeId(
+export async function getArcadeRecordPostListWithArcadeId(
   arcadeId: ArcadeInfo['arcadeId']
 ) {
-  const statement = db.prepare<
-    ArcadeInfo['arcadeId'],
-    ArcadeRecordPostDBColumn
-  >('SELECT * FROM records WHERE arcade_id = ?');
-  return statement.all(arcadeId);
+  const result = await readData<ArcadeRecordPostDBColumn[]>('records', {
+    column: 'arcade_id',
+    value: arcadeId,
+  });
+  console.log(result, arcadeId);
+  return result;
 }

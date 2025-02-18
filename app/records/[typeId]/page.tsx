@@ -11,9 +11,10 @@ interface Props {
 
 export default async function RecordListByTypeIdPage({ params }: Props) {
   const { typeId } = await params;
-  const data = getArcadeRecordPostListWithArcadeId(typeId).map(
+  const data = (await getArcadeRecordPostListWithArcadeId(typeId)).map(
     convertArcadeRecordPostDBColumnToItems
   );
+
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
     memo: datum.note ?? '메모 없음',

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import db from '^/src/shared/lib/db';
+import { deleteData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function deleteArcadeRecordAction(formData: FormData) {
@@ -16,11 +16,10 @@ export async function deleteArcadeRecordAction(formData: FormData) {
     redirect('/');
   }
 
-  const statement = db.prepare(`
-    DELETE FROM records WHERE arcade_record_id = ?
-  `);
-
-  statement.run(arcadeRecordId);
+  await deleteData('records', {
+    column: 'arcade_record_id',
+    value: arcadeRecordId!,
+  });
 
   revalidatePath('/records');
   redirect(`/records`);

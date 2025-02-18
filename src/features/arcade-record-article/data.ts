@@ -3,15 +3,22 @@ import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
-import db from '^/src/shared/lib/db';
+import { readData } from '^/src/shared/supabase/database';
 
-export function getArcadeRecordPostArticle(
+export async function getArcadeRecordPostArticle(
   arcadeId: ArcadeInfo['arcadeId'],
   arcadeRecordId: ArcadeRecordPost['arcadeRecordId']
 ) {
-  const statement = db.prepare<
-    [ArcadeInfo['arcadeId'], ArcadeRecordPost['arcadeRecordId']],
-    ArcadeRecordPostDBColumn
-  >('SELECT * FROM records WHERE arcade_id = ? and arcade_record_id = ?');
-  return statement.get(arcadeId, arcadeRecordId);
+  const result = await readData<ArcadeRecordPostDBColumn[]>(
+    'records',
+    {
+      column: 'arcade_id',
+      value: arcadeId,
+    },
+    {
+      column: 'arcade_record_id',
+      value: arcadeRecordId,
+    }
+  );
+  return result[0];
 }

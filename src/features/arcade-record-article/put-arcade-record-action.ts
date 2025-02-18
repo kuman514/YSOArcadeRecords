@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import db from '^/src/shared/lib/db';
-
+import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
+import { updateData } from '^/src/shared/supabase/database';
 import { saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ArcadeRecordActionState } from './types';
@@ -125,33 +125,35 @@ export async function putArcadeRecordAction(
     )
   );
 
-  const statement = db.prepare(`
-    UPDATE records SET title = ?, arcade_id = ?, method_id = ?, players = ?, player_side = ?, evaluation = ?, stage = ?, rank = ?, comment = ?, tag_ids = ?, note = ?, youtube_id = ?, thumbnail_url = ?, image_urls = ?, achieved_at = ?, modified_at = ? WHERE arcade_record_id = ?
-  `);
-
   const createdDate = new Date();
   const formattedDate = `${createdDate.getFullYear()}-${String(
     createdDate.getMonth() + 1
   ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
 
-  statement.run(
-    title,
-    arcadeId,
-    methodId,
-    players,
-    playerSide,
-    evaluation,
-    stage,
-    rank,
-    comment,
-    tagIds ? JSON.stringify(tagIds) : null,
-    note ?? null,
-    youTubeId ?? null,
-    thumbnailUrl,
-    JSON.stringify(originalImageUrls),
-    achievedAt,
-    formattedDate,
-    arcadeRecordId
+  await updateData<Partial<ArcadeRecordPostDBColumn>>(
+    'records',
+    {
+      title: title!,
+      arcade_id: arcadeId!,
+      method_id: methodId!,
+      players: Number(players),
+      player_side: Number(playerSide),
+      evaluation: evaluation!,
+      stage: stage!,
+      rank,
+      comment: comment!,
+      tag_ids: JSON.stringify(tagIds),
+      note,
+      youtube_id: youTubeId,
+      thumbnail_url: thumbnailUrl,
+      image_urls: JSON.stringify(originalImageUrls),
+      achieved_at: achievedAt!,
+      modified_at: formattedDate,
+    },
+    {
+      column: 'arcade_record_id',
+      value: arcadeRecordId!,
+    }
   );
 
   revalidatePath(`/records/${arcadeId}/${arcadeRecordId}`);

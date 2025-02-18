@@ -4,8 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
-import db from '^/src/shared/lib/db';
-
+import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
+import { addData } from '^/src/shared/supabase/database';
 import { saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ArcadeRecordActionState } from './types';
@@ -110,37 +110,32 @@ export async function postArcadeRecordAction(
     )
   );
 
-  const statement = db.prepare(`
-    INSERT INTO records (arcade_record_id, title, author_id, arcade_id, method_id, players, player_side, evaluation, stage, rank, comment, tag_ids, note, youtube_id, thumbnail_url, image_urls, achieved_at, created_at, modified_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
   const createdDate = new Date();
   const formattedDate = `${createdDate.getFullYear()}-${String(
     createdDate.getMonth() + 1
   ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
 
-  statement.run(
-    arcadeRecordId,
-    title,
-    data.user.id,
-    arcadeId,
-    methodId,
-    players,
-    playerSide,
-    evaluation,
-    stage,
+  await addData<Omit<ArcadeRecordPostDBColumn, 'id'>>('records', {
+    title: title!,
+    arcade_id: arcadeId!,
+    arcade_record_id: arcadeRecordId!,
+    method_id: methodId!,
+    author_id: data.user.id,
+    players: Number(players),
+    player_side: Number(playerSide),
+    evaluation: evaluation!,
+    stage: stage!,
     rank,
-    comment,
-    tagIds ? JSON.stringify(tagIds) : null,
-    note ?? null,
-    youTubeId ?? null,
-    thumbnailUrl,
-    JSON.stringify(originalImageUrls),
-    achievedAt,
-    formattedDate,
-    formattedDate
-  );
+    comment: comment!,
+    tag_ids: JSON.stringify(tagIds),
+    note,
+    youtube_id: youTubeId,
+    thumbnail_url: thumbnailUrl,
+    image_urls: JSON.stringify(originalImageUrls),
+    achieved_at: achievedAt!,
+    created_at: formattedDate,
+    modified_at: formattedDate,
+  });
 
   revalidatePath('/records');
   redirect(`/records/${arcadeId}/${arcadeRecordId}`);

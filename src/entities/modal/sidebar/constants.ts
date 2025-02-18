@@ -14,7 +14,7 @@ export const LINK_TREES: LinkTreeNode[] = [
         label: '도돈파치(1997) C-Shot',
       },
       {
-        href: '/records/galaga-arrangement',
+        href: '/records/galagaarrangement',
         label: '갤러그 어레인지먼트',
       },
       {

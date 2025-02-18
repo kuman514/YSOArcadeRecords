@@ -3,10 +3,11 @@ import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-post-list/data';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 
-export default function RecordListPage() {
-  const data = getArcadeRecordPostList().map(
+export default async function RecordListPage() {
+  const data = (await getArcadeRecordPostList()).map(
     convertArcadeRecordPostDBColumnToItems
   );
+
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
     memo: datum.note ?? '메모 없음',

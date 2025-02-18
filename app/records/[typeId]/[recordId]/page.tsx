@@ -19,7 +19,7 @@ export default async function RecordArticlePage({ params }: Props) {
   const { data, error } = await supabase.auth.getUser();
 
   const { typeId, recordId } = await params;
-  const article = getArcadeRecordPostArticle(typeId, recordId);
+  const article = await getArcadeRecordPostArticle(typeId, recordId);
 
   if (!article) {
     notFound();

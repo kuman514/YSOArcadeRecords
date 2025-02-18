@@ -38,7 +38,6 @@ export async function signInAction(_: AuthActionState, formData: FormData) {
   });
 
   if (error) {
-    console.log(error.name);
     return {
       errors: {
         password: 'Failed to sign in.',

@@ -14,6 +14,5 @@ export async function getArcadeRecordPostListWithArcadeId(
     column: 'arcade_id',
     value: arcadeId,
   });
-  console.log(result, arcadeId);
   return result;
 }

@@ -9,8 +9,8 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
-    typeId: string;
-    recordId: string;
+    arcadeId: string;
+    arcadeRecordId: string;
   }>;
 }
 
@@ -18,8 +18,8 @@ export default async function RecordArticlePage({ params }: Props) {
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
 
-  const { typeId, recordId } = await params;
-  const article = await getArcadeRecordPostArticle(typeId, recordId);
+  const { arcadeId, arcadeRecordId } = await params;
+  const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
 
   if (!article) {
     notFound();
@@ -29,7 +29,9 @@ export default async function RecordArticlePage({ params }: Props) {
 
   const renderModifyButton = !(error || !data?.user) ? (
     <div className="w-full flex flex-row justify-end items-center gap-4">
-      <Link href={`/records/${typeId}/${recordId}/modify`}>수정하기</Link>
+      <Link href={`/records/${arcadeId}/${arcadeRecordId}/modify`}>
+        수정하기
+      </Link>
       <form action={deleteArcadeRecordAction}>
         <input
           type="hidden"

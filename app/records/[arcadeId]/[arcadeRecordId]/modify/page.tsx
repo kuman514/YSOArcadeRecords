@@ -7,8 +7,8 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
-    typeId: string;
-    recordId: string;
+    arcadeId: string;
+    arcadeRecordId: string;
   }>;
 }
 
@@ -20,8 +20,8 @@ export default async function ModifyRecordPage({ params }: Props) {
     redirect('/');
   }
 
-  const { typeId, recordId } = await params;
-  const article = await getArcadeRecordPostArticle(typeId, recordId);
+  const { arcadeId, arcadeRecordId } = await params;
+  const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
 
   if (!article) {
     notFound();

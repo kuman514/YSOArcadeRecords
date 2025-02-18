@@ -5,13 +5,13 @@ import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-re
 
 interface Props {
   params: Promise<{
-    typeId: string;
+    arcadeId: string;
   }>;
 }
 
 export default async function RecordListByTypeIdPage({ params }: Props) {
-  const { typeId } = await params;
-  const data = (await getArcadeRecordPostListWithArcadeId(typeId)).map(
+  const { arcadeId } = await params;
+  const data = (await getArcadeRecordPostListWithArcadeId(arcadeId)).map(
     convertArcadeRecordPostDBColumnToItems
   );
 
@@ -27,7 +27,7 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
-      <h1 className="text-4xl font-bold">{typeId} 기록 목록</h1>
+      <h1 className="text-4xl font-bold">{arcadeId} 기록 목록</h1>
       <ArcadeRecordPostList arcadeRecordPostListItems={postListItems} />
     </main>
   );

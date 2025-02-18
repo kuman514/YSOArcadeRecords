@@ -2,12 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
-import {
-  changePasswordByEmail,
-  getUserByEmail,
-} from '^/src/features/auth/user';
 import { checkIsEmailValid } from '^/src/shared/lib/email';
-import { hashUserPassword } from '^/src/shared/lib/hash';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
 
 import { AuthActionState } from './action-state';
@@ -38,22 +33,10 @@ export async function changePasswordAction(
     return { errors };
   }
 
-  const existingUser = getUserByEmail(email);
+  /**
+   * @todo
+   * Add codes for changing password that fits to supabase
+   */
 
-  if (!existingUser) {
-    return {
-      errors: {
-        email: 'This account does not exist.',
-      },
-    };
-  }
-
-  const hashedPassword = hashUserPassword(password);
-
-  try {
-    changePasswordByEmail(email, hashedPassword);
-    redirect('/');
-  } catch (error) {
-    throw error;
-  }
+  redirect('/');
 }

@@ -1,15 +1,3 @@
-export interface Author {
-  authorId: string;
-  name: string;
-  email: string;
-}
-
-export interface HavingAuthor {
-  author: Author;
-}
-
-// ===========================================
-
 export interface Tag {
   tagId: string;
   label: string;

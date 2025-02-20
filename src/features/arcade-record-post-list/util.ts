@@ -11,7 +11,6 @@ export function convertArcadeRecordPostDBColumnToItems({
   id,
   arcade_record_id,
   title,
-  author_id,
   arcade_id,
   method_id,
   players,
@@ -36,11 +35,6 @@ export function convertArcadeRecordPostDBColumnToItems({
     postId: id,
     arcadeRecordId: arcade_record_id,
     title,
-    author: {
-      authorId: author_id,
-      name: 'kuman514',
-      email: 'hadjadj0@gmail.com',
-    },
     arcade: {
       arcadeId: arcade_id,
       label: arcadeDictionary[arcade_id] ?? arcade_id,

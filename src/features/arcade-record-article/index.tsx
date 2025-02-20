@@ -17,16 +17,16 @@ export default function ArcadeRecordArticle({ post }: Props) {
   const modifiedAtText = parseDateToString(post.modifiedAt);
   const evaluationObject = parseEvaluation(post.evaluation);
 
-  const renderPostDate =
-    createdAtText === modifiedAtText ? (
+  const renderCreatedAt = (
+    <span className="w-full text-right text-sm">작성일자: {createdAtText}</span>
+  );
+
+  const renderModifiedAt =
+    createdAtText !== modifiedAtText ? (
       <span className="w-full text-right text-sm">
-        작성일자: {createdAtText}
+        수정일자: {modifiedAtText}
       </span>
-    ) : (
-      <span className="w-full text-right text-sm">
-        작성일자: {createdAtText} / 수정일자: {modifiedAtText}
-      </span>
-    );
+    ) : null;
 
   const renderPlayerInfo =
     post.playerInfo.players === 1 ? (
@@ -113,10 +113,8 @@ export default function ArcadeRecordArticle({ post }: Props) {
     <>
       <h1 className="text-4xl font-bold">{post.title}</h1>
       <div className="w-full flex flex-col">
-        <span className="w-full text-right text-sm">
-          작성자: {post.author.name}
-        </span>
-        {renderPostDate}
+        {renderCreatedAt}
+        {renderModifiedAt}
       </div>
       <section className="w-full flex flex-col sm:flex-row sm:items-center gap-2">
         <ArcadeRecordThumbnail

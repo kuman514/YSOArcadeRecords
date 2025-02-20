@@ -120,7 +120,6 @@ export async function postArcadeRecordAction(
     arcade_id: arcadeId!,
     arcade_record_id: arcadeRecordId!,
     method_id: methodId!,
-    author_id: data.user.id,
     players: Number(players),
     player_side: Number(playerSide),
     evaluation: evaluation!,

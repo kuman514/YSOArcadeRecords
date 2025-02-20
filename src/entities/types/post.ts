@@ -1,16 +1,14 @@
 import { ArcadeRecord } from './arcade-record';
 import { ArcadeInfo, Method, PlayerInfo } from './arcade-record-compositions';
 import {
-  Author,
   Commentable,
-  HavingAuthor,
   HavingImages,
   HavingThumbnail,
   HavingYouTube,
   Taggable,
 } from './post-compositions';
 
-export interface BasePost extends HavingAuthor, Commentable, Taggable {
+export interface BasePost extends Commentable, Taggable {
   postId: number;
   title: string;
   createdAt: Date;
@@ -28,7 +26,6 @@ export interface ArcadeRecordPostDBColumn {
   id: ArcadeRecordPost['postId'];
   arcade_record_id: ArcadeRecordPost['arcadeRecordId'];
   title: ArcadeRecordPost['title'];
-  author_id: Author['authorId'];
   arcade_id: ArcadeInfo['arcadeId'];
   method_id: Method['methodId'];
   players: PlayerInfo['players'];

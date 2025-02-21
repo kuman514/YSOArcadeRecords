@@ -1,8 +1,11 @@
+import Image from 'next/image';
+
 import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
 import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-post-list/data';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
+import EmptyPng from '^/public/status/empty.png';
 
 interface Props {
   params: Promise<{
@@ -37,7 +40,21 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
       <h1 className="text-4xl font-bold">
         {arcadeDictionary[arcadeId] ?? arcadeId} 기록 목록
       </h1>
-      <ArcadeRecordPostList arcadeRecordPostListItems={postListItems} />
+      {postListItems.length > 0 ? (
+        <ArcadeRecordPostList arcadeRecordPostListItems={postListItems} />
+      ) : (
+        <div className="w-full flex flex-col items-center">
+          <div className="w-full h-40 relative">
+            <Image
+              src={EmptyPng}
+              fill
+              alt="관련 데이터를 찾을 수 없음"
+              className="object-contain"
+            />
+          </div>
+          <span className="text-2xl font-bold">기록이 없습니다.</span>
+        </div>
+      )}
     </main>
   );
 }

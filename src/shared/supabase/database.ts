@@ -1,5 +1,10 @@
 import { createServerSideClient } from './server';
-import { ConditionType, EqualityCondition, SelectQuery } from './types';
+import {
+  ConditionType,
+  EqualityCondition,
+  InsertQuery,
+  SelectQuery,
+} from './types';
 
 export async function selectData<T>({ select, from, where }: SelectQuery) {
   const supabase = await createServerSideClient();
@@ -20,18 +25,18 @@ export async function selectData<T>({ select, from, where }: SelectQuery) {
   return result as T;
 }
 
-export async function addData<T>(target: string, newData: T) {
+export async function insertData<T>({ insertInto, value }: InsertQuery<T>) {
   const supabase = await createServerSideClient();
   const { data: result, error } = await supabase
-    .from(target)
-    .insert(newData)
+    .from(insertInto)
+    .insert(value)
     .select();
 
   if (error || !result) {
-    throw new Error('Failed to add data.');
+    throw new Error('Failed to insert data.');
   }
 
-  return result[0].id;
+  return result[0];
 }
 
 export async function updateData<T>(

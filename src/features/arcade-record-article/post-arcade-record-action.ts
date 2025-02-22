@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
-import { addData } from '^/src/shared/supabase/database';
+import { insertData } from '^/src/shared/supabase/database';
 import { saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ArcadeRecordActionState } from './types';
@@ -115,25 +115,28 @@ export async function postArcadeRecordAction(
     createdDate.getMonth() + 1
   ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
 
-  await addData<Omit<ArcadeRecordPostDBColumn, 'id'>>('records', {
-    title: title!,
-    arcade_id: arcadeId!,
-    arcade_record_id: arcadeRecordId!,
-    method_id: methodId!,
-    players: Number(players),
-    player_side: Number(playerSide),
-    evaluation: evaluation!,
-    stage: stage!,
-    rank,
-    comment: comment!,
-    tag_ids: JSON.stringify(tagIds),
-    note,
-    youtube_id: youTubeId,
-    thumbnail_url: thumbnailUrl,
-    image_urls: JSON.stringify(originalImageUrls),
-    achieved_at: achievedAt!,
-    created_at: formattedDate,
-    modified_at: formattedDate,
+  await insertData<Omit<ArcadeRecordPostDBColumn, 'id'>>({
+    insertInto: 'records',
+    value: {
+      title: title!,
+      arcade_id: arcadeId!,
+      arcade_record_id: arcadeRecordId!,
+      method_id: methodId!,
+      players: Number(players),
+      player_side: Number(playerSide),
+      evaluation: evaluation!,
+      stage: stage!,
+      rank,
+      comment: comment!,
+      tag_ids: JSON.stringify(tagIds),
+      note,
+      youtube_id: youTubeId,
+      thumbnail_url: thumbnailUrl,
+      image_urls: JSON.stringify(originalImageUrls),
+      achieved_at: achievedAt!,
+      created_at: formattedDate,
+      modified_at: formattedDate,
+    },
   });
 
   revalidatePath('/records');

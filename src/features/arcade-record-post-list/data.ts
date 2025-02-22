@@ -1,4 +1,4 @@
-import { ArcadeInfo } from '^/src/entities/types/arcade-record-compositions';
+import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
 import { readData } from '^/src/shared/supabase/database';
 

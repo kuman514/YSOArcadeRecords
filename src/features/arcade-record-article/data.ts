@@ -1,4 +1,4 @@
-import { ArcadeInfo } from '^/src/entities/types/arcade-record-compositions';
+import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,

@@ -1,8 +1,6 @@
-import {
-  HavingArcadeInfo,
-  HavingMethod,
-  HavingPlayerInfo,
-} from './arcade-record-compositions';
+import { HavingArcadeInfo } from './arcade-info';
+import { HavingMethod } from './method';
+import { HavingPlayerInfo } from './arcade-record-compositions';
 
 export interface ArcadeRecord
   extends HavingArcadeInfo,

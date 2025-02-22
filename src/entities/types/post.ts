@@ -1,5 +1,7 @@
+import { ArcadeInfo } from './arcade-info';
+import { Method } from './method';
 import { ArcadeRecord } from './arcade-record';
-import { ArcadeInfo, Method, PlayerInfo } from './arcade-record-compositions';
+import { PlayerInfo } from './arcade-record-compositions';
 import {
   Commentable,
   HavingImages,

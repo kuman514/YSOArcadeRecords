@@ -1,17 +1,3 @@
-export interface ArcadeInfo {
-  arcadeId: string;
-  label: string;
-}
-
-export interface HavingArcadeInfo {
-  /**
-   * The played arcade game.
-   */
-  arcade: ArcadeInfo;
-}
-
-// ===========================================
-
 export interface PlayerInfo {
   /**
    * The number of players of the play.
@@ -27,18 +13,4 @@ export interface PlayerInfo {
 
 export interface HavingPlayerInfo {
   playerInfo: PlayerInfo;
-}
-
-// ===========================================
-
-export interface Method {
-  methodId: string;
-  label: string;
-}
-
-export interface HavingMethod {
-  /**
-   * The place or game console the play happened on.
-   */
-  method: Method;
 }

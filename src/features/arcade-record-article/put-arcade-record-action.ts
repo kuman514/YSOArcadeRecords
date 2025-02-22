@@ -7,6 +7,8 @@ import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
 import { updateData } from '^/src/shared/supabase/database';
 import { saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import { ConditionType } from '^/src/shared/supabase/types';
+
 import { ArcadeRecordActionState } from './types';
 
 export async function putArcadeRecordAction(
@@ -130,9 +132,9 @@ export async function putArcadeRecordAction(
     createdDate.getMonth() + 1
   ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
 
-  await updateData<Partial<ArcadeRecordPostDBColumn>>(
-    'records',
-    {
+  await updateData<Partial<ArcadeRecordPostDBColumn>>({
+    update: 'records',
+    set: {
       title: title!,
       arcade_id: arcadeId!,
       method_id: methodId!,
@@ -150,11 +152,14 @@ export async function putArcadeRecordAction(
       achieved_at: achievedAt!,
       modified_at: formattedDate,
     },
-    {
-      column: 'arcade_record_id',
-      value: arcadeRecordId!,
-    }
-  );
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_record_id',
+        value: arcadeRecordId!,
+      },
+    ],
+  });
 
   revalidatePath(`/records/${arcadeId}/${arcadeRecordId}`);
   redirect(`/records/${arcadeId}/${arcadeRecordId}`);

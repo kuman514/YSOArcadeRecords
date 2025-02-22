@@ -3,22 +3,29 @@ import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
-import { readData } from '^/src/shared/supabase/database';
+import { selectData } from '^/src/shared/supabase/database';
+import { ConditionType } from '^/src/shared/supabase/types';
 
 export async function getArcadeRecordPostArticle(
   arcadeId: ArcadeInfo['arcadeId'],
   arcadeRecordId: ArcadeRecordPost['arcadeRecordId']
 ) {
-  const result = await readData<ArcadeRecordPostDBColumn[]>(
-    'records',
-    {
-      column: 'arcade_id',
-      value: arcadeId,
-    },
-    {
-      column: 'arcade_record_id',
-      value: arcadeRecordId,
-    }
-  );
+  const result = await selectData<ArcadeRecordPostDBColumn[]>({
+    select: '*',
+    from: 'records',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_id',
+        value: arcadeId,
+      },
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_record_id',
+        value: arcadeRecordId,
+      },
+    ],
+  });
+
   return result[0];
 }

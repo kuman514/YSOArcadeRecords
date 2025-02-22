@@ -1,18 +1,32 @@
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
-import { readData } from '^/src/shared/supabase/database';
+import { selectData } from '^/src/shared/supabase/database';
+import { ConditionType } from '^/src/shared/supabase/types';
 
 export async function getArcadeRecordPostList() {
-  const result = await readData<ArcadeRecordPostDBColumn[]>('records');
+  const result = await selectData<ArcadeRecordPostDBColumn[]>({
+    select: '*',
+    from: 'records',
+    where: [],
+  });
+
   return result;
 }
 
 export async function getArcadeRecordPostListWithArcadeId(
   arcadeId: ArcadeInfo['arcadeId']
 ) {
-  const result = await readData<ArcadeRecordPostDBColumn[]>('records', {
-    column: 'arcade_id',
-    value: arcadeId,
+  const result = await selectData<ArcadeRecordPostDBColumn[]>({
+    select: '*',
+    from: 'records',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_id',
+        value: arcadeId,
+      },
+    ],
   });
+
   return result;
 }

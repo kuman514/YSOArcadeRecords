@@ -1,27 +1,20 @@
 import { createServerSideClient } from './server';
-import { EqualityCondition } from './types';
+import { ConditionType, EqualityCondition, SelectQuery } from './types';
 
-export async function readData<T>(
-  target: string,
-  equalityCondition?: EqualityCondition,
-  secondEqualityCondition?: EqualityCondition
-) {
+export async function selectData<T>({ select, from, where }: SelectQuery) {
   const supabase = await createServerSideClient();
-  const { data: result, error } = equalityCondition
-    ? secondEqualityCondition
-      ? await supabase
-          .from(target)
-          .select('*')
-          .eq(equalityCondition.column, equalityCondition.value)
-          .eq(secondEqualityCondition.column, secondEqualityCondition.value)
-      : await supabase
-          .from(target)
-          .select('*')
-          .eq(equalityCondition.column, equalityCondition.value)
-    : await supabase.from(target).select('*');
+
+  const { data: result, error } = await where.reduce((accFilter, curWhere) => {
+    switch (curWhere.type) {
+      case ConditionType.EQUAL:
+        return accFilter.eq(curWhere.column, curWhere.value);
+      default:
+        return accFilter;
+    }
+  }, supabase.from(from).select(select));
 
   if (error || !result) {
-    throw new Error('Failed to add data.');
+    throw new Error('Failed to select data.');
   }
 
   return result as T;

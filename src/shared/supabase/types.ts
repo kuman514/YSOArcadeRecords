@@ -8,11 +8,6 @@ export interface EqualityWhere {
   value: string;
 }
 
-export interface EqualityCondition {
-  column: string;
-  value: string;
-}
-
 export type Where = EqualityWhere;
 
 export interface SelectQuery {

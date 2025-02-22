@@ -1,7 +1,7 @@
 import { createServerSideClient } from './server';
 import {
   ConditionType,
-  EqualityCondition,
+  DeleteQuery,
   InsertQuery,
   SelectQuery,
   UpdateQuery,
@@ -52,17 +52,19 @@ export async function updateData<T>({ update, set, where }: UpdateQuery<T>) {
   }
 }
 
-export async function deleteData(
-  target: string,
-  equalityCondition: EqualityCondition
-) {
+export async function deleteData({ deleteFrom, where }: DeleteQuery) {
   const supabase = await createServerSideClient();
-  const { error } = await supabase
-    .from(target)
-    .delete()
-    .eq(equalityCondition.column, equalityCondition.value);
+
+  const { error } = await where.reduce((accFilter, curWhere) => {
+    switch (curWhere.type) {
+      case ConditionType.EQUAL:
+        return accFilter.eq(curWhere.column, curWhere.value);
+      default:
+        return accFilter;
+    }
+  }, supabase.from(deleteFrom).delete());
 
   if (error) {
-    throw new Error('Failed to delete data.');
+    throw new Error('Failed to modify data.');
   }
 }

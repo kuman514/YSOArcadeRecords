@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
+import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
 import { saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
@@ -115,7 +115,7 @@ export async function postArcadeRecordAction(
     createdDate.getMonth() + 1
   ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
 
-  await insertData<Omit<ArcadeRecordPostDBColumn, 'id'>>({
+  await insertData<Omit<ArcadeRecordPostDBInput, 'id'>>({
     insertInto: 'records',
     value: {
       title: title!,

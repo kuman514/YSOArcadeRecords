@@ -3,8 +3,6 @@
 import Image from 'next/image';
 import { useActionState, useMemo, useState } from 'react';
 
-import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
-import { methodDictionary } from '^/src/entities/dictionary/method';
 import { tagDictionary } from '^/src/entities/dictionary/tag';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
@@ -12,15 +10,23 @@ import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
+import { ArcadeInfo } from '^/src/entities/types/arcade-info';
+import { Method } from '^/src/entities/types/method';
 
 import { postArcadeRecordAction } from './post-arcade-record-action';
 import { ArcadeRecordActionState } from './types';
 
 interface Props {
   post?: ArcadeRecordPost;
+  arcadeInfoList: ArcadeInfo[];
+  methodList: Method[];
 }
 
-export default function RecordForm({ post }: Props) {
+export default function RecordForm({
+  post,
+  arcadeInfoList,
+  methodList,
+}: Props) {
   const [formState, formAction] = useActionState<
     ArcadeRecordActionState,
     FormData
@@ -57,32 +63,22 @@ export default function RecordForm({ post }: Props) {
 
   const renderArcadeSelectOptions = useMemo(
     () =>
-      Object.entries(arcadeDictionary).map(
-        ([selectableArcadeId, arcadeLabel]) => (
-          <option
-            key={`arcade-selection-${selectableArcadeId}`}
-            value={selectableArcadeId}
-          >
-            {arcadeLabel}
-          </option>
-        )
-      ),
-    []
+      arcadeInfoList.map(({ arcadeId: id, label }) => (
+        <option key={`arcade-selection-${id}`} value={id}>
+          {label}
+        </option>
+      )),
+    [arcadeInfoList]
   );
 
   const renderMethodSelectOptions = useMemo(
     () =>
-      Object.entries(methodDictionary).map(
-        ([selectableMethodId, methodLabel]) => (
-          <option
-            key={`method-selection-${selectableMethodId}`}
-            value={selectableMethodId}
-          >
-            {methodLabel}
-          </option>
-        )
-      ),
-    []
+      methodList.map(({ methodId: id, label }) => (
+        <option key={`method-selection-${id}`} value={id}>
+          {label}
+        </option>
+      )),
+    [methodList]
   );
 
   const renderTagSelectOptions = Object.entries(tagDictionary).map(

@@ -1,5 +1,5 @@
-import { ArcadeInfo } from './arcade-info';
-import { Method } from './method';
+import { ArcadeInfo, ArcadeInfoDBColumn } from './arcade-info';
+import { Method, MethodDBColumn } from './method';
 import { ArcadeRecord } from './arcade-record';
 import { PlayerInfo } from './arcade-record-compositions';
 import {
@@ -24,7 +24,7 @@ export interface ArcadeRecordPost
     HavingImages,
     HavingYouTube {}
 
-export interface ArcadeRecordPostDBColumn {
+export interface ArcadeRecordPostDBInput {
   id: ArcadeRecordPost['postId'];
   arcade_record_id: ArcadeRecordPost['arcadeRecordId'];
   title: ArcadeRecordPost['title'];
@@ -44,4 +44,9 @@ export interface ArcadeRecordPostDBColumn {
   achieved_at: string;
   created_at: string;
   modified_at: string;
+}
+
+export interface ArcadeRecordPostDBColumn extends ArcadeRecordPostDBInput {
+  arcade_info: ArcadeInfoDBColumn;
+  methods: MethodDBColumn;
 }

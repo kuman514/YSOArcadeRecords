@@ -12,5 +12,5 @@ export interface HavingMethod {
 
 export interface MethodDBColumn {
   method_id: Method['methodId'];
-  method_title: Method['label'];
+  method_name: Method['label'];
 }

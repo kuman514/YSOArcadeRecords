@@ -11,7 +11,7 @@ export async function getArcadeRecordPostArticle(
   arcadeRecordId: ArcadeRecordPost['arcadeRecordId']
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
-    select: '*',
+    select: '*, arcade_info (*), methods (*)',
     from: 'records',
     where: [
       {

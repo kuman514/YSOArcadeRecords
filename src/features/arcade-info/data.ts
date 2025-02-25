@@ -8,7 +8,7 @@ import { ConditionType } from '^/src/shared/supabase/types';
 export async function getArcadeInfoList() {
   const result = await selectData<ArcadeInfoDBColumn[]>({
     select: '*',
-    from: 'arcade-info',
+    from: 'arcade_info',
     where: [],
   });
 
@@ -18,7 +18,7 @@ export async function getArcadeInfoList() {
 export async function getArcadeInfo(arcadeId: ArcadeInfo['arcadeId']) {
   const result = await selectData<ArcadeInfoDBColumn[]>({
     select: '*',
-    from: 'arcade-info',
+    from: 'arcade_info',
     where: [
       {
         type: ConditionType.EQUAL,

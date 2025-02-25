@@ -1,11 +1,12 @@
 import Image from 'next/image';
 
-import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
 import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-post-list/data';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 import EmptyPng from '^/public/status/empty.png';
+import { getArcadeInfo } from '^/src/features/arcade-info/data';
+import { convertArcadeInfoDBColumnToArcadeInfo } from '^/src/features/arcade-info/util';
 
 interface Props {
   params: Promise<{
@@ -18,6 +19,9 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
   const data = (await getArcadeRecordPostListWithArcadeId(arcadeId)).map(
     convertArcadeRecordPostDBColumnToItems
   );
+  const arcadeInfo = convertArcadeInfoDBColumnToArcadeInfo(
+    await getArcadeInfo(arcadeId)
+  );
 
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
@@ -29,17 +33,9 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
     thumbnailUrl: datum.thumbnailUrl,
   }));
 
-  /**
-   * @todo
-   * Make arcade info table that has arcadeId, arcadeName, and more information as columns
-   * Apply arcadeId in arcade info table as foreign key of arcade record table's arcadeId
-   */
-
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
-      <h1 className="text-4xl font-bold">
-        {arcadeDictionary[arcadeId] ?? arcadeId} 기록 목록
-      </h1>
+      <h1 className="text-4xl font-bold">{arcadeInfo.label} 기록 목록</h1>
       {postListItems.length > 0 ? (
         <ArcadeRecordPostList arcadeRecordPostListItems={postListItems} />
       ) : (

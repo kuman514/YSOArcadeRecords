@@ -5,7 +5,7 @@ import { ConditionType } from '^/src/shared/supabase/types';
 
 export async function getArcadeRecordPostList() {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
-    select: '*',
+    select: '*, arcade_info (*), methods (*)',
     from: 'records',
     where: [],
   });
@@ -17,7 +17,7 @@ export async function getArcadeRecordPostListWithArcadeId(
   arcadeId: ArcadeInfo['arcadeId']
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
-    select: '*',
+    select: '*, arcade_info (*), methods (*)',
     from: 'records',
     where: [
       {

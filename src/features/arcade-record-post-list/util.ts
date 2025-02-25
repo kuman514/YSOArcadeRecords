@@ -1,5 +1,3 @@
-import { arcadeDictionary } from '^/src/entities/dictionary/arcade';
-import { methodDictionary } from '^/src/entities/dictionary/method';
 import { tagDictionary } from '^/src/entities/dictionary/tag';
 import {
   ArcadeRecordPost,
@@ -11,8 +9,8 @@ export function convertArcadeRecordPostDBColumnToItems({
   id,
   arcade_record_id,
   title,
-  arcade_id,
-  method_id,
+  arcade_info,
+  methods,
   players,
   player_side,
   evaluation,
@@ -36,12 +34,12 @@ export function convertArcadeRecordPostDBColumnToItems({
     arcadeRecordId: arcade_record_id,
     title,
     arcade: {
-      arcadeId: arcade_id,
-      label: arcadeDictionary[arcade_id] ?? arcade_id,
+      arcadeId: arcade_info.arcade_id,
+      label: arcade_info.arcade_title,
     },
     method: {
-      methodId: method_id,
-      label: methodDictionary[method_id] ?? method_id,
+      methodId: methods.method_id,
+      label: methods.method_name,
     },
     playerInfo: {
       players,

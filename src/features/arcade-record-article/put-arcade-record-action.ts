@@ -161,6 +161,6 @@ export async function putArcadeRecordAction(
     ],
   });
 
-  revalidatePath(`/records/${arcadeId}/${arcadeRecordId}`);
+  revalidatePath(`/records`);
   redirect(`/records/${arcadeId}/${arcadeRecordId}`);
 }

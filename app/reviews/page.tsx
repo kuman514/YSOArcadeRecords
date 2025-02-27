@@ -1,3 +1,5 @@
+import PreparingNotice from '^/src/shared/notice/preparing';
+
 export default function ReviewListPage() {
-  return <main>현재 준비 중입니다.</main>;
+  return <PreparingNotice />;
 }

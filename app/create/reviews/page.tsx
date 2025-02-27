@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import PreparingNotice from '^/src/shared/notice/preparing';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export default async function CreateReviewPage() {
@@ -10,5 +11,5 @@ export default async function CreateReviewPage() {
     redirect('/');
   }
 
-  return <main>현재 준비 중입니다.</main>;
+  return <PreparingNotice />;
 }

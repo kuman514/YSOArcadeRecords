@@ -11,6 +11,7 @@ export default function RootNotFoundPage() {
           fill
           alt="페이지를 찾을 수 없음"
           className="object-contain"
+          priority
         />
       </div>
       <h1 className="text-4xl font-bold">페이지를 찾을 수 없습니다.</h1>

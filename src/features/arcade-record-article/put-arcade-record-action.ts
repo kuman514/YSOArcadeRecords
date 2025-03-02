@@ -54,27 +54,27 @@ export async function putArcadeRecordAction(
   }
 
   if (!title || title.trim().length === 0) {
-    errors.title = 'Title required.';
+    errors.title = '제목을 입력해주십시오.';
   }
 
   if (!arcadeId) {
-    errors.arcadeId = 'Arcade type required.';
+    errors.arcadeId = '아케이드 부문을 입력해주십시오.';
   }
 
   if (!methodId) {
-    errors.methodId = 'Method required.';
+    errors.methodId = '수단을 입력해주십시오.';
   }
 
   if (!achievedAt) {
-    errors.achievedAt = 'Write when you achieved this record.';
+    errors.achievedAt = '달성일자를 입력해주십시오.';
   }
 
   if (!players) {
-    errors.players = 'Number of players required.';
+    errors.players = '몇 명이서 플레이했는지 선택해주십시오.';
   }
 
   if (!playerSide) {
-    errors.playerSide = 'Write which side you played.';
+    errors.playerSide = '어느 사이드에서 플레이했는지 선택해주십시오.';
   }
 
   if (!evaluation) {
@@ -82,18 +82,18 @@ export async function putArcadeRecordAction(
   }
 
   if (!stage) {
-    errors.stage = 'Stage required.';
+    errors.stage = '어느 스테이지에서 끝났는지 입력해주십시오.';
   }
 
   if (!comment) {
-    errors.comment = 'Comment required.';
+    errors.comment = '코멘터리를 입력해주십시오.';
   }
 
   if (
     (!thumbnail.name || thumbnail.name === 'undefined') &&
     !presentThumbnailUrl
   ) {
-    errors.thumbnailUrl = 'Thumbnail required.';
+    errors.thumbnailUrl = '썸네일을 선택해주십시오.';
   }
 
   if (
@@ -103,7 +103,7 @@ export async function putArcadeRecordAction(
       originalImages[0].name === 'undefined') &&
     presentImageUrls.length === 0
   ) {
-    errors.imageUrls = 'Original images required.';
+    errors.imageUrls = '원본 이미지들을 선택해주십시오.';
   }
 
   if (Object.keys(errors).length > 0) {

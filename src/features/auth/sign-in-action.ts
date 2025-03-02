@@ -40,7 +40,7 @@ export async function signInAction(_: AuthActionState, formData: FormData) {
   if (error) {
     return {
       errors: {
-        password: 'Failed to sign in.',
+        password: '로그인 실패. 이메일과 비밀번호가 일치한지 확인해주십시오.',
       },
     };
   }

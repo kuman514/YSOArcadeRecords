@@ -1,4 +1,21 @@
+import sharp from 'sharp';
 import { createServerSideClient } from './server';
+
+export async function resizeImage(
+  file: File,
+  sizeOption: {
+    maxWidth: number;
+    maxHeight: number;
+  }
+) {
+  const extension = file.name.split('.').pop();
+  const resizeResultBuffer = await sharp(await file.arrayBuffer())
+    .resize(sizeOption.maxWidth, sizeOption.maxHeight, {
+      fit: 'inside',
+    })
+    .toBuffer();
+  return new File([resizeResultBuffer], `resized.${extension}`);
+}
 
 export async function saveImage(
   file: File,

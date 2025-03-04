@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
 import { updateData } from '^/src/shared/supabase/database';
-import { saveImage } from '^/src/shared/supabase/image';
+import { resizeImage, saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
 
@@ -115,14 +115,26 @@ export async function putArcadeRecordAction(
 
   const thumbnailUrl =
     thumbnail.name !== 'undefined'
-      ? await saveImage(thumbnail, `thumbnail-${timestamp}`, directory)
+      ? await saveImage(
+          await resizeImage(thumbnail, {
+            maxWidth: 480,
+            maxHeight: 480,
+          }),
+          `thumbnail-${timestamp}`,
+          directory
+        )
       : presentThumbnailUrl;
 
   const validImages = originalImages.filter((image) => image.size > 0);
   const originalImageUrls = presentImageUrls.concat(
     await Promise.all<string>(
-      validImages.map((file, index) =>
-        saveImage(file, `original-${timestamp}-${index + 1}`, directory)
+      validImages.map(
+        async (file, index) =>
+          await saveImage(
+            await resizeImage(file, { maxWidth: 1024, maxHeight: 1024 }),
+            `original-${timestamp}-${index + 1}`,
+            directory
+          )
       )
     )
   );

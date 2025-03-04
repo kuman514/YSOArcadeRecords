@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
-import { saveImage } from '^/src/shared/supabase/image';
+import { resizeImage, saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ArcadeRecordActionState } from './types';
 
@@ -98,15 +98,23 @@ export async function postArcadeRecordAction(
   const timestamp = new Date().toISOString();
 
   const thumbnailUrl = await saveImage(
-    thumbnail,
+    await resizeImage(thumbnail, {
+      maxWidth: 480,
+      maxHeight: 480,
+    }),
     `thumbnail-${timestamp}`,
     directory
   );
 
   const validImages = originalImages.filter((image) => image.size > 0);
   const originalImageUrls = await Promise.all<string>(
-    validImages.map((file, index) =>
-      saveImage(file, `original-${timestamp}-${index + 1}`, directory)
+    validImages.map(
+      async (file, index) =>
+        await saveImage(
+          await resizeImage(file, { maxWidth: 1024, maxHeight: 1024 }),
+          `original-${timestamp}-${index + 1}`,
+          directory
+        )
     )
   );
 

@@ -13,7 +13,7 @@ export type Where = EqualityWhere;
 export interface SelectQuery {
   select: string;
   from: string;
-  where: EqualityWhere[];
+  where: Where[];
 }
 
 export interface InsertQuery<T> {
@@ -24,10 +24,10 @@ export interface InsertQuery<T> {
 export interface UpdateQuery<T> {
   update: string;
   set: T;
-  where: EqualityWhere[];
+  where: Where[];
 }
 
 export interface DeleteQuery {
   deleteFrom: string;
-  where: EqualityWhere[];
+  where: Where[];
 }

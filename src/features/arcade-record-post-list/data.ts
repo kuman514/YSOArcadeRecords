@@ -8,6 +8,12 @@ export async function getArcadeRecordPostList() {
     select: '*, arcade_info (*), methods (*)',
     from: 'records',
     where: [],
+    order: [
+      {
+        column: 'achieved_at',
+        isAscending: false,
+      },
+    ],
   });
 
   return result;
@@ -24,6 +30,12 @@ export async function getArcadeRecordPostListWithArcadeId(
         type: ConditionType.EQUAL,
         column: 'arcade_id',
         value: arcadeId,
+      },
+    ],
+    order: [
+      {
+        column: 'achieved_at',
+        isAscending: false,
       },
     ],
   });

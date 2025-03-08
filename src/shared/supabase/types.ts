@@ -10,10 +10,16 @@ export interface EqualityWhere {
 
 export type Where = EqualityWhere;
 
+export interface SelectOrder {
+  column: string;
+  isAscending: boolean;
+}
+
 export interface SelectQuery {
   select: string;
   from: string;
   where: Where[];
+  order?: SelectOrder[];
 }
 
 export interface InsertQuery<T> {

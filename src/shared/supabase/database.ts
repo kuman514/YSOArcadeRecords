@@ -7,17 +7,30 @@ import {
   UpdateQuery,
 } from './types';
 
-export async function selectData<T>({ select, from, where }: SelectQuery) {
+export async function selectData<T>({
+  select,
+  from,
+  where,
+  order,
+}: SelectQuery) {
   const supabase = await createServerSideClient();
 
-  const { data: result, error } = await where.reduce((accFilter, curWhere) => {
+  const rawQuery = supabase.from(from).select(select);
+  const queryWithWhere = where.reduce((accFilter, curWhere) => {
     switch (curWhere.type) {
       case ConditionType.EQUAL:
         return accFilter.eq(curWhere.column, curWhere.value);
       default:
         return accFilter;
     }
-  }, supabase.from(from).select(select));
+  }, rawQuery);
+  const queryWithOrder = (order ?? []).reduce(
+    (accFilter, curOrder) =>
+      accFilter.order(curOrder.column, { ascending: curOrder.isAscending }),
+    queryWithWhere
+  );
+
+  const { data: result, error } = await queryWithOrder;
 
   if (error || !result) {
     throw new Error('Failed to select data.');

@@ -17,6 +17,14 @@ export function ShareToTwitterButton({ postTitle }: Props) {
     window.open(tweet, '_blank');
   }
 
+  /**
+   * @todo
+   * Reinstall svgr-webpack.
+   * Configure svgr-webpack to work without errors like render tree mismatch.
+   * Change all SVGs used by Image in next/image into SVGR components.
+   * Apply fill color (CSS property) to Twitter SVG icon on hovering this share button.
+   */
+
   return (
     <button
       type="button"

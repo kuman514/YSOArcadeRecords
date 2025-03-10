@@ -7,6 +7,7 @@ import { EvaluationCriterion } from '^/src/shared/util/types';
 
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
 import { PLAYER_CLASS } from './constants';
+import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 
 interface Props {
   post: ArcadeRecordPost;
@@ -140,6 +141,9 @@ export default function ArcadeRecordArticle({ post }: Props) {
             {renderRank}
             {renderNote}
           </UnorderedList>
+          <div className="flex flex-row gap-2">
+            <ShareToTwitterButton postTitle={post.title} />
+          </div>
         </div>
       </section>
       <section className="w-full flex flex-col gap-2">

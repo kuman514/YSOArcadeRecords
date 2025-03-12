@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import ArcadeRecordArticle from '^/src/features/arcade-record-article';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
-import { deleteArcadeRecordAction } from '^/src/features/arcade-record-article/delete-arcade-record-action';
+import DeleteArcadeRecordForm from '^/src/features/arcade-record-article/delete-form';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
@@ -32,15 +32,9 @@ export default async function RecordArticlePage({ params }: Props) {
       <Link href={`/records/${arcadeId}/${arcadeRecordId}/modify`}>
         수정하기
       </Link>
-      <form action={deleteArcadeRecordAction}>
-        <input
-          type="hidden"
-          id="arcadeRecordId"
-          name="arcadeRecordId"
-          value={convertedArticle.arcadeRecordId}
-        />
-        <button type="submit">삭제하기</button>
-      </form>
+      <DeleteArcadeRecordForm
+        arcadeRecordId={convertedArticle.arcadeRecordId}
+      />
     </div>
   ) : null;
 

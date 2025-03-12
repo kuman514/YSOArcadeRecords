@@ -1,4 +1,6 @@
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import { CopyLinkButton } from '^/src/shared/share/copy-link';
+import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
 import UnorderedList from '^/src/shared/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
@@ -7,7 +9,6 @@ import { EvaluationCriterion } from '^/src/shared/util/types';
 
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
 import { PLAYER_CLASS } from './constants';
-import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 
 interface Props {
   post: ArcadeRecordPost;
@@ -143,6 +144,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
           </UnorderedList>
           <div className="flex flex-row gap-2">
             <ShareToTwitterButton postTitle={post.title} />
+            <CopyLinkButton />
           </div>
         </div>
       </section>

@@ -1,10 +1,5 @@
-export interface Tag {
-  tagId: string;
-  label: string;
-}
-
 export interface Taggable {
-  tags: Tag[];
+  tags: string[];
 }
 
 // ===========================================

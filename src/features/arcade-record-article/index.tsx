@@ -85,7 +85,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
     post.tags.length > 0 ? (
       <div className="flex flex-row flex-wrap gap-2">
         {post.tags.map((tag) => (
-          <Tag key={tag.tagId}>{tag.label}</Tag>
+          <Tag key={tag}>{tag}</Tag>
         ))}
       </div>
     ) : (

@@ -26,7 +26,7 @@ export async function postArcadeRecordAction(
   const comment = formData.get('comment')?.toString();
   const note = formData.get('note')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
-  const tagIds = formData.getAll('tagIds');
+  const tags = formData.get('tags')?.toString();
 
   const thumbnail = formData.get('thumbnail') as File;
   const originalImages = formData.getAll('originalImages') as File[];
@@ -136,11 +136,11 @@ export async function postArcadeRecordAction(
       stage: stage!,
       rank,
       comment: comment!,
-      tag_ids: JSON.stringify(tagIds),
+      tags: tags?.split(',').map((tag) => tag.trim()) ?? [],
       note,
       youtube_id: youTubeId,
       thumbnail_url: thumbnailUrl,
-      image_urls: JSON.stringify(originalImageUrls),
+      image_urls: originalImageUrls,
       achieved_at: achievedAt!,
       created_at: formattedDate,
       modified_at: formattedDate,

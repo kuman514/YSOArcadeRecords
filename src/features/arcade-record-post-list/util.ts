@@ -1,9 +1,7 @@
-import { tagDictionary } from '^/src/entities/dictionary/tag';
 import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
-import { Tag } from '^/src/entities/types/post-compositions';
 
 export function convertArcadeRecordPostDBColumnToItems({
   id,
@@ -17,7 +15,7 @@ export function convertArcadeRecordPostDBColumnToItems({
   stage,
   rank,
   comment,
-  tag_ids,
+  tags,
   note,
   youtube_id,
   thumbnail_url,
@@ -26,9 +24,6 @@ export function convertArcadeRecordPostDBColumnToItems({
   created_at,
   modified_at,
 }: ArcadeRecordPostDBColumn): ArcadeRecordPost {
-  const parsedTagIds: Tag['tagId'][] = JSON.parse(tag_ids ?? '[]');
-  const parsedImageUrls: ArcadeRecordPost['imageUrls'] = JSON.parse(image_urls);
-
   return {
     postId: id,
     arcadeRecordId: arcade_record_id,
@@ -49,14 +44,11 @@ export function convertArcadeRecordPostDBColumnToItems({
     stage,
     rank,
     comment,
-    tags: parsedTagIds.map((tagId) => ({
-      tagId,
-      label: tagDictionary[tagId] ?? tagId,
-    })),
+    tags,
     note,
     youTubeId: youtube_id,
     thumbnailUrl: thumbnail_url,
-    imageUrls: parsedImageUrls,
+    imageUrls: image_urls,
     achievedAt: new Date(achieved_at),
     createdAt: new Date(created_at),
     modifiedAt: new Date(modified_at),

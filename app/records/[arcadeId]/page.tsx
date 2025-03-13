@@ -27,7 +27,7 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
     title: datum.title,
     memo: datum.note ?? '메모 없음',
     dateToDisplay: datum.achievedAt,
-    tags: datum.tags.map((tag) => tag.label),
+    tags: datum.tags,
     isHaveYouTube: Boolean(datum.youTubeId),
     href: `/records/${datum.arcade.arcadeId}/${datum.arcadeRecordId}`,
     thumbnailUrl: datum.thumbnailUrl,

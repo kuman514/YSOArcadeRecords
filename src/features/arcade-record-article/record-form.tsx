@@ -3,15 +3,14 @@
 import Image from 'next/image';
 import { useActionState, useMemo, useState } from 'react';
 
-import { tagDictionary } from '^/src/entities/dictionary/tag';
+import { ArcadeInfo } from '^/src/entities/types/arcade-info';
+import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
-import { ArcadeInfo } from '^/src/entities/types/arcade-info';
-import { Method } from '^/src/entities/types/method';
 
 import { postArcadeRecordAction } from './post-arcade-record-action';
 import { ArcadeRecordActionState } from './types';
@@ -46,6 +45,7 @@ export default function RecordForm({
   const [stage, setStage] = useState<string>(post?.stage ?? '');
   const [rank, setRank] = useState<string>(post?.rank ?? '');
   const [comment, setComment] = useState<string>(post?.comment ?? '');
+  const [tags, setTags] = useState<string>(post?.tags.join(',') ?? '');
   const [note, setNote] = useState<string>(post?.note ?? '');
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
@@ -79,23 +79,6 @@ export default function RecordForm({
         </option>
       )),
     [methodList]
-  );
-
-  const renderTagSelectOptions = Object.entries(tagDictionary).map(
-    ([selectableTagId, tagLabel]) => (
-      <span
-        key={`tag-selection-${selectableTagId}`}
-        className="flex flex-row gap-2"
-      >
-        <input
-          type="checkbox"
-          id={`tag-selection-${selectableTagId}`}
-          name="tagIds"
-          value={selectableTagId}
-        />
-        <label htmlFor={`tag-selection-${selectableTagId}`}>{tagLabel}</label>
-      </span>
-    )
   );
 
   return (
@@ -267,8 +250,16 @@ export default function RecordForm({
       {formState.errors?.comment && <p>{formState.errors.comment}</p>}
 
       <p className="w-full flex flex-col gap-2">
-        <label>태그</label>
-        {renderTagSelectOptions}
+        <label>태그 (콤마로 구분)</label>
+        <FormInput
+          type="text"
+          id="tags"
+          name="tags"
+          value={tags}
+          onChange={(event) => {
+            setTags(event.currentTarget.value);
+          }}
+        />
       </p>
 
       <p className="w-full flex flex-col gap-2">

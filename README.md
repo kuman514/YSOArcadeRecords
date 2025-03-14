@@ -1,6 +1,7 @@
 # YSOArcadeRecords
 - 본인 YSO(kuman514)가 기록한 각종 고전 아케이드 게임 관련 기록을 열람할 수 있는 앱.
 - [YSOShmupRecords](https://github.com/kuman514/YSOShmupRecords)가 이 프로젝트의 전신입니다.
+- [앱 방문하기](https://yso-arcade-records.vercel.app/)
 
 ## 프로젝트를 만든 목적
 - YSOShmupRecords에서 계승됨
@@ -18,7 +19,7 @@
     - 근거: [Turbopack Unsupported Features](https://nextjs.org/docs/app/api-reference/turbopack#unsupported-features)의 Yarn PnP 항목에, `We are currently not planning to support Yarn PnP in Next.js with Turbopack. (저희는 현재 Next.js Turbopack에 대한 Yarn PnP를 지원할 계획이 없습니다.)`라고 적혀 있다.
 
 ## 태스크 브레이크다운
-- YSOArcadeRecords MVP 완성하기
+- ~~YSOArcadeRecords MVP 완성하기~~ (완료)
   - ~~YSOShmupRecords로부터 승계되는 페이지~~ (완료)
     - ~~대문 페이지~~ (완료)
       - ~~대문용 로고~~ (완료)
@@ -49,7 +50,7 @@
   - ~~신규 추가 컴포넌트~~ (완료)
     - ~~포스트 폼~~ (완료)
       - ~~아케이드 기록 포스트 폼~~ (완료)
-  - 그 외
+  - ~~그 외~~ (완료)
     - ~~아케이드 기록 구성 요소 타입 정의~~ (완료)
     - ~~데이터베이스 및 파일 스토리지 정하기~~ (완료) -> Supabase를 사용하기로 결정
       - ~~조건~~
@@ -76,7 +77,7 @@
       - ~~아케이드 기록 테스트~~ (완료)
         - ~~기록 생성 및 테스트~~ (완료)
         - ~~기록 수정 및 삭제 테스트~~ (완료)
-  - Vercel을 통해 배포하기
+  - ~~Vercel을 통해 배포하기~~ (완료)
 - YSOArcadeRecords MVP 이후 추가 기능 완성하기
   - 통산 최고 성과에 기록 링크 걸기
   - 신규 추가 페이지
@@ -123,3 +124,7 @@
       - 확인해보니, `svgr-webpack`으로 전환된 SVG 컴포넌트들은 클라이언트 컴포넌트.
       - `svgr-webpack`으로 전환된 SVG 컴포넌트를 제거하고 그 자리에 임시 텍스트를 넣으니, 빌드 환경에서의 동작까지 전부 에러 없이 진행되었다.
     - 프로젝트 내에서의 SVG 또한, `fill`이나 `stroke`같은 스타일링을 각각 한 가지만 사용한지라, 유연한 스타일링이 필요하지 않을 것이라 판단, `svgr-webpack`을 제거하고 `next/image`에 SVG를 넣는 방법으로 회귀하였다.
+
+## 버그 목록
+- 기록에 태그가 없을 때 태그 영역에 검은 사각형 모양 점이 나타나는 현상
+- 이미지를 여러 개 첨부한 기록을 등록할 때 client side exception이 발생하는 현상 (에러 코드 413)

@@ -1,4 +1,6 @@
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import { CopyLinkButton } from '^/src/shared/share/copy-link';
+import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
 import UnorderedList from '^/src/shared/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
@@ -83,7 +85,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
     post.tags.length > 0 ? (
       <div className="flex flex-row flex-wrap gap-2">
         {post.tags.map((tag) => (
-          <Tag key={tag.tagId}>{tag.label}</Tag>
+          <Tag key={tag}>{tag}</Tag>
         ))}
       </div>
     ) : (
@@ -140,6 +142,10 @@ export default function ArcadeRecordArticle({ post }: Props) {
             {renderRank}
             {renderNote}
           </UnorderedList>
+          <div className="flex flex-row gap-2">
+            <ShareToTwitterButton postTitle={post.title} />
+            <CopyLinkButton />
+          </div>
         </div>
       </section>
       <section className="w-full flex flex-col gap-2">

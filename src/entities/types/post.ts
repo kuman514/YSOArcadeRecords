@@ -1,7 +1,7 @@
 import { ArcadeInfo, ArcadeInfoDBColumn } from './arcade-info';
-import { Method, MethodDBColumn } from './method';
 import { ArcadeRecord } from './arcade-record';
 import { PlayerInfo } from './arcade-record-compositions';
+import { Method, MethodDBColumn } from './method';
 import {
   Commentable,
   HavingImages,
@@ -36,11 +36,11 @@ export interface ArcadeRecordPostDBInput {
   stage: ArcadeRecordPost['stage'];
   rank?: ArcadeRecordPost['rank'];
   comment: ArcadeRecordPost['comment'];
-  tag_ids: string;
+  tags: string[];
   note?: ArcadeRecordPost['note'];
   youtube_id?: ArcadeRecordPost['youTubeId'];
   thumbnail_url: ArcadeRecordPost['thumbnailUrl'];
-  image_urls: string;
+  image_urls: ArcadeRecordPost['imageUrls'];
   achieved_at: string;
   created_at: string;
   modified_at: string;

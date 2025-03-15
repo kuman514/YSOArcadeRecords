@@ -156,7 +156,11 @@ export async function putArcadeRecordAction(
       stage: stage!,
       rank,
       comment: comment!,
-      tags: tags?.split(',').map((tag) => tag.trim()) ?? [],
+      tags:
+        tags
+          ?.split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0) ?? [],
       note,
       youtube_id: youTubeId,
       thumbnail_url: thumbnailUrl,

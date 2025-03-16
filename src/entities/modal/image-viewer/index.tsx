@@ -21,7 +21,10 @@ export default function ImageViewer() {
 
   return (
     <>
-      <ImageZoomController imageUrl={imageUrls[currentShowIndex]} alt="Test" />
+      <ImageZoomController
+        imageUrl={imageUrls[currentShowIndex]}
+        alt="아케이드 기록 관련 사진"
+      />
       <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
         <button
           type="button"

@@ -1,37 +1,33 @@
 'use client';
 
 import Image from 'next/image';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 interface Props {
   name: string;
+  currentFiles: File[];
+  onSelectFiles: (newFiles: File[]) => void;
 }
 
-export default function MultipleImagePicker({ name }: Props) {
+export default function MultipleImagePicker({
+  name,
+  currentFiles,
+  onSelectFiles,
+}: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const [pickedImages, setPickedImages] = useState<
+  const [imageInfos, setImageInfos] = useState<
     { sourceUrl: string; tmpId: string }[]
   >([]);
 
-  function handleOnClickLoad() {
-    imageInputRef.current?.click();
-  }
-
-  function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
-
-    if (!files) {
-      return;
-    }
-
+  useEffect(() => {
     (async () => {
       let i = 0;
-      const newPickedImages = await Promise.all<{
+      const newImageInfo = await Promise.all<{
         sourceUrl: string;
         tmpId: string;
       }>(
-        Array.from(files).map(
+        Array.from(currentFiles).map(
           (file) =>
             new Promise((resolve, reject) => {
               const fileReader = new FileReader();
@@ -49,22 +45,30 @@ export default function MultipleImagePicker({ name }: Props) {
             })
         )
       );
-      setPickedImages(newPickedImages);
+      setImageInfos(newImageInfo);
     })();
+  }, [currentFiles]);
+
+  function handleOnClickLoad() {
+    imageInputRef.current?.click();
+  }
+
+  function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (!files) {
+      return;
+    }
+    onSelectFiles(Array.from(files));
   }
 
   return (
     <div className="flex flex-row gap-4 flex-wrap">
       <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
-        {pickedImages.length ? (
-          pickedImages.map((pickedImage) => (
-            <div key={pickedImage.tmpId} className="flex flex-row gap-2">
+        {imageInfos.length ? (
+          imageInfos.map((imageInfo) => (
+            <div key={imageInfo.tmpId} className="flex flex-row gap-2">
               <div className="w-40 h-40 relative">
-                <Image
-                  src={pickedImage.sourceUrl}
-                  alt="유저 선택 이미지"
-                  fill
-                />
+                <Image src={imageInfo.sourceUrl} alt="유저 선택 이미지" fill />
               </div>
             </div>
           ))

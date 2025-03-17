@@ -1,16 +1,33 @@
 'use client';
 
 import Image from 'next/image';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 interface Props {
   name: string;
+  currentFile: File | null;
+  onSelectFile: (newFile: File) => void;
 }
 
-export default function SingleImagePicker({ name }: Props) {
+export default function SingleImagePicker({
+  name,
+  currentFile,
+  onSelectFile,
+}: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const [pickedImage, setPickedImage] = useState<string | null>(null);
+  useEffect(() => {
+    if (!currentFile) {
+      return;
+    }
+
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      setImageUrl(fileReader.result ? fileReader.result.toString() : null);
+    };
+    fileReader.readAsDataURL(currentFile);
+  }, [currentFile]);
 
   function handleOnClickLoad() {
     imageInputRef.current?.click();
@@ -18,24 +35,17 @@ export default function SingleImagePicker({ name }: Props) {
 
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-
     if (!file) {
       return;
     }
-
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      setPickedImage(fileReader.result ? fileReader.result.toString() : null);
-    };
-
-    fileReader.readAsDataURL(file);
+    onSelectFile(file);
   }
 
   return (
     <div className="flex flex-row gap-2 flex-wrap">
       <div className="w-40 h-40 border border-primary rounded relative flex justify-center items-center overflow-hidden">
-        {pickedImage ? (
-          <Image src={pickedImage} alt="유저 선택 이미지" fill />
+        {imageUrl ? (
+          <Image src={imageUrl} alt="유저 선택 이미지" fill unoptimized />
         ) : (
           <span>이미지 없음</span>
         )}

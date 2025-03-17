@@ -1,6 +1,5 @@
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
+import { NextResponse } from 'next/server';
 
 import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
 import { ArcadeRecordActionState } from '^/src/features/arcade-record-article/types';
@@ -10,6 +9,7 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 export async function POST(request: Request) {
   const formData = await request.formData();
 
+  const arcadeRecordId = formData.get('arcadeRecordId')?.toString();
   const title = formData.get('title')?.toString();
   const arcadeId = formData.get('arcadeId')?.toString();
   const methodId = formData.get('methodId')?.toString();
@@ -31,7 +31,13 @@ export async function POST(request: Request) {
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data?.user) {
-    redirect('/');
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: 'Requires authentication.',
+      },
+      { status: 401 }
+    );
   }
 
   const errors: ArcadeRecordActionState['errors'] = {};
@@ -73,10 +79,14 @@ export async function POST(request: Request) {
   }
 
   if (Object.keys(errors).length > 0) {
-    return { errors };
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '올바르지 않은 입력이 있습니다. 확인해 주십시오.',
+      },
+      { status: 400 }
+    );
   }
-
-  const arcadeRecordId = uuidv4();
 
   const createdDate = new Date();
   const formattedDate = `${createdDate.getFullYear()}-${String(
@@ -112,5 +122,5 @@ export async function POST(request: Request) {
   });
 
   revalidatePath('/records');
-  redirect(`/records/${arcadeId}/${arcadeRecordId}`);
+  return NextResponse.json({ result: 'success' }, { status: 201 });
 }

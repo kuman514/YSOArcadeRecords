@@ -1,19 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useActionState, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
-import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
-
-import { postArcadeRecordAction } from './post-arcade-record-action';
-import { ArcadeRecordActionState } from './types';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -26,10 +24,7 @@ export default function RecordForm({
   arcadeInfoList,
   methodList,
 }: Props) {
-  const [formState, formAction] = useActionState<
-    ArcadeRecordActionState,
-    FormData
-  >(post ? putArcadeRecordAction : postArcadeRecordAction, {});
+  const route = useRouter();
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [arcadeId, setArcadeId] = useState<string>(post?.arcade.arcadeId ?? '');
@@ -52,6 +47,9 @@ export default function RecordForm({
   const [presentImageUrls, setPresentImageUrls] = useState<string[]>(
     post?.imageUrls ?? []
   );
+
+  const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+  const [localOriginalImages, setLocalOriginalImages] = useState<File[]>([]);
 
   function handleOnClickDeletePresentImageUrl(index: number) {
     return () => {
@@ -88,19 +86,112 @@ export default function RecordForm({
   return (
     <form
       className="w-full flex flex-col justify-center items-start gap-8"
-      action={formAction}
-    >
-      {post?.arcadeRecordId && (
-        <input
-          type="hidden"
-          id="arcadeRecordId"
-          name="arcadeRecordId"
-          value={post.arcadeRecordId}
-          readOnly
-        />
-      )}
-      {formState.errors?.arcadeId && <p>{formState.errors.arcadeId}</p>}
+      onSubmit={async (event) => {
+        event.preventDefault();
 
+        if (!post?.thumbnailUrl && !localThumbnail) {
+          return false;
+        }
+
+        const arcadeRecordId = post?.arcadeRecordId ?? uuidv4();
+        const directory = `${arcadeId}/${arcadeRecordId}`;
+        const timestamp = new Date().toISOString();
+
+        const thumbnailUrl = localThumbnail
+          ? await (async () => {
+              const thumbnailFormData = new FormData();
+              thumbnailFormData.append('image', localThumbnail);
+              thumbnailFormData.append('size', '480');
+              thumbnailFormData.append('path', directory);
+              thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
+              return (
+                await fetch('/api/upload-image', {
+                  method: 'POST',
+                  body: thumbnailFormData,
+                }).then((res) => res.json())
+              ).imageUrl;
+            })()
+          : post?.thumbnailUrl;
+
+        if (!thumbnailUrl) {
+          return false;
+        }
+
+        const originalImageUrls = await Promise.all<string>(
+          localOriginalImages.map(async (file, index) => {
+            const imageFormData = new FormData();
+            imageFormData.append('image', file);
+            imageFormData.append('size', '1024');
+            imageFormData.append('path', directory);
+            imageFormData.append(
+              'fileName',
+              `original-${timestamp}-${index + 1}`
+            );
+            const imageUrl = (
+              await fetch('/api/upload-image', {
+                method: 'POST',
+                body: imageFormData,
+              }).then((res) => res.json())
+            ).imageUrl;
+            return imageUrl;
+          })
+        );
+
+        if (
+          originalImageUrls.filter((imageUrl) => Boolean(imageUrl)).length !==
+          originalImageUrls.length
+        ) {
+          return false;
+        }
+
+        const recordFormData = new FormData();
+        recordFormData.append('arcadeRecordId', arcadeRecordId);
+        recordFormData.append('title', title);
+        recordFormData.append('arcadeId', arcadeId);
+        recordFormData.append('methodId', methodId);
+        recordFormData.append('achievedAt', achievedAt.toISOString());
+        recordFormData.append('players', String(players));
+        recordFormData.append('playerSide', String(playerSide));
+        recordFormData.append('evaluation', evaluation);
+        recordFormData.append('stage', stage);
+        recordFormData.append('rank', rank);
+        recordFormData.append('comment', comment);
+        recordFormData.append('note', note);
+        recordFormData.append('youTubeId', youTubeId);
+        recordFormData.append('tags', tags);
+
+        if (post?.thumbnailUrl) {
+          recordFormData.append('presentThumbnailUrl', post.thumbnailUrl);
+        }
+        recordFormData.append('thumbnailUrl', thumbnailUrl);
+
+        if (presentImageUrls.length > 0) {
+          recordFormData.append(
+            'presentImageUrls',
+            JSON.stringify(presentImageUrls)
+          );
+        }
+        originalImageUrls.forEach((imageUrl) => {
+          recordFormData.append('originalImageUrls', imageUrl);
+        });
+
+        const result = post
+          ? await fetch(`/api/records/${post.arcadeRecordId}`, {
+              method: 'PUT',
+              body: recordFormData,
+            }).then((res) => res.json())
+          : await fetch('/api/records', {
+              method: 'POST',
+              body: recordFormData,
+            }).then((res) => res.json());
+
+        if (result.result === 'success') {
+          route.replace(`/records/${arcadeId}/${arcadeRecordId}`);
+        }
+
+        return false;
+      }}
+    >
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">기록 제목</label>
         <FormInput
@@ -113,7 +204,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.title && <p>{formState.errors.title}</p>}
+      {title.length <= 0 && <p>제목을 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="arcadeId">아케이드 부문</label>
@@ -128,7 +219,7 @@ export default function RecordForm({
           {renderArcadeSelectOptions}
         </FormDropdown>
       </p>
-      {formState.errors?.arcadeId && <p>{formState.errors.arcadeId}</p>}
+      {arcadeId === '' && <p>아케이드 부문을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="methodId">수단</label>
@@ -143,7 +234,7 @@ export default function RecordForm({
           {renderMethodSelectOptions}
         </FormDropdown>
       </p>
-      {formState.errors?.methodId && <p>{formState.errors.methodId}</p>}
+      {methodId === '' && <p>플레이 수단을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
@@ -160,7 +251,6 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.achievedAt && <p>{formState.errors.achievedAt}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="players">플레이어 수</label>
@@ -178,7 +268,6 @@ export default function RecordForm({
           <option value={4}>4명</option>
         </FormDropdown>
       </p>
-      {formState.errors?.players && <p>{formState.errors.players}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="players">작성자의 플레이 사이드</label>
@@ -196,7 +285,6 @@ export default function RecordForm({
           <option value={4}>4P</option>
         </FormDropdown>
       </p>
-      {formState.errors?.playerSide && <p>{formState.errors.playerSide}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="evaluation">점수 / 클리어 타임</label>
@@ -210,7 +298,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.evaluation && <p>{formState.errors.evaluation}</p>}
+      {evaluation.length <= 0 && <p>점수 또는 클리어 타임을 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
@@ -224,7 +312,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.stage && <p>{formState.errors.stage}</p>}
+      {stage.length <= 0 && <p>어느 스테이지까지 도달하였는지 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="rank">최종 등급</label>
@@ -251,7 +339,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.comment && <p>{formState.errors.comment}</p>}
+      {comment.length <= 0 && <p>코멘터리를 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
@@ -310,9 +398,13 @@ export default function RecordForm({
 
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">새로운 썸네일</label>
-        <SingleImagePicker name="thumbnail" />
+        <SingleImagePicker
+          name="thumbnail"
+          currentFile={localThumbnail}
+          onSelectFile={setLocalThumbnail}
+        />
       </div>
-      {formState.errors?.thumbnailUrl && <p>{formState.errors.thumbnailUrl}</p>}
+      {!post?.thumbnailUrl && !localThumbnail && <p>썸네일을 등록해주세요.</p>}
 
       {post && (
         <div className="w-full flex flex-col gap-2">
@@ -346,12 +438,14 @@ export default function RecordForm({
 
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
-        <MultipleImagePicker name="originalImages" />
+        <MultipleImagePicker
+          name="originalImages"
+          currentFiles={localOriginalImages}
+          onSelectFiles={setLocalOriginalImages}
+        />
       </div>
-      {formState.errors?.imageUrls && <p>{formState.errors.imageUrls}</p>}
-
-      {Object.keys(formState.errors ?? {}).length > 0 && (
-        <p>완료되지 않은 입력이 있습니다. 확인하여 주십시오.</p>
+      {presentImageUrls.length <= 0 && localOriginalImages.length <= 0 && (
+        <p>원본 이미지를 첨부해주세요.</p>
       )}
 
       <button

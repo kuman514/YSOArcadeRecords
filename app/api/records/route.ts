@@ -1,19 +1,15 @@
-'use server';
-
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
+import { NextResponse } from 'next/server';
 
 import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
+import { ArcadeRecordActionState } from '^/src/features/arcade-record-article/types';
 import { insertData } from '^/src/shared/supabase/database';
-import { resizeImage, saveImage } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
-import { ArcadeRecordActionState } from './types';
 
-export async function postArcadeRecordAction(
-  _: ArcadeRecordActionState,
-  formData: FormData
-) {
+export async function POST(request: Request) {
+  const formData = await request.formData();
+
+  const arcadeRecordId = formData.get('arcadeRecordId')?.toString();
   const title = formData.get('title')?.toString();
   const arcadeId = formData.get('arcadeId')?.toString();
   const methodId = formData.get('methodId')?.toString();
@@ -28,14 +24,20 @@ export async function postArcadeRecordAction(
   const youTubeId = formData.get('youTubeId')?.toString();
   const tags = formData.get('tags')?.toString();
 
-  const thumbnail = formData.get('thumbnail') as File;
-  const originalImages = formData.getAll('originalImages') as File[];
+  const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
+  const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data?.user) {
-    redirect('/');
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: 'Requires authentication.',
+      },
+      { status: 401 }
+    );
   }
 
   const errors: ArcadeRecordActionState['errors'] = {};
@@ -76,47 +78,15 @@ export async function postArcadeRecordAction(
     errors.comment = '코멘터리를 입력해주십시오.';
   }
 
-  if (!thumbnail.name || thumbnail.name === 'undefined') {
-    errors.thumbnailUrl = '썸네일을 선택해주십시오.';
-  }
-
-  if (
-    !originalImages ||
-    originalImages.length === 0 ||
-    !originalImages[0].name ||
-    originalImages[0].name === 'undefined'
-  ) {
-    errors.imageUrls = '원본 이미지들을 선택해주십시오.';
-  }
-
   if (Object.keys(errors).length > 0) {
-    return { errors };
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '올바르지 않은 입력이 있습니다. 확인해 주십시오.',
+      },
+      { status: 400 }
+    );
   }
-
-  const arcadeRecordId = uuidv4();
-  const directory = `${arcadeId}/${arcadeRecordId}`;
-  const timestamp = new Date().toISOString();
-
-  const thumbnailUrl = await saveImage(
-    await resizeImage(thumbnail, {
-      maxWidth: 480,
-      maxHeight: 480,
-    }),
-    `thumbnail-${timestamp}`,
-    directory
-  );
-
-  const validImages = originalImages.filter((image) => image.size > 0);
-  const originalImageUrls = await Promise.all<string>(
-    validImages.map(
-      async (file, index) =>
-        await saveImage(
-          await resizeImage(file, { maxWidth: 1024, maxHeight: 1024 }),
-          `original-${timestamp}-${index + 1}`,
-          directory
-        )
-    )
-  );
 
   const createdDate = new Date();
   const formattedDate = `${createdDate.getFullYear()}-${String(
@@ -143,7 +113,7 @@ export async function postArcadeRecordAction(
           .filter((tag) => tag.length > 0) ?? [],
       note,
       youtube_id: youTubeId,
-      thumbnail_url: thumbnailUrl,
+      thumbnail_url: thumbnailUrl!,
       image_urls: originalImageUrls,
       achieved_at: achievedAt!,
       created_at: formattedDate,
@@ -152,5 +122,5 @@ export async function postArcadeRecordAction(
   });
 
   revalidatePath('/records');
-  redirect(`/records/${arcadeId}/${arcadeRecordId}`);
+  return NextResponse.json({ result: 'success' }, { status: 201 });
 }

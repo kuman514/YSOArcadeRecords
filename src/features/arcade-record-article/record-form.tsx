@@ -12,6 +12,7 @@ import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
+import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -50,6 +51,33 @@ export default function RecordForm({
 
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
   const [localOriginalImages, setLocalOriginalImages] = useState<File[]>([]);
+
+  const isTitleVerified = title.length > 0;
+  const isArcadeIdVerified = arcadeId.length > 0;
+  const isMethodIdVerified = methodId.length > 0;
+  const isEvaluationVerified = (() => {
+    try {
+      parseEvaluation(evaluation);
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  const isStageVerified = stage.length > 0;
+  const isCommentVerified = comment.length > 0;
+  const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
+  const isOriginalImagesVerified =
+    presentImageUrls.length > 0 || localOriginalImages.length > 0;
+
+  const isSubmittable =
+    isTitleVerified &&
+    isArcadeIdVerified &&
+    isMethodIdVerified &&
+    isEvaluationVerified &&
+    isStageVerified &&
+    isCommentVerified &&
+    isThumbnailVerified &&
+    isOriginalImagesVerified;
 
   function handleOnClickDeletePresentImageUrl(index: number) {
     return () => {
@@ -204,7 +232,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {title.length <= 0 && <p>제목을 입력해주세요.</p>}
+      {!isTitleVerified && <p>제목을 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="arcadeId">아케이드 부문</label>
@@ -219,7 +247,7 @@ export default function RecordForm({
           {renderArcadeSelectOptions}
         </FormDropdown>
       </p>
-      {arcadeId === '' && <p>아케이드 부문을 선택해주세요.</p>}
+      {!isArcadeIdVerified && <p>아케이드 부문을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="methodId">수단</label>
@@ -234,7 +262,7 @@ export default function RecordForm({
           {renderMethodSelectOptions}
         </FormDropdown>
       </p>
-      {methodId === '' && <p>플레이 수단을 선택해주세요.</p>}
+      {!isMethodIdVerified && <p>플레이 수단을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
@@ -298,7 +326,12 @@ export default function RecordForm({
           }}
         />
       </p>
-      {evaluation.length <= 0 && <p>점수 또는 클리어 타임을 입력해주세요.</p>}
+      {!isEvaluationVerified && (
+        <p>
+          점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의 시간)의
+          형식에 맞게 입력해주세요.
+        </p>
+      )}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
@@ -312,7 +345,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {stage.length <= 0 && <p>어느 스테이지까지 도달하였는지 입력해주세요.</p>}
+      {!isStageVerified && <p>어느 스테이지까지 도달하였는지 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="rank">최종 등급</label>
@@ -339,7 +372,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {comment.length <= 0 && <p>코멘터리를 입력해주세요.</p>}
+      {!isCommentVerified && <p>코멘터리를 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
@@ -404,7 +437,7 @@ export default function RecordForm({
           onSelectFile={setLocalThumbnail}
         />
       </div>
-      {!post?.thumbnailUrl && !localThumbnail && <p>썸네일을 등록해주세요.</p>}
+      {!isThumbnailVerified && <p>썸네일을 등록해주세요.</p>}
 
       {post && (
         <div className="w-full flex flex-col gap-2">
@@ -444,13 +477,12 @@ export default function RecordForm({
           onSelectFiles={setLocalOriginalImages}
         />
       </div>
-      {presentImageUrls.length <= 0 && localOriginalImages.length <= 0 && (
-        <p>원본 이미지를 첨부해주세요.</p>
-      )}
+      {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
       <button
         type="submit"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
+        disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}
       </button>

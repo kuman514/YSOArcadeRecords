@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: 'Requires authentication.',
+        error: '로그인이 필요합니다.',
       },
       { status: 401 }
     );
@@ -27,7 +27,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: 'Requires an image, the size, the path, and the image name.',
+        error:
+          '이미지 파일과 저장할 경로, 최대 사이즈, 저장할 파일명을 지정하셔야 합니다.',
       },
       { status: 400 }
     );
@@ -44,7 +45,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ result: 'success', imageUrl }, { status: 201 });
   } catch {
     return NextResponse.json(
-      { result: 'failed', error: 'Failed to save image.' },
+      {
+        result: 'failed',
+        error: '이미지 업로드에 실패하였습니다. 다시 시도해 주십시오.',
+      },
       { status: 500 }
     );
   }

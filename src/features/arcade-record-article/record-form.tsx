@@ -63,21 +63,25 @@ export default function RecordForm({
 
   const renderArcadeSelectOptions = useMemo(
     () =>
-      arcadeInfoList.map(({ arcadeId: id, label }) => (
-        <option key={`arcade-selection-${id}`} value={id}>
-          {label}
-        </option>
-      )),
+      [{ arcadeId: '', label: '선택하세요' }]
+        .concat(arcadeInfoList)
+        .map(({ arcadeId: id, label }) => (
+          <option key={`arcade-selection-${id}`} value={id}>
+            {label}
+          </option>
+        )),
     [arcadeInfoList]
   );
 
   const renderMethodSelectOptions = useMemo(
     () =>
-      methodList.map(({ methodId: id, label }) => (
-        <option key={`method-selection-${id}`} value={id}>
-          {label}
-        </option>
-      )),
+      [{ methodId: '', label: '선택하세요' }]
+        .concat(methodList)
+        .map(({ methodId: id, label }) => (
+          <option key={`method-selection-${id}`} value={id}>
+            {label}
+          </option>
+        )),
     [methodList]
   );
 

@@ -1,8 +1,22 @@
 import { NextResponse } from 'next/server';
 
 import { resizeImage, saveImage } from '^/src/shared/supabase/image';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function POST(request: Request) {
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: 'Requires authentication.',
+      },
+      { status: 401 }
+    );
+  }
+
   const formData = await request.formData();
   const image = formData.get('image') as File;
   const size = formData.get('size')?.toString();

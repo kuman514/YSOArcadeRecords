@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
@@ -13,6 +13,8 @@ import SingleImagePicker from '^/src/shared/image-picker/single';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { useRouteHandlerPut } from '^/src/shared/route-handler-call/put';
+import { useRouteHandlerPost } from '^/src/shared/route-handler-call/post';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -26,6 +28,23 @@ export default function RecordForm({
   methodList,
 }: Props) {
   const route = useRouter();
+
+  const {
+    isLoading: isRouteHandlerPostLoading,
+    isSuccess: isRouteHandlerPostSuccess,
+    errorMessage: routeHandlerPostErrorMessage,
+    sendRequest: sendRouteHandlerPostRequest,
+  } = useRouteHandlerPost();
+  const {
+    isLoading: isRouteHandlerPutLoading,
+    isSuccess: isRouteHandlerPutSuccess,
+    errorMessage: routeHandlerPutErrorMessage,
+    sendRequest: sendRouteHandlerPutRequest,
+  } = useRouteHandlerPut();
+
+  const arcadeRecordId = useRef<string>(
+    post?.arcadeRecordId ?? uuidv4()
+  ).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [arcadeId, setArcadeId] = useState<string>(post?.arcade.arcadeId ?? '');
@@ -69,6 +88,9 @@ export default function RecordForm({
   const isOriginalImagesVerified =
     presentImageUrls.length > 0 || localOriginalImages.length > 0;
 
+  const isLoading = isRouteHandlerPostLoading || isRouteHandlerPutLoading;
+  const isSuccess = isRouteHandlerPostSuccess || isRouteHandlerPutSuccess;
+
   const isSubmittable =
     isTitleVerified &&
     isArcadeIdVerified &&
@@ -77,7 +99,15 @@ export default function RecordForm({
     isStageVerified &&
     isCommentVerified &&
     isThumbnailVerified &&
-    isOriginalImagesVerified;
+    isOriginalImagesVerified &&
+    !isLoading &&
+    !isSuccess;
+
+  useEffect(() => {
+    if (isSuccess) {
+      route.replace(`/records/${arcadeId}/${arcadeRecordId}`);
+    }
+  }, [isSuccess, arcadeId, route, arcadeRecordId]);
 
   function handleOnClickDeletePresentImageUrl(index: number) {
     return () => {
@@ -85,6 +115,103 @@ export default function RecordForm({
       newPresentImageUrls.splice(index, 1);
       setPresentImageUrls(newPresentImageUrls);
     };
+  }
+
+  async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!post?.thumbnailUrl && !localThumbnail) {
+      return false;
+    }
+
+    const path = `${arcadeId}/${arcadeRecordId}`;
+    const timestamp = new Date().toISOString();
+
+    const thumbnailUrl = localThumbnail
+      ? await (async () => {
+          const thumbnailFormData = new FormData();
+          thumbnailFormData.append('image', localThumbnail);
+          thumbnailFormData.append('size', '480');
+          thumbnailFormData.append('path', path);
+          thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
+          return (
+            await fetch('/api/upload-image', {
+              method: 'POST',
+              body: thumbnailFormData,
+            }).then((res) => res.json())
+          ).imageUrl;
+        })()
+      : post?.thumbnailUrl;
+
+    if (!thumbnailUrl) {
+      return false;
+    }
+
+    const originalImageUrls = await Promise.all<string>(
+      localOriginalImages.map(async (file, index) => {
+        const imageFormData = new FormData();
+        imageFormData.append('image', file);
+        imageFormData.append('size', '1024');
+        imageFormData.append('path', path);
+        imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
+        const imageUrl = (
+          await fetch('/api/upload-image', {
+            method: 'POST',
+            body: imageFormData,
+          }).then((res) => res.json())
+        ).imageUrl;
+        return imageUrl;
+      })
+    );
+
+    if (
+      originalImageUrls.filter((imageUrl) => Boolean(imageUrl)).length !==
+      originalImageUrls.length
+    ) {
+      return false;
+    }
+
+    const recordFormData = new FormData();
+    recordFormData.append('arcadeRecordId', arcadeRecordId);
+    recordFormData.append('title', title);
+    recordFormData.append('arcadeId', arcadeId);
+    recordFormData.append('methodId', methodId);
+    recordFormData.append('achievedAt', achievedAt.toISOString());
+    recordFormData.append('players', String(players));
+    recordFormData.append('playerSide', String(playerSide));
+    recordFormData.append('evaluation', evaluation);
+    recordFormData.append('stage', stage);
+    recordFormData.append('rank', rank);
+    recordFormData.append('comment', comment);
+    recordFormData.append('note', note);
+    recordFormData.append('youTubeId', youTubeId);
+    recordFormData.append('tags', tags);
+
+    if (post?.thumbnailUrl) {
+      recordFormData.append('presentThumbnailUrl', post.thumbnailUrl);
+    }
+    recordFormData.append('thumbnailUrl', thumbnailUrl);
+
+    if (presentImageUrls.length > 0) {
+      recordFormData.append(
+        'presentImageUrls',
+        JSON.stringify(presentImageUrls)
+      );
+    }
+    originalImageUrls.forEach((imageUrl) => {
+      recordFormData.append('originalImageUrls', imageUrl);
+    });
+
+    if (post) {
+      await sendRouteHandlerPutRequest(
+        `/api/records/${arcadeRecordId}`,
+        recordFormData
+      );
+    } else {
+      await sendRouteHandlerPostRequest('/api/records', recordFormData);
+    }
+
+    return false;
   }
 
   const renderArcadeSelectOptions = useMemo(
@@ -114,111 +241,7 @@ export default function RecordForm({
   return (
     <form
       className="w-full flex flex-col justify-center items-start gap-8"
-      onSubmit={async (event) => {
-        event.preventDefault();
-
-        if (!post?.thumbnailUrl && !localThumbnail) {
-          return false;
-        }
-
-        const arcadeRecordId = post?.arcadeRecordId ?? uuidv4();
-        const directory = `${arcadeId}/${arcadeRecordId}`;
-        const timestamp = new Date().toISOString();
-
-        const thumbnailUrl = localThumbnail
-          ? await (async () => {
-              const thumbnailFormData = new FormData();
-              thumbnailFormData.append('image', localThumbnail);
-              thumbnailFormData.append('size', '480');
-              thumbnailFormData.append('path', directory);
-              thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
-              return (
-                await fetch('/api/upload-image', {
-                  method: 'POST',
-                  body: thumbnailFormData,
-                }).then((res) => res.json())
-              ).imageUrl;
-            })()
-          : post?.thumbnailUrl;
-
-        if (!thumbnailUrl) {
-          return false;
-        }
-
-        const originalImageUrls = await Promise.all<string>(
-          localOriginalImages.map(async (file, index) => {
-            const imageFormData = new FormData();
-            imageFormData.append('image', file);
-            imageFormData.append('size', '1024');
-            imageFormData.append('path', directory);
-            imageFormData.append(
-              'fileName',
-              `original-${timestamp}-${index + 1}`
-            );
-            const imageUrl = (
-              await fetch('/api/upload-image', {
-                method: 'POST',
-                body: imageFormData,
-              }).then((res) => res.json())
-            ).imageUrl;
-            return imageUrl;
-          })
-        );
-
-        if (
-          originalImageUrls.filter((imageUrl) => Boolean(imageUrl)).length !==
-          originalImageUrls.length
-        ) {
-          return false;
-        }
-
-        const recordFormData = new FormData();
-        recordFormData.append('arcadeRecordId', arcadeRecordId);
-        recordFormData.append('title', title);
-        recordFormData.append('arcadeId', arcadeId);
-        recordFormData.append('methodId', methodId);
-        recordFormData.append('achievedAt', achievedAt.toISOString());
-        recordFormData.append('players', String(players));
-        recordFormData.append('playerSide', String(playerSide));
-        recordFormData.append('evaluation', evaluation);
-        recordFormData.append('stage', stage);
-        recordFormData.append('rank', rank);
-        recordFormData.append('comment', comment);
-        recordFormData.append('note', note);
-        recordFormData.append('youTubeId', youTubeId);
-        recordFormData.append('tags', tags);
-
-        if (post?.thumbnailUrl) {
-          recordFormData.append('presentThumbnailUrl', post.thumbnailUrl);
-        }
-        recordFormData.append('thumbnailUrl', thumbnailUrl);
-
-        if (presentImageUrls.length > 0) {
-          recordFormData.append(
-            'presentImageUrls',
-            JSON.stringify(presentImageUrls)
-          );
-        }
-        originalImageUrls.forEach((imageUrl) => {
-          recordFormData.append('originalImageUrls', imageUrl);
-        });
-
-        const result = post
-          ? await fetch(`/api/records/${post.arcadeRecordId}`, {
-              method: 'PUT',
-              body: recordFormData,
-            }).then((res) => res.json())
-          : await fetch('/api/records', {
-              method: 'POST',
-              body: recordFormData,
-            }).then((res) => res.json());
-
-        if (result.result === 'success') {
-          route.replace(`/records/${arcadeId}/${arcadeRecordId}`);
-        }
-
-        return false;
-      }}
+      onSubmit={handleOnSubmit}
     >
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">기록 제목</label>
@@ -479,6 +502,8 @@ export default function RecordForm({
       </div>
       {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
+      {!routeHandlerPostErrorMessage && <p>{routeHandlerPostErrorMessage}</p>}
+      {!routeHandlerPutErrorMessage && <p>{routeHandlerPutErrorMessage}</p>}
       <button
         type="submit"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"

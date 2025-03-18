@@ -1,19 +1,22 @@
 'use client';
 
 import Image from 'next/image';
-import { useActionState, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
-import { putArcadeRecordAction } from '^/src/features/arcade-record-article/put-arcade-record-action';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
+import {
+  RouteHandlerCallResponse,
+  RouteHandlerCallResponseStatus,
+} from '^/src/shared/route-handler-call/types';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
-
-import { postArcadeRecordAction } from './post-arcade-record-action';
-import { ArcadeRecordActionState } from './types';
+import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -26,10 +29,15 @@ export default function RecordForm({
   arcadeInfoList,
   methodList,
 }: Props) {
-  const [formState, formAction] = useActionState<
-    ArcadeRecordActionState,
-    FormData
-  >(post ? putArcadeRecordAction : postArcadeRecordAction, {});
+  const route = useRouter();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const arcadeRecordId = useRef<string>(
+    post?.arcadeRecordId ?? uuidv4()
+  ).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [arcadeId, setArcadeId] = useState<string>(post?.arcade.arcadeId ?? '');
@@ -53,6 +61,44 @@ export default function RecordForm({
     post?.imageUrls ?? []
   );
 
+  const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+  const [localOriginalImages, setLocalOriginalImages] = useState<File[]>([]);
+
+  const isTitleVerified = title.length > 0;
+  const isArcadeIdVerified = arcadeId.length > 0;
+  const isMethodIdVerified = methodId.length > 0;
+  const isEvaluationVerified = (() => {
+    try {
+      parseEvaluation(evaluation);
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  const isStageVerified = stage.length > 0;
+  const isCommentVerified = comment.length > 0;
+  const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
+  const isOriginalImagesVerified =
+    presentImageUrls.length > 0 || localOriginalImages.length > 0;
+
+  const isSubmittable =
+    isTitleVerified &&
+    isArcadeIdVerified &&
+    isMethodIdVerified &&
+    isEvaluationVerified &&
+    isStageVerified &&
+    isCommentVerified &&
+    isThumbnailVerified &&
+    isOriginalImagesVerified &&
+    !isLoading &&
+    !isSuccess;
+
+  useEffect(() => {
+    if (isSuccess) {
+      route.replace(`/records/${arcadeId}/${arcadeRecordId}`);
+    }
+  }, [isSuccess, arcadeId, route, arcadeRecordId]);
+
   function handleOnClickDeletePresentImageUrl(index: number) {
     return () => {
       const newPresentImageUrls = Array.from(presentImageUrls);
@@ -61,42 +107,170 @@ export default function RecordForm({
     };
   }
 
+  async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    const path = `${arcadeId}/${arcadeRecordId}`;
+    const timestamp = new Date().toISOString();
+
+    const thumbnailUrl = localThumbnail
+      ? await (async () => {
+          const thumbnailFormData = new FormData();
+          thumbnailFormData.append('image', localThumbnail);
+          thumbnailFormData.append('size', '480');
+          thumbnailFormData.append('path', path);
+          thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
+          const result = await fetch('/api/upload-image', {
+            method: 'POST',
+            body: thumbnailFormData,
+          }).then(
+            (res) =>
+              res.json() as Promise<
+                RouteHandlerCallResponse<{ imageUrl: string }>
+              >
+          );
+          if (result.result === RouteHandlerCallResponseStatus.FAILED) {
+            return null;
+          }
+          return result.imageUrl;
+        })()
+      : post?.thumbnailUrl;
+
+    if (!thumbnailUrl) {
+      setErrorMessage(
+        '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+      );
+      setIsLoading(false);
+      return false;
+    }
+
+    const originalImageUrls = await Promise.all<string | null>(
+      localOriginalImages.map(async (file, index) => {
+        const imageFormData = new FormData();
+        imageFormData.append('image', file);
+        imageFormData.append('size', '1024');
+        imageFormData.append('path', path);
+        imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
+        const result = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: imageFormData,
+        }).then(
+          (res) =>
+            res.json() as Promise<
+              RouteHandlerCallResponse<{ imageUrl: string }>
+            >
+        );
+        if (result.result === RouteHandlerCallResponseStatus.FAILED) {
+          return null;
+        }
+        return result.imageUrl;
+      })
+    );
+
+    const filteredOriginalImages = originalImageUrls.filter(
+      (imageUrl) => imageUrl !== null
+    );
+
+    if (filteredOriginalImages.length !== originalImageUrls.length) {
+      setErrorMessage(
+        '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+      );
+      setIsLoading(false);
+      return false;
+    }
+
+    const recordFormData = new FormData();
+    recordFormData.append('arcadeRecordId', arcadeRecordId);
+    recordFormData.append('title', title);
+    recordFormData.append('arcadeId', arcadeId);
+    recordFormData.append('methodId', methodId);
+    recordFormData.append('achievedAt', achievedAt.toISOString());
+    recordFormData.append('players', String(players));
+    recordFormData.append('playerSide', String(playerSide));
+    recordFormData.append('evaluation', evaluation);
+    recordFormData.append('stage', stage);
+    recordFormData.append('rank', rank);
+    recordFormData.append('comment', comment);
+    recordFormData.append('note', note);
+    recordFormData.append('youTubeId', youTubeId);
+    recordFormData.append('tags', tags);
+
+    if (post?.thumbnailUrl) {
+      recordFormData.append('presentThumbnailUrl', post.thumbnailUrl);
+    }
+    recordFormData.append('thumbnailUrl', thumbnailUrl);
+
+    presentImageUrls.forEach((imageUrl) => {
+      recordFormData.append('presentImageUrls', imageUrl);
+    });
+    filteredOriginalImages.forEach((imageUrl) => {
+      recordFormData.append('originalImageUrls', imageUrl);
+    });
+
+    try {
+      const result = post
+        ? await fetch(`/api/records/${arcadeRecordId}`, {
+            method: 'PUT',
+            body: recordFormData,
+          }).then(
+            (res) => res.json() as Promise<RouteHandlerCallResponse<object>>
+          )
+        : await fetch('/api/records', {
+            method: 'POST',
+            body: recordFormData,
+          }).then(
+            (res) => res.json() as Promise<RouteHandlerCallResponse<object>>
+          );
+
+      switch (result.result) {
+        case RouteHandlerCallResponseStatus.SUCCESS:
+          setIsSuccess(true);
+          break;
+        case RouteHandlerCallResponseStatus.FAILED:
+          setErrorMessage(result.error);
+          break;
+        default:
+      }
+    } catch {
+      setErrorMessage('예기치 못한 문제가 발생하였습니다.');
+    }
+
+    setIsLoading(false);
+    return false;
+  }
+
   const renderArcadeSelectOptions = useMemo(
     () =>
-      arcadeInfoList.map(({ arcadeId: id, label }) => (
-        <option key={`arcade-selection-${id}`} value={id}>
-          {label}
-        </option>
-      )),
+      [{ arcadeId: '', label: '선택하세요' }]
+        .concat(arcadeInfoList)
+        .map(({ arcadeId: id, label }) => (
+          <option key={`arcade-selection-${id}`} value={id}>
+            {label}
+          </option>
+        )),
     [arcadeInfoList]
   );
 
   const renderMethodSelectOptions = useMemo(
     () =>
-      methodList.map(({ methodId: id, label }) => (
-        <option key={`method-selection-${id}`} value={id}>
-          {label}
-        </option>
-      )),
+      [{ methodId: '', label: '선택하세요' }]
+        .concat(methodList)
+        .map(({ methodId: id, label }) => (
+          <option key={`method-selection-${id}`} value={id}>
+            {label}
+          </option>
+        )),
     [methodList]
   );
 
   return (
     <form
       className="w-full flex flex-col justify-center items-start gap-8"
-      action={formAction}
+      onSubmit={handleOnSubmit}
     >
-      {post?.arcadeRecordId && (
-        <input
-          type="hidden"
-          id="arcadeRecordId"
-          name="arcadeRecordId"
-          value={post.arcadeRecordId}
-          readOnly
-        />
-      )}
-      {formState.errors?.arcadeId && <p>{formState.errors.arcadeId}</p>}
-
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">기록 제목</label>
         <FormInput
@@ -109,7 +283,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.title && <p>{formState.errors.title}</p>}
+      {!isTitleVerified && <p>제목을 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="arcadeId">아케이드 부문</label>
@@ -124,7 +298,7 @@ export default function RecordForm({
           {renderArcadeSelectOptions}
         </FormDropdown>
       </p>
-      {formState.errors?.arcadeId && <p>{formState.errors.arcadeId}</p>}
+      {!isArcadeIdVerified && <p>아케이드 부문을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="methodId">수단</label>
@@ -139,7 +313,7 @@ export default function RecordForm({
           {renderMethodSelectOptions}
         </FormDropdown>
       </p>
-      {formState.errors?.methodId && <p>{formState.errors.methodId}</p>}
+      {!isMethodIdVerified && <p>플레이 수단을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
@@ -156,7 +330,6 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.achievedAt && <p>{formState.errors.achievedAt}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="players">플레이어 수</label>
@@ -174,7 +347,6 @@ export default function RecordForm({
           <option value={4}>4명</option>
         </FormDropdown>
       </p>
-      {formState.errors?.players && <p>{formState.errors.players}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="players">작성자의 플레이 사이드</label>
@@ -192,7 +364,6 @@ export default function RecordForm({
           <option value={4}>4P</option>
         </FormDropdown>
       </p>
-      {formState.errors?.playerSide && <p>{formState.errors.playerSide}</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="evaluation">점수 / 클리어 타임</label>
@@ -206,7 +377,12 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.evaluation && <p>{formState.errors.evaluation}</p>}
+      {!isEvaluationVerified && (
+        <p>
+          점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의 시간)의
+          형식에 맞게 입력해주세요.
+        </p>
+      )}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
@@ -220,7 +396,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.stage && <p>{formState.errors.stage}</p>}
+      {!isStageVerified && <p>어느 스테이지까지 도달하였는지 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="rank">최종 등급</label>
@@ -247,7 +423,7 @@ export default function RecordForm({
           }}
         />
       </p>
-      {formState.errors?.comment && <p>{formState.errors.comment}</p>}
+      {!isCommentVerified && <p>코멘터리를 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
@@ -306,9 +482,13 @@ export default function RecordForm({
 
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">새로운 썸네일</label>
-        <SingleImagePicker name="thumbnail" />
+        <SingleImagePicker
+          name="thumbnail"
+          currentFile={localThumbnail}
+          onSelectFile={setLocalThumbnail}
+        />
       </div>
-      {formState.errors?.thumbnailUrl && <p>{formState.errors.thumbnailUrl}</p>}
+      {!isThumbnailVerified && <p>썸네일을 등록해주세요.</p>}
 
       {post && (
         <div className="w-full flex flex-col gap-2">
@@ -342,17 +522,19 @@ export default function RecordForm({
 
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
-        <MultipleImagePicker name="originalImages" />
+        <MultipleImagePicker
+          name="originalImages"
+          currentFiles={localOriginalImages}
+          onSelectFiles={setLocalOriginalImages}
+        />
       </div>
-      {formState.errors?.imageUrls && <p>{formState.errors.imageUrls}</p>}
+      {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
-      {Object.keys(formState.errors ?? {}).length > 0 && (
-        <p>완료되지 않은 입력이 있습니다. 확인하여 주십시오.</p>
-      )}
-
+      {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
+        disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}
       </button>

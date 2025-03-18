@@ -15,7 +15,7 @@ export default function ArcadeRecordThumbnail({
     <div className="relative w-full sm:w-80 h-80">
       <Image
         src={thumbnailUrl}
-        alt="Test thumbnail"
+        alt="아케이드 기록 썸네일"
         className="object-contain"
         fill
       />

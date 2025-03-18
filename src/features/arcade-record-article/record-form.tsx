@@ -10,11 +10,13 @@ import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
+import {
+  RouteHandlerCallResponse,
+  RouteHandlerCallResponseStatus,
+} from '^/src/shared/route-handler-call/types';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
-import { useRouteHandlerPut } from '^/src/shared/route-handler-call/put';
-import { useRouteHandlerPost } from '^/src/shared/route-handler-call/post';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -29,18 +31,9 @@ export default function RecordForm({
 }: Props) {
   const route = useRouter();
 
-  const {
-    isLoading: isRouteHandlerPostLoading,
-    isSuccess: isRouteHandlerPostSuccess,
-    errorMessage: routeHandlerPostErrorMessage,
-    sendRequest: sendRouteHandlerPostRequest,
-  } = useRouteHandlerPost();
-  const {
-    isLoading: isRouteHandlerPutLoading,
-    isSuccess: isRouteHandlerPutSuccess,
-    errorMessage: routeHandlerPutErrorMessage,
-    sendRequest: sendRouteHandlerPutRequest,
-  } = useRouteHandlerPut();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const arcadeRecordId = useRef<string>(
     post?.arcadeRecordId ?? uuidv4()
@@ -88,9 +81,6 @@ export default function RecordForm({
   const isOriginalImagesVerified =
     presentImageUrls.length > 0 || localOriginalImages.length > 0;
 
-  const isLoading = isRouteHandlerPostLoading || isRouteHandlerPutLoading;
-  const isSuccess = isRouteHandlerPostSuccess || isRouteHandlerPutSuccess;
-
   const isSubmittable =
     isTitleVerified &&
     isArcadeIdVerified &&
@@ -120,9 +110,8 @@ export default function RecordForm({
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!post?.thumbnailUrl && !localThumbnail) {
-      return false;
-    }
+    setIsLoading(true);
+    setErrorMessage(null);
 
     const path = `${arcadeId}/${arcadeRecordId}`;
     const timestamp = new Date().toISOString();
@@ -134,40 +123,62 @@ export default function RecordForm({
           thumbnailFormData.append('size', '480');
           thumbnailFormData.append('path', path);
           thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
-          return (
-            await fetch('/api/upload-image', {
-              method: 'POST',
-              body: thumbnailFormData,
-            }).then((res) => res.json())
-          ).imageUrl;
+          const result = await fetch('/api/upload-image', {
+            method: 'POST',
+            body: thumbnailFormData,
+          }).then(
+            (res) =>
+              res.json() as Promise<
+                RouteHandlerCallResponse<{ imageUrl: string }>
+              >
+          );
+          if (result.result === RouteHandlerCallResponseStatus.FAILED) {
+            return null;
+          }
+          return result.imageUrl;
         })()
       : post?.thumbnailUrl;
 
     if (!thumbnailUrl) {
+      setErrorMessage(
+        '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+      );
+      setIsLoading(false);
       return false;
     }
 
-    const originalImageUrls = await Promise.all<string>(
+    const originalImageUrls = await Promise.all<string | null>(
       localOriginalImages.map(async (file, index) => {
         const imageFormData = new FormData();
         imageFormData.append('image', file);
         imageFormData.append('size', '1024');
         imageFormData.append('path', path);
         imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
-        const imageUrl = (
-          await fetch('/api/upload-image', {
-            method: 'POST',
-            body: imageFormData,
-          }).then((res) => res.json())
-        ).imageUrl;
-        return imageUrl;
+        const result = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: imageFormData,
+        }).then(
+          (res) =>
+            res.json() as Promise<
+              RouteHandlerCallResponse<{ imageUrl: string }>
+            >
+        );
+        if (result.result === RouteHandlerCallResponseStatus.FAILED) {
+          return null;
+        }
+        return result.imageUrl;
       })
     );
 
-    if (
-      originalImageUrls.filter((imageUrl) => Boolean(imageUrl)).length !==
-      originalImageUrls.length
-    ) {
+    const filteredOriginalImages = originalImageUrls.filter(
+      (imageUrl) => imageUrl !== null
+    );
+
+    if (filteredOriginalImages.length !== originalImageUrls.length) {
+      setErrorMessage(
+        '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+      );
+      setIsLoading(false);
       return false;
     }
 
@@ -192,25 +203,42 @@ export default function RecordForm({
     }
     recordFormData.append('thumbnailUrl', thumbnailUrl);
 
-    if (presentImageUrls.length > 0) {
-      recordFormData.append(
-        'presentImageUrls',
-        JSON.stringify(presentImageUrls)
-      );
-    }
-    originalImageUrls.forEach((imageUrl) => {
+    presentImageUrls.forEach((imageUrl) => {
+      recordFormData.append('presentImageUrls', imageUrl);
+    });
+    filteredOriginalImages.forEach((imageUrl) => {
       recordFormData.append('originalImageUrls', imageUrl);
     });
 
-    if (post) {
-      await sendRouteHandlerPutRequest(
-        `/api/records/${arcadeRecordId}`,
-        recordFormData
-      );
-    } else {
-      await sendRouteHandlerPostRequest('/api/records', recordFormData);
+    try {
+      const result = post
+        ? await fetch(`/api/records/${arcadeRecordId}`, {
+            method: 'PUT',
+            body: recordFormData,
+          }).then(
+            (res) => res.json() as Promise<RouteHandlerCallResponse<object>>
+          )
+        : await fetch('/api/records', {
+            method: 'POST',
+            body: recordFormData,
+          }).then(
+            (res) => res.json() as Promise<RouteHandlerCallResponse<object>>
+          );
+
+      switch (result.result) {
+        case RouteHandlerCallResponseStatus.SUCCESS:
+          setIsSuccess(true);
+          break;
+        case RouteHandlerCallResponseStatus.FAILED:
+          setErrorMessage(result.error);
+          break;
+        default:
+      }
+    } catch {
+      setErrorMessage('예기치 못한 문제가 발생하였습니다.');
     }
 
+    setIsLoading(false);
     return false;
   }
 
@@ -502,11 +530,10 @@ export default function RecordForm({
       </div>
       {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
-      {!routeHandlerPostErrorMessage && <p>{routeHandlerPostErrorMessage}</p>}
-      {!routeHandlerPutErrorMessage && <p>{routeHandlerPutErrorMessage}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
         disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}

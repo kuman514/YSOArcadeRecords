@@ -30,9 +30,7 @@ export async function PUT(
   const tags = formData.get('tags')?.toString();
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
-  const presentImageUrls = JSON.parse(
-    formData.get('presentImageUrls')?.toString() ?? '[]'
-  ) as string[];
+  const presentImageUrls = formData.getAll('presentImageUrls') as string[];
 
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];

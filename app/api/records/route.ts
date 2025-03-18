@@ -2,9 +2,9 @@ import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
-import { ArcadeRecordActionState } from '^/src/features/arcade-record-article/types';
 import { insertData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -34,51 +34,36 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: 'Requires authentication.',
+        error: '로그인이 필요합니다.',
       },
       { status: 401 }
     );
   }
 
-  const errors: ArcadeRecordActionState['errors'] = {};
+  const isEvaluationVerified = (() => {
+    try {
+      parseEvaluation(evaluation ?? '');
+      return true;
+    } catch {
+      return false;
+    }
+  })();
 
-  if (!title || title.trim().length === 0) {
-    errors.title = '제목을 입력해주십시오.';
-  }
-
-  if (!arcadeId) {
-    errors.arcadeId = '아케이드 부문을 입력해주십시오.';
-  }
-
-  if (!methodId) {
-    errors.methodId = '수단을 입력해주십시오.';
-  }
-
-  if (!achievedAt) {
-    errors.achievedAt = '달성일자를 입력해주십시오.';
-  }
-
-  if (!players) {
-    errors.players = '몇 명이서 플레이했는지 선택해주십시오.';
-  }
-
-  if (!playerSide) {
-    errors.playerSide = '어느 사이드에서 플레이했는지 선택해주십시오.';
-  }
-
-  if (!evaluation) {
-    errors.evaluation = '점수 또는 클리어 타임을 입력해주십시오.';
-  }
-
-  if (!stage) {
-    errors.stage = '어느 스테이지에서 끝났는지 입력해주십시오.';
-  }
-
-  if (!comment) {
-    errors.comment = '코멘터리를 입력해주십시오.';
-  }
-
-  if (Object.keys(errors).length > 0) {
+  if (
+    !arcadeRecordId ||
+    !title ||
+    !arcadeId ||
+    !methodId ||
+    !achievedAt ||
+    !players ||
+    !playerSide ||
+    !evaluation ||
+    !isEvaluationVerified ||
+    !stage ||
+    !comment ||
+    !thumbnailUrl ||
+    originalImageUrls.length === 0
+  ) {
     return NextResponse.json(
       {
         result: 'failed',
@@ -93,34 +78,44 @@ export async function POST(request: Request) {
     createdDate.getMonth() + 1
   ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
 
-  await insertData<Omit<ArcadeRecordPostDBInput, 'id'>>({
-    insertInto: 'records',
-    value: {
-      title: title!,
-      arcade_id: arcadeId!,
-      arcade_record_id: arcadeRecordId!,
-      method_id: methodId!,
-      players: Number(players),
-      player_side: Number(playerSide),
-      evaluation: evaluation!,
-      stage: stage!,
-      rank,
-      comment: comment!,
-      tags:
-        tags
-          ?.split(',')
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0) ?? [],
-      note,
-      youtube_id: youTubeId,
-      thumbnail_url: thumbnailUrl!,
-      image_urls: originalImageUrls,
-      achieved_at: achievedAt!,
-      created_at: formattedDate,
-      modified_at: formattedDate,
-    },
-  });
+  try {
+    await insertData<Omit<ArcadeRecordPostDBInput, 'id'>>({
+      insertInto: 'records',
+      value: {
+        title: title,
+        arcade_id: arcadeId,
+        arcade_record_id: arcadeRecordId,
+        method_id: methodId,
+        players: Number(players),
+        player_side: Number(playerSide),
+        evaluation: evaluation,
+        stage: stage,
+        rank,
+        comment: comment,
+        tags:
+          tags
+            ?.split(',')
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0) ?? [],
+        note,
+        youtube_id: youTubeId,
+        thumbnail_url: thumbnailUrl,
+        image_urls: originalImageUrls,
+        achieved_at: achievedAt,
+        created_at: formattedDate,
+        modified_at: formattedDate,
+      },
+    });
 
-  revalidatePath('/records');
-  return NextResponse.json({ result: 'success' }, { status: 201 });
+    revalidatePath('/records');
+    return NextResponse.json({ result: 'success' }, { status: 201 });
+  } catch {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '아케이드 기록 수정 실패. 다시 시도하여 주십시오.',
+      },
+      { status: 500 }
+    );
+  }
 }

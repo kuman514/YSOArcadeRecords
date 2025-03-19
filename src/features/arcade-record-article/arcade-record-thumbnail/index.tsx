@@ -18,6 +18,7 @@ export default function ArcadeRecordThumbnail({
         alt="아케이드 기록 썸네일"
         className="object-contain"
         fill
+        sizes="20rem"
       />
       <ArcadeRecordThumbnailInteractivity
         originalImageUrls={originalImageUrls}

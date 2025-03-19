@@ -47,6 +47,7 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
               alt="관련 데이터를 찾을 수 없음"
               className="object-contain"
               priority
+              sizes="37.5rem"
             />
           </div>
           <span className="text-2xl font-bold">기록이 없습니다.</span>

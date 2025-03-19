@@ -12,6 +12,7 @@ export default function ArcadeRecordArticleNotFoundPage() {
           alt="관련 데이터를 찾을 수 없음"
           className="object-contain"
           priority
+          sizes="37.5rem"
         />
       </div>
       <h1 className="text-4xl font-bold">기록이 없습니다.</h1>

@@ -55,6 +55,7 @@ export default function PostListItem({
             src={thumbnailUrl}
             alt={`${title} ${memo}`}
             fill
+            sizes="37.5rem"
           />
         </div>
 

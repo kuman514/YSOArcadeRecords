@@ -468,7 +468,12 @@ export default function RecordForm({
         <div className="w-full flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
           <div className="w-40 h-40 border border-primary rounded relative flex justify-center items-center overflow-hidden">
-            <Image src={post.thumbnailUrl} alt="기존 썸네일 이미지" fill />
+            <Image
+              src={post.thumbnailUrl}
+              alt="기존 썸네일 이미지"
+              fill
+              sizes="10rem"
+            />
           </div>
           <input
             id="presentThumbnailUrl"
@@ -498,7 +503,12 @@ export default function RecordForm({
               ? presentImageUrls.map((imageUrl, index) => (
                   <div key={imageUrl} className="flex flex-row gap-2">
                     <div className="w-40 h-40 relative">
-                      <Image src={imageUrl} alt="유저 선택 이미지" fill />
+                      <Image
+                        src={imageUrl}
+                        alt="유저 선택 이미지"
+                        fill
+                        sizes="10rem"
+                      />
                     </div>
                     <button
                       type="button"

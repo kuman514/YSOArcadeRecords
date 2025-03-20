@@ -68,7 +68,12 @@ export default function MultipleImagePicker({
           imageInfos.map((imageInfo) => (
             <div key={imageInfo.tmpId} className="flex flex-row gap-2">
               <div className="w-40 h-40 relative">
-                <Image src={imageInfo.sourceUrl} alt="유저 선택 이미지" fill />
+                <Image
+                  src={imageInfo.sourceUrl}
+                  alt="유저 선택 이미지"
+                  fill
+                  unoptimized
+                />
               </div>
             </div>
           ))

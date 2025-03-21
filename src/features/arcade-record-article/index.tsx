@@ -118,7 +118,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
         {renderCreatedAt}
         {renderModifiedAt}
       </div>
-      <section className="w-full flex flex-col sm:flex-row sm:items-center gap-2">
+      <section className="w-full flex flex-col sm:flex-row sm:items-center gap-4">
         <ArcadeRecordThumbnail
           thumbnailUrl={post.thumbnailUrl}
           originalImageUrls={post.imageUrls}

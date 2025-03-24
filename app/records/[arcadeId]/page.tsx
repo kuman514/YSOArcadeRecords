@@ -7,6 +7,7 @@ import { convertArcadeInfoDBColumnToArcadeInfo } from '^/src/features/arcade-inf
 import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
 import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-post-list/data';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
+import { notFound } from 'next/navigation';
 
 interface Props {
   params: Promise<{
@@ -19,9 +20,13 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
   const data = (await getArcadeRecordPostListWithArcadeId(arcadeId)).map(
     convertArcadeRecordPostDBColumnToItems
   );
-  const arcadeInfo = convertArcadeInfoDBColumnToArcadeInfo(
-    await getArcadeInfo(arcadeId)
-  );
+
+  const arcadeInfoData = await getArcadeInfo(arcadeId);
+  if (!arcadeInfoData) {
+    notFound();
+  }
+
+  const arcadeInfo = convertArcadeInfoDBColumnToArcadeInfo(arcadeInfoData);
 
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,

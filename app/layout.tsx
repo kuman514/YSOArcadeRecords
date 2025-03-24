@@ -9,6 +9,7 @@ import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 
 import './globals.css';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -21,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'YSOArcadeRecords',
+  title: IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords',
   // prettier-ignore
   description: 'YSO(kuman514)\'s arcade records',
 };
@@ -44,7 +45,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
             <AuthLink />
             <div className="w-full h-12 flex flex-col items-center justify-end sm:flex-row sm:items-center sm:justify-between">
               <Link href="/" className="text-white md:text-2xl">
-                YSOArcadeRecords
+                {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'}
               </Link>
 
               <nav>

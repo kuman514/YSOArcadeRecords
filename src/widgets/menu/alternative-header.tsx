@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import SidebarCaller from '^/src/entities/modal/sidebar/caller';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 
 export default function AlternativeHeader() {
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -35,7 +36,7 @@ export default function AlternativeHeader() {
     >
       <SidebarCaller />
       <Link href="/" className="text-white">
-        YSOArcadeRecords
+        {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'}
       </Link>
     </div>
   );

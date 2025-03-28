@@ -11,7 +11,7 @@ import {
 } from './post-compositions';
 import { Review } from './review';
 
-export interface BasePost extends Commentable, Taggable {
+export interface BasePost extends Taggable {
   postId: number;
   title: string;
   createdAt: Date;
@@ -20,6 +20,7 @@ export interface BasePost extends Commentable, Taggable {
 
 export interface ArcadeRecordPost
   extends BasePost,
+    Commentable,
     ArcadeRecord,
     HavingThumbnail,
     HavingImages,
@@ -63,7 +64,6 @@ export interface ReviewPostDBInput {
   id: ReviewPost['postId'];
   title: ReviewPost['title'];
   tags: ReviewPost['tags'];
-  comment: ReviewPost['comment'];
   subject_name: ReviewPost['subjectName'];
   subject_type: ReviewPost['subjectType'];
   created_by: ReviewPost['createdBy'];

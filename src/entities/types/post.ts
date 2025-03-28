@@ -9,6 +9,7 @@ import {
   HavingYouTube,
   Taggable,
 } from './post-compositions';
+import { Review } from './review';
 
 export interface BasePost extends Commentable, Taggable {
   postId: number;
@@ -50,3 +51,36 @@ export interface ArcadeRecordPostDBColumn extends ArcadeRecordPostDBInput {
   arcade_info: ArcadeInfoDBColumn;
   methods: MethodDBColumn;
 }
+
+export interface ReviewPost
+  extends BasePost,
+    Review,
+    HavingThumbnail,
+    HavingImages,
+    HavingYouTube {}
+
+export interface ReviewPostDBInput {
+  id: ReviewPost['postId'];
+  title: ReviewPost['title'];
+  tags: ReviewPost['tags'];
+  comment: ReviewPost['comment'];
+  subject_name: ReviewPost['subjectName'];
+  subject_type: ReviewPost['subjectType'];
+  created_by: ReviewPost['createdBy'];
+  release_date: string;
+  key_features: ReviewPost['keyFeatures'];
+  expectations: ReviewPost['expectations'];
+  first_impressions: ReviewPost['firstImpressions'];
+  positives: ReviewPost['positives'];
+  negatives: ReviewPost['negatives'];
+  conclusions: ReviewPost['conclusions'];
+  review_score: ReviewPost['reviewScore'];
+  youtube_id?: ReviewPost['youTubeId'];
+  thumbnail_url: ReviewPost['thumbnailUrl'];
+  image_urls: ReviewPost['imageUrls'];
+  achieved_at: string;
+  created_at: string;
+  modified_at: string;
+}
+
+export type ReviewPostDBColumn = ReviewPostDBInput;

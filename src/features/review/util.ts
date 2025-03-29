@@ -2,6 +2,7 @@ import { ReviewPost, ReviewPostDBColumn } from '^/src/entities/types/post';
 
 export function convertReviewPostDBColumnToReviewPost({
   id,
+  review_id,
   title,
   tags,
   subject_name,
@@ -23,6 +24,7 @@ export function convertReviewPostDBColumnToReviewPost({
 }: ReviewPostDBColumn): ReviewPost {
   return {
     postId: id,
+    reviewId: review_id,
     title,
     tags,
     subjectName: subject_name,

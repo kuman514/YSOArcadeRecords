@@ -21,7 +21,7 @@ export async function getReviewPostList() {
   return result;
 }
 
-export async function getReviewPost(reviewId: ReviewPost['postId']) {
+export async function getReviewPost(reviewId: ReviewPost['reviewId']) {
   const result = await selectData<ReviewPostDBColumn[]>({
     select: '*',
     from: 'reviews',
@@ -29,7 +29,7 @@ export async function getReviewPost(reviewId: ReviewPost['postId']) {
       {
         type: ConditionType.EQUAL,
         column: 'review_id',
-        value: String(reviewId),
+        value: reviewId,
       },
     ],
   });
@@ -37,7 +37,9 @@ export async function getReviewPost(reviewId: ReviewPost['postId']) {
   return result[0];
 }
 
-export async function insertReviewPost(newReviewDBInput: ReviewPostDBInput) {
+export async function insertReviewPost(
+  newReviewDBInput: Omit<ReviewPostDBInput, 'id'>
+) {
   await insertData({
     insertInto: 'reviews',
     value: newReviewDBInput,
@@ -45,8 +47,8 @@ export async function insertReviewPost(newReviewDBInput: ReviewPostDBInput) {
 }
 
 export async function updateReviewPost(
-  reviewId: ReviewPost['postId'],
-  newReviewDBInput: ReviewPostDBInput
+  reviewId: ReviewPost['reviewId'],
+  newReviewDBInput: Omit<ReviewPostDBInput, 'id'>
 ) {
   await updateData({
     update: 'reviews',
@@ -55,20 +57,20 @@ export async function updateReviewPost(
       {
         type: ConditionType.EQUAL,
         column: 'review_id',
-        value: String(reviewId),
+        value: reviewId,
       },
     ],
   });
 }
 
-export async function deleteReviewPost(reviewId: ReviewPost['postId']) {
+export async function deleteReviewPost(reviewId: ReviewPost['reviewId']) {
   await deleteData({
     deleteFrom: 'reviews',
     where: [
       {
         type: ConditionType.EQUAL,
         column: 'arcade_record_id',
-        value: String(reviewId),
+        value: reviewId,
       },
     ],
   });

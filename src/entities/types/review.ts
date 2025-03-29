@@ -9,4 +9,6 @@ export interface Review
   extends HavingIntroduction,
     HavingMainReview,
     HavingOpinion,
-    Scorable {}
+    Scorable {
+  reviewId: string;
+}

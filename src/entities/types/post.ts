@@ -62,6 +62,7 @@ export interface ReviewPost
 
 export interface ReviewPostDBInput {
   id: ReviewPost['postId'];
+  review_id: ReviewPost['reviewId'];
   title: ReviewPost['title'];
   tags: ReviewPost['tags'];
   subject_name: ReviewPost['subjectName'];

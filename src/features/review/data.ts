@@ -11,16 +11,6 @@ import {
 } from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
-export async function getReviewPostList() {
-  const result = await selectData<ReviewPostDBColumn[]>({
-    select: '*',
-    from: 'reviews',
-    where: [],
-  });
-
-  return result;
-}
-
 export async function getReviewPost(reviewId: ReviewPost['reviewId']) {
   const result = await selectData<ReviewPostDBColumn[]>({
     select: '*',

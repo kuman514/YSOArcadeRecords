@@ -11,6 +11,19 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ arcadeRecordId: string }> }
 ) {
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '로그인이 필요합니다.',
+      },
+      { status: 401 }
+    );
+  }
+
   const formData = await request.formData();
 
   const arcadeRecordId = (await params).arcadeRecordId;
@@ -34,19 +47,6 @@ export async function PUT(
 
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
-
-  const supabase = await createServerSideClient();
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error || !data?.user) {
-    return NextResponse.json(
-      {
-        result: 'failed',
-        error: '로그인이 필요합니다.',
-      },
-      { status: 401 }
-    );
-  }
 
   const isEvaluationVerified = (() => {
     try {

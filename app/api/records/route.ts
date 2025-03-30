@@ -7,6 +7,19 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 
 export async function POST(request: Request) {
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '로그인이 필요합니다.',
+      },
+      { status: 401 }
+    );
+  }
+
   const formData = await request.formData();
 
   const arcadeRecordId = formData.get('arcadeRecordId')?.toString();
@@ -26,19 +39,6 @@ export async function POST(request: Request) {
 
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
-
-  const supabase = await createServerSideClient();
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error || !data?.user) {
-    return NextResponse.json(
-      {
-        result: 'failed',
-        error: '로그인이 필요합니다.',
-      },
-      { status: 401 }
-    );
-  }
 
   const isEvaluationVerified = (() => {
     try {
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '아케이드 기록 수정 실패. 다시 시도하여 주십시오.',
+        error: '아케이드 기록 등록 실패. 다시 시도하여 주십시오.',
       },
       { status: 500 }
     );

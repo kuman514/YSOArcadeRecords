@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 
 import { ReviewPostDBInput } from '^/src/entities/types/post';
-import { insertData } from '^/src/shared/supabase/database';
+import { updateData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import { ConditionType } from '^/src/shared/supabase/types';
 import { revalidatePath } from 'next/cache';
 
-export async function POST(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ reviewId: string }> }
+) {
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -21,7 +25,7 @@ export async function POST(request: Request) {
 
   const formData = await request.formData();
 
-  const reviewId = formData.get('reviewId')?.toString();
+  const reviewId = (await params).reviewId;
 
   const title = formData.get('title')?.toString();
   const tags = formData.get('tags')?.toString();
@@ -37,6 +41,9 @@ export async function POST(request: Request) {
   const conclusions = formData.getAll('conclusions') as string[];
   const reviewScore = formData.get('reviewScore')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
+
+  const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
+  const presentImageUrls = formData.getAll('presentImageUrls') as string[];
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
@@ -66,15 +73,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const createdDate = new Date();
-  const formattedDate = `${createdDate.getFullYear()}-${String(
-    createdDate.getMonth() + 1
-  ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+  const modifiedDate = new Date();
+  const formattedDate = `${modifiedDate.getFullYear()}-${String(
+    modifiedDate.getMonth() + 1
+  ).padStart(2, '0')}-${String(modifiedDate.getDate()).padStart(2, '0')}`;
 
   try {
-    await insertData<Omit<ReviewPostDBInput, 'id'>>({
-      insertInto: 'records',
-      value: {
+    await updateData<Partial<ReviewPostDBInput>>({
+      update: 'reviews',
+      set: {
         review_id: reviewId,
         title: title,
         tags:
@@ -94,20 +101,26 @@ export async function POST(request: Request) {
         conclusions: conclusions,
         review_score: parseInt(reviewScore),
         youtube_id: youTubeId,
-        thumbnail_url: thumbnailUrl,
-        image_urls: originalImageUrls,
-        created_at: formattedDate,
+        thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
+        image_urls: presentImageUrls.concat(originalImageUrls),
         modified_at: formattedDate,
       },
+      where: [
+        {
+          type: ConditionType.EQUAL,
+          column: 'review_id',
+          value: reviewId,
+        },
+      ],
     });
 
     revalidatePath('/reviews');
-    return NextResponse.json({ result: 'success' }, { status: 201 });
+    return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '리뷰 등록 실패. 다시 시도하여 주십시오.',
+        error: '리뷰 수정 실패. 다시 시도하여 주십시오.',
       },
       { status: 500 }
     );

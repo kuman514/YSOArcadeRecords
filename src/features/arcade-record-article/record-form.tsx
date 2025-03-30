@@ -11,12 +11,14 @@ import { ArcadeRecordPost } from '^/src/entities/types/post';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import {
+  FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import axios from 'axios';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -123,27 +125,39 @@ export default function RecordForm({
           thumbnailFormData.append('size', '480');
           thumbnailFormData.append('path', path);
           thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
-          const result = await fetch('/api/upload-image', {
-            method: 'POST',
-            body: thumbnailFormData,
-          }).then(
-            (res) =>
-              res.json() as Promise<
-                RouteHandlerCallResponse<{ imageUrl: string }>
-              >
-          );
-          if (result.result === RouteHandlerCallResponseStatus.FAILED) {
+
+          try {
+            const response = await axios.post<
+              RouteHandlerCallResponse<{ imageUrl: string }>
+            >('/api/upload-image', thumbnailFormData);
+            if (
+              response.data.result === RouteHandlerCallResponseStatus.FAILED
+            ) {
+              setErrorMessage(
+                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+              );
+              setIsLoading(false);
+              return null;
+            }
+            return response.data.imageUrl;
+          } catch (error) {
+            if (axios.isAxiosError(error)) {
+              const newErrorMessage =
+                error.response?.data.error ??
+                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
+              setErrorMessage(newErrorMessage);
+            } else {
+              setErrorMessage(
+                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+              );
+            }
+            setIsLoading(false);
             return null;
           }
-          return result.imageUrl;
         })()
       : post?.thumbnailUrl;
 
     if (!thumbnailUrl) {
-      setErrorMessage(
-        '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
-      );
-      setIsLoading(false);
       return false;
     }
 
@@ -154,31 +168,40 @@ export default function RecordForm({
         imageFormData.append('size', '1024');
         imageFormData.append('path', path);
         imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
-        const result = await fetch('/api/upload-image', {
-          method: 'POST',
-          body: imageFormData,
-        }).then(
-          (res) =>
-            res.json() as Promise<
-              RouteHandlerCallResponse<{ imageUrl: string }>
-            >
-        );
-        if (result.result === RouteHandlerCallResponseStatus.FAILED) {
+
+        try {
+          const response = await axios.post<
+            RouteHandlerCallResponse<{ imageUrl: string }>
+          >('/api/upload-image', imageFormData);
+          if (response.data.result === RouteHandlerCallResponseStatus.FAILED) {
+            setErrorMessage(
+              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+            );
+            setIsLoading(false);
+            return null;
+          }
+          return response.data.imageUrl;
+        } catch (error) {
+          if (axios.isAxiosError<FailedRouteHandlerCallResponse>(error)) {
+            const newErrorMessage =
+              error.response?.data.error ??
+              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
+            setErrorMessage(newErrorMessage);
+          } else {
+            setErrorMessage(
+              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+            );
+          }
+          setIsLoading(false);
           return null;
         }
-        return result.imageUrl;
       })
     );
 
     const filteredOriginalImages = originalImageUrls.filter(
       (imageUrl) => imageUrl !== null
     );
-
     if (filteredOriginalImages.length !== originalImageUrls.length) {
-      setErrorMessage(
-        '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
-      );
-      setIsLoading(false);
       return false;
     }
 
@@ -211,31 +234,37 @@ export default function RecordForm({
     });
 
     try {
-      const result = post
-        ? await fetch(`/api/records/${arcadeRecordId}`, {
-            method: 'PUT',
-            body: recordFormData,
-          }).then(
-            (res) => res.json() as Promise<RouteHandlerCallResponse<object>>
+      const response = post
+        ? await axios.put<RouteHandlerCallResponse<object>>(
+            `/api/records/${arcadeRecordId}`,
+            recordFormData
           )
-        : await fetch('/api/records', {
-            method: 'POST',
-            body: recordFormData,
-          }).then(
-            (res) => res.json() as Promise<RouteHandlerCallResponse<object>>
+        : await axios.post<RouteHandlerCallResponse<object>>(
+            '/api/records',
+            recordFormData
           );
 
-      switch (result.result) {
+      switch (response.data.result) {
         case RouteHandlerCallResponseStatus.SUCCESS:
           setIsSuccess(true);
           break;
         case RouteHandlerCallResponseStatus.FAILED:
-          setErrorMessage(result.error);
+          setErrorMessage(response.data.error);
           break;
         default:
+          break;
       }
-    } catch {
-      setErrorMessage('예기치 못한 문제가 발생하였습니다.');
+    } catch (error) {
+      if (axios.isAxiosError<FailedRouteHandlerCallResponse>(error)) {
+        const newErrorMessage =
+          error.response?.data.error ??
+          '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.';
+        setErrorMessage(newErrorMessage);
+      } else {
+        setErrorMessage(
+          '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.'
+        );
+      }
     }
 
     setIsLoading(false);

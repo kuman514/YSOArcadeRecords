@@ -59,7 +59,7 @@ export async function deleteReviewPost(reviewId: ReviewPost['reviewId']) {
     where: [
       {
         type: ConditionType.EQUAL,
-        column: 'arcade_record_id',
+        column: 'review_id',
         value: reviewId,
       },
     ],

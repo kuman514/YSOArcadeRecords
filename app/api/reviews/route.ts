@@ -73,10 +73,10 @@ export async function POST(request: Request) {
 
   try {
     await insertData<Omit<ReviewPostDBInput, 'id'>>({
-      insertInto: 'records',
+      insertInto: 'reviews',
       value: {
         review_id: reviewId,
-        title: title,
+        title,
         tags:
           tags
             ?.split(',')
@@ -87,11 +87,11 @@ export async function POST(request: Request) {
         created_by: createdBy,
         release_date: releaseDate,
         key_features: keyFeatures,
-        expectations: expectations,
+        expectations,
         first_impressions: firstImpressions,
-        positives: positives,
-        negatives: negatives,
-        conclusions: conclusions,
+        positives,
+        negatives,
+        conclusions,
         review_score: parseInt(reviewScore),
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl,
@@ -103,7 +103,8 @@ export async function POST(request: Request) {
 
     revalidatePath('/reviews');
     return NextResponse.json({ result: 'success' }, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         result: 'failed',

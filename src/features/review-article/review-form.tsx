@@ -128,22 +128,6 @@ export default function ReviewForm({ post }: Props) {
     !isLoading &&
     !isSuccess;
 
-  console.log({
-    isTitleVerified,
-    isThumbnailVerified,
-    isOriginalImagesVerified,
-    isSubjectNameVerified,
-    isSubjectTypeVerified,
-    isCreatedByVerified,
-    isKeyFeaturesVerified,
-    isExpectationsVerified,
-    isFirstImpressionsVerified,
-    isPositivesVerified,
-    isNegativesVerified,
-    isConclusionsVerified,
-    isReviewScoreVerified,
-  });
-
   useEffect(() => {
     if (isSuccess) {
       route.replace(`/reviews/${reviewId}`);

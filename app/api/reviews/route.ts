@@ -103,8 +103,7 @@ export async function POST(request: Request) {
 
     revalidatePath('/reviews');
     return NextResponse.json({ result: 'success' }, { status: 201 });
-  } catch (error) {
-    console.error(error);
+  } catch {
     return NextResponse.json(
       {
         result: 'failed',

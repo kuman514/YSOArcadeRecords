@@ -61,8 +61,8 @@ export async function PUT(
     negatives.length === 0 ||
     conclusions.length === 0 ||
     !reviewScore ||
-    !thumbnailUrl ||
-    originalImageUrls.length === 0
+    (!thumbnailUrl && !presentThumbnailUrl) ||
+    (presentImageUrls.length === 0 && originalImageUrls.length === 0)
   ) {
     return NextResponse.json(
       {

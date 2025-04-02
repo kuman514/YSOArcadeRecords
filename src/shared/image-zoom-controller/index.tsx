@@ -14,6 +14,13 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
   const [scale, setScale] = useState<number>(1);
 
   useEffect(() => {
+    document.body.style.overflowY = 'hidden';
+    return () => {
+      document.body.style.overflowY = 'auto';
+    };
+  }, []);
+
+  useEffect(() => {
     setRecentTouchDist(-1);
     setPosition([0, 0]);
     setScale(1);
@@ -66,6 +73,9 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
         document.addEventListener('touchend', handleOnTouchEnd, { once: true });
       }}
       onTouchMove={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         if (event.touches.length === 2) {
           const firstPageX = event.touches[0].pageX;
           const firstPageY = event.touches[0].pageY;

@@ -35,7 +35,7 @@ export default function Modal() {
   })();
 
   return type !== ModalType.OFF ? (
-    <div className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50">
+    <div className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none">
       {renderModalContent}
       <button
         className="fixed left-0 top-0 w-12 h-12 p-2 m-2"

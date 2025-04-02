@@ -12,7 +12,7 @@ export default function ReviewThumbnail({
   originalImageUrls,
 }: Props) {
   return (
-    <figure className="flex flex-col justify-center items-center gap-2">
+    <figure className="w-full flex flex-col justify-center items-center gap-2">
       <div className="relative w-full h-80 bg-black">
         <Image
           src={thumbnailUrl}

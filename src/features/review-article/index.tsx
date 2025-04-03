@@ -1,9 +1,14 @@
+import Image from 'next/image';
+
+import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
+import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
 import UnorderedList from '^/src/shared/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
+
 import ReviewThumbnail from './review-thumbnail';
 
 interface Props {
@@ -78,8 +83,26 @@ export default function ReviewArticle({ post }: Props) {
       </section>
 
       <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">평점</h2>
-        <span>{post.reviewScore} / 5점</span>
+        <h2 className="text-2xl font-bold">평점: {post.reviewScore} / 5점</h2>
+        <span className="w-full flex flex-row justify-center items-center dark:invert">
+          {[1, 2, 3, 4, 5].map((score) =>
+            post.reviewScore >= score ? (
+              <Image
+                className="w-1/6"
+                key={score}
+                src={FilledStarSvgRepoComSvg}
+                alt={`${score}점`}
+              />
+            ) : (
+              <Image
+                className="w-1/6"
+                key={score}
+                src={StarSvgRepoComSvg}
+                alt={`${score}점`}
+              />
+            )
+          )}
+        </span>
       </section>
 
       <section className="w-full flex flex-col gap-2">

@@ -409,7 +409,7 @@ export default function ReviewForm({ post }: Props) {
               onClick={() => {
                 setReviewScore(score);
               }}
-              className="dark:invert"
+              className="w-1/6 dark:invert"
             >
               {reviewScore >= score ? (
                 <Image src={FilledStarSvgRepoComSvg} alt={`${score}점`} />

@@ -1,28 +1,33 @@
-export interface ReviewObject {
-  reviewObjectId: string;
-  label: string;
-}
-
-export interface HavingReviewObject {
-  reviewObject: ReviewObject;
+export interface HavingIntroduction {
+  /**
+   * Introduction of the object.
+   */
+  subjectName: string;
+  subjectType: string;
+  createdBy: string;
+  releaseDate: Date;
+  keyFeatures: string[];
 }
 
 // ===========================================
 
-export interface HavingPositives {
+export interface HavingMainReview {
   /**
-   * Positive things of the object.
+   * Pros and cons of the object.
    */
   positives: string[];
+  negatives: string[];
 }
 
 // ===========================================
 
-export interface HavingNegatives {
+export interface HavingOpinion {
   /**
-   * Negative things of the object.
+   * Individual opinions about object.
    */
-  negatives: string[];
+  firstImpressions: string[];
+  expectations: string[];
+  conclusions: string[];
 }
 
 // ===========================================

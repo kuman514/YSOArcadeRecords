@@ -1,10 +1,13 @@
 'use client';
 
+import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
+import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
+import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
@@ -15,7 +18,6 @@ import {
 } from '^/src/shared/route-handler-call/types';
 import FormInput from '^/src/shared/ui/form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
-import axios from 'axios';
 
 interface Props {
   post?: ReviewPost;
@@ -407,9 +409,13 @@ export default function ReviewForm({ post }: Props) {
               onClick={() => {
                 setReviewScore(score);
               }}
-              className={score === reviewScore ? 'text-hovering' : ''}
+              className="dark:invert"
             >
-              {score}점
+              {reviewScore >= score ? (
+                <Image src={FilledStarSvgRepoComSvg} alt={`${score}점`} />
+              ) : (
+                <Image src={StarSvgRepoComSvg} alt={`${score}점`} />
+              )}
             </button>
           ))}
         </div>

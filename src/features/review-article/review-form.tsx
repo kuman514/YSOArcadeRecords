@@ -17,6 +17,7 @@ import {
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
 import FormInput from '^/src/shared/ui/form-input';
+import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
 
 interface Props {
@@ -141,6 +142,47 @@ export default function ReviewForm({ post }: Props) {
       const newPresentImageUrls = Array.from(presentImageUrls);
       newPresentImageUrls.splice(index, 1);
       setPresentImageUrls(newPresentImageUrls);
+    };
+  }
+
+  function handleOnChangeMultipleTextFormInput(
+    values: MultipleFormValue<string>,
+    setValues: (newValues: MultipleFormValue<string>) => void
+  ) {
+    return (index: number, newValue: string) => {
+      setValues(
+        values.with(index, {
+          id: values[index].id,
+          value: newValue,
+        })
+      );
+    };
+  }
+
+  function handleOnAppendMultipleTextFormInput(
+    values: MultipleFormValue<string>,
+    setValues: (newValues: MultipleFormValue<string>) => void
+  ) {
+    return () => {
+      setValues(
+        values.concat([
+          {
+            id: (values[values.length - 1]?.id ?? 0) + 1,
+            value: '',
+          },
+        ])
+      );
+    };
+  }
+
+  function handleOnDeleteMultipleTextFormInput(
+    values: MultipleFormValue<string>,
+    setValues: (newValues: MultipleFormValue<string>) => void
+  ) {
+    return (index: number) => {
+      const newValues = Array.from(values);
+      newValues.splice(index, 1);
+      setValues(newValues);
     };
   }
 
@@ -422,223 +464,101 @@ export default function ReviewForm({ post }: Props) {
       </div>
       {!isReviewScoreVerified && <p>총점을 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="keyFeatures">특징</label>
-        {keyFeatures.map((keyFeature, index) => (
-          <FormInput
-            key={keyFeature.id}
-            type="text"
-            id="keyFeatures"
-            name="keyFeatures"
-            value={keyFeature.value}
-            onChange={(event) => {
-              const newKeyFeatures = keyFeatures.with(index, {
-                id: keyFeature.id,
-                value: event.currentTarget.value,
-              });
-              setKeyFeatures(newKeyFeatures);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
-          onClick={() => {
-            setKeyFeatures(
-              keyFeatures.concat([
-                {
-                  id: (keyFeatures[keyFeatures.length - 1]?.id ?? 0) + 1,
-                  value: '',
-                },
-              ])
-            );
-          }}
-        >
-          새 특징
-        </button>
-      </p>
+      <MultipleTextFormInput
+        name="keyFeatures"
+        values={keyFeatures}
+        mainLabel="특징"
+        appendButtonLabel="새 특징"
+        onChange={handleOnChangeMultipleTextFormInput(
+          keyFeatures,
+          setKeyFeatures
+        )}
+        onAppend={handleOnAppendMultipleTextFormInput(
+          keyFeatures,
+          setKeyFeatures
+        )}
+        onDelete={handleOnDeleteMultipleTextFormInput(
+          keyFeatures,
+          setKeyFeatures
+        )}
+      />
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="expectations">기대사항</label>
-        {expectations.map((expectation, index) => (
-          <FormInput
-            key={expectation.id}
-            type="text"
-            id="expectations"
-            name="expectations"
-            value={expectation.value}
-            onChange={(event) => {
-              const newExpectations = expectations.with(index, {
-                id: expectation.id,
-                value: event.currentTarget.value,
-              });
-              setExpectations(newExpectations);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
-          onClick={() => {
-            setExpectations(
-              expectations.concat([
-                {
-                  id: (expectations[expectations.length - 1]?.id ?? 0) + 1,
-                  value: '',
-                },
-              ])
-            );
-          }}
-        >
-          새 기대사항
-        </button>
-      </p>
+      <MultipleTextFormInput
+        name="expectations"
+        values={expectations}
+        mainLabel="기대사항"
+        appendButtonLabel="새 기대사항"
+        onChange={handleOnChangeMultipleTextFormInput(
+          expectations,
+          setExpectations
+        )}
+        onAppend={handleOnAppendMultipleTextFormInput(
+          expectations,
+          setExpectations
+        )}
+        onDelete={handleOnDeleteMultipleTextFormInput(
+          expectations,
+          setExpectations
+        )}
+      />
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="firstImpressions">첫인상</label>
-        {firstImpressions.map((firstImpression, index) => (
-          <FormInput
-            key={firstImpression.id}
-            type="text"
-            id="firstImpressions"
-            name="firstImpressions"
-            value={firstImpression.value}
-            onChange={(event) => {
-              const newFirstImpressions = firstImpressions.with(index, {
-                id: firstImpression.id,
-                value: event.currentTarget.value,
-              });
-              setFirstImpressions(newFirstImpressions);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
-          onClick={() => {
-            setFirstImpressions(
-              firstImpressions.concat([
-                {
-                  id:
-                    (firstImpressions[firstImpressions.length - 1]?.id ?? 0) +
-                    1,
-                  value: '',
-                },
-              ])
-            );
-          }}
-        >
-          새 첫인상
-        </button>
-      </p>
+      <MultipleTextFormInput
+        name="firstImpressions"
+        values={firstImpressions}
+        mainLabel="첫인상"
+        appendButtonLabel="새 첫인상"
+        onChange={handleOnChangeMultipleTextFormInput(
+          firstImpressions,
+          setFirstImpressions
+        )}
+        onAppend={handleOnAppendMultipleTextFormInput(
+          firstImpressions,
+          setFirstImpressions
+        )}
+        onDelete={handleOnDeleteMultipleTextFormInput(
+          firstImpressions,
+          setFirstImpressions
+        )}
+      />
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="positives">장점</label>
-        {positives.map((positive, index) => (
-          <FormInput
-            key={positive.id}
-            type="text"
-            id="positives"
-            name="positives"
-            value={positive.value}
-            onChange={(event) => {
-              const newPositives = positives.with(index, {
-                id: positive.id,
-                value: event.currentTarget.value,
-              });
-              setPositives(newPositives);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
-          onClick={() => {
-            setPositives(
-              positives.concat([
-                {
-                  id: (positives[positives.length - 1]?.id ?? 0) + 1,
-                  value: '',
-                },
-              ])
-            );
-          }}
-        >
-          새 장점
-        </button>
-      </p>
+      <MultipleTextFormInput
+        name="positives"
+        values={positives}
+        mainLabel="장점"
+        appendButtonLabel="새 장점"
+        onChange={handleOnChangeMultipleTextFormInput(positives, setPositives)}
+        onAppend={handleOnAppendMultipleTextFormInput(positives, setPositives)}
+        onDelete={handleOnDeleteMultipleTextFormInput(positives, setPositives)}
+      />
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="negatives">단점</label>
-        {negatives.map((negative, index) => (
-          <FormInput
-            key={negative.id}
-            type="text"
-            id="negatives"
-            name="negatives"
-            value={negative.value}
-            onChange={(event) => {
-              const newNegatives = negatives.with(index, {
-                id: negative.id,
-                value: event.currentTarget.value,
-              });
-              setNegatives(newNegatives);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
-          onClick={() => {
-            setNegatives(
-              negatives.concat([
-                {
-                  id: (negatives[negatives.length - 1]?.id ?? 0) + 1,
-                  value: '',
-                },
-              ])
-            );
-          }}
-        >
-          새 단점
-        </button>
-      </p>
+      <MultipleTextFormInput
+        name="negatives"
+        values={negatives}
+        mainLabel="단점"
+        appendButtonLabel="새 단점"
+        onChange={handleOnChangeMultipleTextFormInput(negatives, setNegatives)}
+        onAppend={handleOnAppendMultipleTextFormInput(negatives, setNegatives)}
+        onDelete={handleOnDeleteMultipleTextFormInput(negatives, setNegatives)}
+      />
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="conclusions">결론</label>
-        {conclusions.map((conclusion, index) => (
-          <FormInput
-            key={conclusion.id}
-            type="text"
-            id="conclusion"
-            name="conclusion"
-            value={conclusion.value}
-            onChange={(event) => {
-              const newConclusions = conclusions.with(index, {
-                id: conclusion.id,
-                value: event.currentTarget.value,
-              });
-              setConclusions(newConclusions);
-            }}
-          />
-        ))}
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
-          onClick={() => {
-            setConclusions(
-              conclusions.concat([
-                {
-                  id: (conclusions[conclusions.length - 1]?.id ?? 0) + 1,
-                  value: '',
-                },
-              ])
-            );
-          }}
-        >
-          새 결론
-        </button>
-      </p>
+      <MultipleTextFormInput
+        name="conclusions"
+        values={conclusions}
+        mainLabel="결론"
+        appendButtonLabel="새 결론"
+        onChange={handleOnChangeMultipleTextFormInput(
+          conclusions,
+          setConclusions
+        )}
+        onAppend={handleOnAppendMultipleTextFormInput(
+          conclusions,
+          setConclusions
+        )}
+        onDelete={handleOnDeleteMultipleTextFormInput(
+          conclusions,
+          setConclusions
+        )}
+      />
 
       <p className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>

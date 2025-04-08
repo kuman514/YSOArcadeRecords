@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import PreparingNotice from '^/src/shared/notice/preparing';
+import ReviewForm from '^/src/features/review-article/review-form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export default async function CreateReviewPage() {
@@ -11,5 +11,10 @@ export default async function CreateReviewPage() {
     redirect('/');
   }
 
-  return <PreparingNotice />;
+  return (
+    <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
+      <h1 className="text-4xl font-bold">새 리뷰 만들기</h1>
+      <ReviewForm />
+    </main>
+  );
 }

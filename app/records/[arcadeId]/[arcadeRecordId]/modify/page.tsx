@@ -4,7 +4,6 @@ import { getArcadeInfoList } from '^/src/features/arcade-info/data';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { getMethodList } from '^/src/features/method/data';
-import { convertMethodDBColumnToMethod } from '^/src/features/method/util';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -29,7 +28,7 @@ export default async function ModifyRecordPage({ params }: Props) {
   }
 
   const arcadeInfoList = await getArcadeInfoList();
-  const methodList = (await getMethodList()).map(convertMethodDBColumnToMethod);
+  const methodList = await getMethodList();
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">

@@ -4,12 +4,9 @@ import EmptyPng from '^/public/status/empty.png';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ReviewPostList from '^/src/features/review-post-list';
 import { getReviewPostList } from '^/src/features/review-post-list/data';
-import { convertReviewPostDBColumnToReviewPost } from '^/src/features/review-post-list/util';
 
 export default async function ReviewListPage() {
-  const data = (await getReviewPostList()).map(
-    convertReviewPostDBColumnToReviewPost
-  );
+  const data = await getReviewPostList();
 
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,

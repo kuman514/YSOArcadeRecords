@@ -1,13 +1,12 @@
 import { notFound, redirect } from 'next/navigation';
 
+import { getArcadeInfoList } from '^/src/features/arcade-info/data';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
-import { createServerSideClient } from '^/src/shared/supabase/server';
-import { getArcadeInfoList } from '^/src/features/arcade-info/data';
-import { convertArcadeInfoDBColumnToArcadeInfo } from '^/src/features/arcade-info/util';
-import { convertMethodDBColumnToMethod } from '^/src/features/method/util';
 import { getMethodList } from '^/src/features/method/data';
+import { convertMethodDBColumnToMethod } from '^/src/features/method/util';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
@@ -33,9 +32,7 @@ export default async function ModifyRecordPage({ params }: Props) {
 
   const convertedArticle = convertArcadeRecordPostDBColumnToItems(article);
 
-  const arcadeInfoList = (await getArcadeInfoList()).map(
-    convertArcadeInfoDBColumnToArcadeInfo
-  );
+  const arcadeInfoList = await getArcadeInfoList();
   const methodList = (await getMethodList()).map(convertMethodDBColumnToMethod);
 
   return (

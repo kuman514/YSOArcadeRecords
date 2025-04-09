@@ -5,7 +5,6 @@ import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
 import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
 import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-post-list/data';
-import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 import { notFound } from 'next/navigation';
 
 interface Props {
@@ -16,15 +15,13 @@ interface Props {
 
 export default async function RecordListByTypeIdPage({ params }: Props) {
   const { arcadeId } = await params;
-  const data = (await getArcadeRecordPostListWithArcadeId(arcadeId)).map(
-    convertArcadeRecordPostDBColumnToItems
-  );
 
   const arcadeInfo = await getArcadeInfo(arcadeId);
   if (!arcadeInfo) {
     notFound();
   }
 
+  const data = await getArcadeRecordPostListWithArcadeId(arcadeId);
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
     memo: datum.note ?? '메모 없음',

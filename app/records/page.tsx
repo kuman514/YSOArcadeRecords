@@ -4,12 +4,9 @@ import EmptyPng from '^/public/status/empty.png';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-post-list/data';
-import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 
 export default async function RecordListPage() {
-  const data = (await getArcadeRecordPostList()).map(
-    convertArcadeRecordPostDBColumnToItems
-  );
+  const data = await getArcadeRecordPostList();
 
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,

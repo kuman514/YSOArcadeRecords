@@ -3,6 +3,8 @@ import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
 import { selectData } from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
+import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
+
 export async function getArcadeRecordPostList() {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select: '*, arcade_info (*), methods (*)',
@@ -16,7 +18,7 @@ export async function getArcadeRecordPostList() {
     ],
   });
 
-  return result;
+  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);
 }
 
 export async function getArcadeRecordPostListWithArcadeId(
@@ -40,5 +42,5 @@ export async function getArcadeRecordPostListWithArcadeId(
     ],
   });
 
-  return result;
+  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);
 }

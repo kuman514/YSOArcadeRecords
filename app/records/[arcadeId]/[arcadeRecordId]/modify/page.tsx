@@ -3,7 +3,6 @@ import { notFound, redirect } from 'next/navigation';
 import { getArcadeInfoList } from '^/src/features/arcade-info/data';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
-import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
 import { getMethodList } from '^/src/features/method/data';
 import { convertMethodDBColumnToMethod } from '^/src/features/method/util';
 import { createServerSideClient } from '^/src/shared/supabase/server';
@@ -25,12 +24,9 @@ export default async function ModifyRecordPage({ params }: Props) {
 
   const { arcadeId, arcadeRecordId } = await params;
   const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
-
   if (!article) {
     notFound();
   }
-
-  const convertedArticle = convertArcadeRecordPostDBColumnToItems(article);
 
   const arcadeInfoList = await getArcadeInfoList();
   const methodList = (await getMethodList()).map(convertMethodDBColumnToMethod);
@@ -39,7 +35,7 @@ export default async function ModifyRecordPage({ params }: Props) {
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">기록 편집하기</h1>
       <RecordForm
-        post={convertedArticle}
+        post={article}
         arcadeInfoList={arcadeInfoList}
         methodList={methodList}
       />

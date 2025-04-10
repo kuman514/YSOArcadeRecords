@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function DeleteReviewForm({ reviewId }: Props) {
-  const [, formAction, isPending] = useActionState<null, FormData>(
+  const [, formAction, isLoading] = useActionState<null, FormData>(
     deleteReviewAction,
     null
   );
@@ -26,8 +26,8 @@ export default function DeleteReviewForm({ reviewId }: Props) {
       }}
     >
       <input type="hidden" id="reviewId" name="reviewId" value={reviewId} />
-      <button type="submit" disabled={isPending}>
-        {isPending ? '삭제 중' : '삭제하기'}
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? '삭제 중' : '삭제하기'}
       </button>
     </form>
   );

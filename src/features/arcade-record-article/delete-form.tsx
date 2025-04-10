@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function DeleteArcadeRecordForm({ arcadeRecordId }: Props) {
-  const [, formAction, isPending] = useActionState<null, FormData>(
+  const [, formAction, isLoading] = useActionState<null, FormData>(
     deleteArcadeRecordAction,
     null
   );
@@ -31,8 +31,8 @@ export default function DeleteArcadeRecordForm({ arcadeRecordId }: Props) {
         name="arcadeRecordId"
         value={arcadeRecordId}
       />
-      <button type="submit" disabled={isPending}>
-        {isPending ? '삭제 중' : '삭제하기'}
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? '삭제 중' : '삭제하기'}
       </button>
     </form>
   );

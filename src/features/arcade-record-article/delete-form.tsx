@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function DeleteArcadeRecordForm({ arcadeRecordId }: Props) {
-  const [, formAction, isLoading] = useActionState<null, FormData>(
+  const [, formAction, isLoading] = useActionState(
     deleteArcadeRecordAction,
     null
   );

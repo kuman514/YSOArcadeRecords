@@ -11,10 +11,7 @@ interface Props {
 }
 
 export default function DeleteReviewForm({ reviewId }: Props) {
-  const [, formAction, isLoading] = useActionState<null, FormData>(
-    deleteReviewAction,
-    null
-  );
+  const [, formAction, isLoading] = useActionState(deleteReviewAction, null);
 
   return (
     <form

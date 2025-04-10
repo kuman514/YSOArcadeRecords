@@ -10,16 +10,18 @@ import { AuthActionState } from './action-state';
 import { signInAction } from './sign-in-action';
 
 export default function SignInForm() {
-  const [formState, formAction] = useActionState<AuthActionState, FormData>(
-    signInAction,
-    {}
-  );
+  const [formState, formAction, isLoading] = useActionState<
+    AuthActionState,
+    FormData
+  >(signInAction, {});
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const isSubmittable =
-    checkIsEmailValid(email).isPass && checkIsPasswordValid(password).isPass;
+    !isLoading &&
+    checkIsEmailValid(email).isPass &&
+    checkIsPasswordValid(password).isPass;
 
   return (
     <form
@@ -54,7 +56,7 @@ export default function SignInForm() {
       {formState.errors?.password && <p>{formState.errors.password}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
         disabled={!isSubmittable}
       >
         로그인

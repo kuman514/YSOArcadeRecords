@@ -7,7 +7,7 @@ import { deleteData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
 
-export async function deleteArcadeRecordAction(formData: FormData) {
+export async function deleteArcadeRecordAction(_: null, formData: FormData) {
   const arcadeRecordId = formData.get('arcadeRecordId')?.toString();
 
   const supabase = await createServerSideClient();
@@ -17,13 +17,17 @@ export async function deleteArcadeRecordAction(formData: FormData) {
     redirect('/');
   }
 
+  if (!arcadeRecordId) {
+    return null;
+  }
+
   await deleteData({
     deleteFrom: 'records',
     where: [
       {
         type: ConditionType.EQUAL,
         column: 'arcade_record_id',
-        value: arcadeRecordId!,
+        value: arcadeRecordId,
       },
     ],
   });

@@ -1,6 +1,8 @@
 import { ReviewPostDBColumn } from '^/src/entities/types/post';
 import { selectData } from '^/src/shared/supabase/database';
 
+import { convertReviewPostDBColumnToReviewPost } from './util';
+
 export async function getReviewPostList() {
   const result = await selectData<ReviewPostDBColumn[]>({
     select: '*',
@@ -14,5 +16,5 @@ export async function getReviewPostList() {
     ],
   });
 
-  return result;
+  return result.map(convertReviewPostDBColumnToReviewPost);
 }

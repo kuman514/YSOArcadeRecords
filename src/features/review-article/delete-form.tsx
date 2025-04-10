@@ -1,5 +1,7 @@
 'use client';
 
+import { useActionState } from 'react';
+
 import { ReviewPost } from '^/src/entities/types/post';
 
 import { deleteReviewAction } from './delete-review-action';
@@ -9,9 +11,14 @@ interface Props {
 }
 
 export default function DeleteReviewForm({ reviewId }: Props) {
+  const [, formAction, isPending] = useActionState<null, FormData>(
+    deleteReviewAction,
+    null
+  );
+
   return (
     <form
-      action={deleteReviewAction}
+      action={formAction}
       onSubmit={(event) => {
         if (!confirm('삭제하시겠습니까?')) {
           event.preventDefault();
@@ -19,7 +26,9 @@ export default function DeleteReviewForm({ reviewId }: Props) {
       }}
     >
       <input type="hidden" id="reviewId" name="reviewId" value={reviewId} />
-      <button type="submit">삭제하기</button>
+      <button type="submit" disabled={isPending}>
+        {isPending ? '삭제 중' : '삭제하기'}
+      </button>
     </form>
   );
 }

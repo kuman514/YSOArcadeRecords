@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { deleteReviewPost } from './data';
 
-export async function deleteReviewAction(formData: FormData) {
+export async function deleteReviewAction(_: null, formData: FormData) {
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -15,6 +15,10 @@ export async function deleteReviewAction(formData: FormData) {
   }
 
   const reviewId = formData.get('reviewId')?.toString();
+  if (!reviewId) {
+    return null;
+  }
+
   await deleteReviewPost(reviewId!);
 
   revalidatePath('/reviews');

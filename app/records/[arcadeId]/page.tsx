@@ -3,8 +3,8 @@ import Image from 'next/image';
 import EmptyPng from '^/public/status/empty.png';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
-import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
-import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-post-list/data';
+import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
+import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import { notFound } from 'next/navigation';
 
 interface Props {

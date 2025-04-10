@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 import EmptyPng from '^/public/status/empty.png';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
-import ReviewPostList from '^/src/features/review-post-list';
-import { getReviewPostList } from '^/src/features/review-post-list/data';
+import ReviewPostList from '^/src/features/review-article/review-post-list';
+import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 
 export default async function ReviewListPage() {
   const data = await getReviewPostList();

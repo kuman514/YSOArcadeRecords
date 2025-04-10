@@ -11,7 +11,7 @@ import {
 } from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
-import { convertReviewPostDBColumnToReviewPost } from '../review-post-list/util';
+import { convertReviewPostDBColumnToReviewPost } from './review-post-list/util';
 
 export async function getReviewPost(reviewId: ReviewPost['reviewId']) {
   const result = await selectData<ReviewPostDBColumn[]>({

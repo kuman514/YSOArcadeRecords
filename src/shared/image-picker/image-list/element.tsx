@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { ImageListElementValue } from './types';
+import { ImageListElementValue } from '../types';
 
 interface Props {
   elementInfo: ImageListElementValue;

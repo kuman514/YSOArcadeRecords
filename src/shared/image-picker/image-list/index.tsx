@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 
 import ImageListElement from './element';
-import { ImageListElementValue } from './types';
+import { ImageListElementValue } from '../types';
 
 interface Props {
   images: ImageListElementValue[];

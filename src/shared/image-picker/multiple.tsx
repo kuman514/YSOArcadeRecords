@@ -1,53 +1,22 @@
 'use client';
 
-import Image from 'next/image';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useRef } from 'react';
+
+import ImageList from './image-list';
+import { ImageListElementValue } from './types';
 
 interface Props {
   name: string;
-  currentFiles: File[];
-  onSelectFiles: (newFiles: File[]) => void;
+  images: ImageListElementValue[];
+  onChangeImages: (newImages: ImageListElementValue[]) => void;
 }
 
 export default function MultipleImagePicker({
   name,
-  currentFiles,
-  onSelectFiles,
+  images,
+  onChangeImages,
 }: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
-
-  const [imageInfos, setImageInfos] = useState<
-    { sourceUrl: string; tmpId: string }[]
-  >([]);
-
-  useEffect(() => {
-    (async () => {
-      let i = 0;
-      const newImageInfo = await Promise.all<{
-        sourceUrl: string;
-        tmpId: string;
-      }>(
-        Array.from(currentFiles).map(
-          (file) =>
-            new Promise((resolve, reject) => {
-              const fileReader = new FileReader();
-              fileReader.onload = () => {
-                if (!fileReader.result) {
-                  reject(new Error('Unable to read file'));
-                  return;
-                }
-                resolve({
-                  sourceUrl: fileReader.result.toString(),
-                  tmpId: `${new Date().getTime()}-${i++}`,
-                });
-              };
-              fileReader.readAsDataURL(file);
-            })
-        )
-      );
-      setImageInfos(newImageInfo);
-    })();
-  }, [currentFiles]);
 
   function handleOnClickLoad() {
     imageInputRef.current?.click();
@@ -58,25 +27,21 @@ export default function MultipleImagePicker({
     if (!files) {
       return;
     }
-    onSelectFiles(Array.from(files));
+    const timestamp = new Date().getTime();
+    const newImages: ImageListElementValue[] = Array.from(files).map(
+      (file, index): ImageListElementValue => ({
+        tmpId: `${timestamp}-${index}`,
+        localFile: file,
+      })
+    );
+    onChangeImages(images.concat(newImages));
   }
 
   return (
     <div className="flex flex-row gap-4 flex-wrap">
       <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
-        {imageInfos.length ? (
-          imageInfos.map((imageInfo) => (
-            <div key={imageInfo.tmpId} className="flex flex-row gap-2">
-              <div className="w-40 h-40 relative">
-                <Image
-                  src={imageInfo.sourceUrl}
-                  alt="유저 선택 이미지"
-                  fill
-                  unoptimized
-                />
-              </div>
-            </div>
-          ))
+        {images.length > 0 ? (
+          <ImageList images={images} onChangeImages={onChangeImages} />
         ) : (
           <span>이미지 없음</span>
         )}

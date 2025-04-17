@@ -1,4 +1,5 @@
 export interface ImageListElementValue {
-  sourceUrl: string;
+  localFile?: File;
+  sourceUrl?: string;
   tmpId: string;
 }

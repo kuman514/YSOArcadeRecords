@@ -19,6 +19,8 @@ import {
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
+import { ImageListElementValue } from '^/src/shared/image-picker/types';
+import ImageList from '^/src/shared/image-picker/image-list';
 
 interface Props {
   post?: ReviewPost;
@@ -91,12 +93,19 @@ export default function ReviewForm({ post }: Props) {
 
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
-  const [presentImageUrls, setPresentImageUrls] = useState<string[]>(
-    post?.imageUrls ?? []
+  const [presentImageUrls, setPresentImageUrls] = useState<
+    ImageListElementValue[]
+  >(
+    post?.imageUrls.map((imageUrl, index) => ({
+      tmpId: `${new Date().getTime()}-${index}`,
+      sourceUrl: imageUrl,
+    })) ?? []
   );
 
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
-  const [localOriginalImages, setLocalOriginalImages] = useState<File[]>([]);
+  const [localOriginalImages, setLocalOriginalImages] = useState<
+    ImageListElementValue[]
+  >([]);
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;
@@ -136,14 +145,6 @@ export default function ReviewForm({ post }: Props) {
       route.replace(`/reviews/${reviewId}`);
     }
   }, [isSuccess, reviewId, route]);
-
-  function handleOnClickDeletePresentImageUrl(index: number) {
-    return () => {
-      const newPresentImageUrls = Array.from(presentImageUrls);
-      newPresentImageUrls.splice(index, 1);
-      setPresentImageUrls(newPresentImageUrls);
-    };
-  }
 
   function handleOnChangeMultipleTextFormInput(
     values: MultipleFormValue<string>,
@@ -239,9 +240,13 @@ export default function ReviewForm({ post }: Props) {
     }
 
     const originalImageUrls = await Promise.all<string | null>(
-      localOriginalImages.map(async (file, index) => {
+      localOriginalImages.map(async ({ localFile }, index) => {
+        if (!localFile) {
+          return null;
+        }
+
         const imageFormData = new FormData();
-        imageFormData.append('image', file);
+        imageFormData.append('image', localFile);
         imageFormData.append('size', '1024');
         imageFormData.append('path', path);
         imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
@@ -316,8 +321,8 @@ export default function ReviewForm({ post }: Props) {
     }
     reviewFormData.append('thumbnailUrl', thumbnailUrl);
 
-    presentImageUrls.forEach((imageUrl) => {
-      reviewFormData.append('presentImageUrls', imageUrl);
+    presentImageUrls.forEach(({ sourceUrl }) => {
+      reviewFormData.append('presentImageUrls', sourceUrl!);
     });
     filteredOriginalImages.forEach((imageUrl) => {
       reviewFormData.append('originalImageUrls', imageUrl);
@@ -621,26 +626,14 @@ export default function ReviewForm({ post }: Props) {
         <div className="w-full flex flex-col gap-2">
           <label htmlFor="presentImageUrls">등록된 원본 이미지</label>
           <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
-            {presentImageUrls.length > 0
-              ? presentImageUrls.map((imageUrl, index) => (
-                  <div key={imageUrl} className="flex flex-row gap-2">
-                    <div className="w-40 h-40 relative">
-                      <Image
-                        src={imageUrl}
-                        alt="유저 선택 이미지"
-                        fill
-                        sizes="10rem"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleOnClickDeletePresentImageUrl(index)}
-                    >
-                      X
-                    </button>
-                  </div>
-                ))
-              : '이미지 없음'}
+            {presentImageUrls.length > 0 ? (
+              <ImageList
+                images={presentImageUrls}
+                onChangeImages={setPresentImageUrls}
+              />
+            ) : (
+              '이미지 없음'
+            )}
           </div>
           <input
             id="presentImageUrls"
@@ -656,8 +649,8 @@ export default function ReviewForm({ post }: Props) {
         <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
         <MultipleImagePicker
           name="originalImages"
-          currentFiles={localOriginalImages}
-          onSelectFiles={setLocalOriginalImages}
+          images={localOriginalImages}
+          onChangeImages={setLocalOriginalImages}
         />
       </div>
       {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}

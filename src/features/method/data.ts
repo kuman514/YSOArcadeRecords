@@ -1,6 +1,7 @@
-import { Method, MethodDBColumn } from '^/src/entities/types/method';
+import { MethodDBColumn } from '^/src/entities/types/method';
 import { selectData } from '^/src/shared/supabase/database';
-import { ConditionType } from '^/src/shared/supabase/types';
+
+import { convertMethodDBColumnToMethod } from './util';
 
 export async function getMethodList() {
   const result = await selectData<MethodDBColumn[]>({
@@ -9,21 +10,5 @@ export async function getMethodList() {
     where: [],
   });
 
-  return result;
-}
-
-export async function getMethod(methodId: Method['methodId']) {
-  const result = await selectData<MethodDBColumn[]>({
-    select: '*',
-    from: 'methods',
-    where: [
-      {
-        type: ConditionType.EQUAL,
-        column: 'method_id',
-        value: methodId,
-      },
-    ],
-  });
-
-  return result[0];
+  return result.map(convertMethodDBColumnToMethod);
 }

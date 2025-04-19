@@ -6,6 +6,8 @@ import {
 import { selectData } from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
+import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './arcade-record-post-list/util';
+
 export async function getArcadeRecordPostArticle(
   arcadeId: ArcadeInfo['arcadeId'],
   arcadeRecordId: ArcadeRecordPost['arcadeRecordId']
@@ -27,5 +29,5 @@ export async function getArcadeRecordPostArticle(
     ],
   });
 
-  return result[0];
+  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost)[0];
 }

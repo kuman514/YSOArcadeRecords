@@ -3,7 +3,7 @@ import {
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
 
-export function convertArcadeRecordPostDBColumnToItems({
+export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
   id,
   arcade_record_id,
   title,

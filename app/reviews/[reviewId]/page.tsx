@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import ReviewArticle from '^/src/features/review-article';
 import { getReviewPost } from '^/src/features/review-article/data';
 import DeleteReviewForm from '^/src/features/review-article/delete-form';
-import { convertReviewPostDBColumnToReviewPost } from '^/src/features/review-post-list/util';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -19,24 +18,21 @@ export default async function ReviewArticlePage({ params }: Props) {
 
   const { reviewId } = await params;
   const article = await getReviewPost(reviewId);
-
   if (!article) {
     notFound();
   }
 
-  const convertedArticle = convertReviewPostDBColumnToReviewPost(article);
-
   const renderModifyButton = !(error || !data?.user) ? (
     <div className="w-full flex flex-row justify-end items-center gap-4">
       <Link href={`/reviews/${reviewId}/modify`}>수정하기</Link>
-      <DeleteReviewForm reviewId={convertedArticle.reviewId} />
+      <DeleteReviewForm reviewId={article.reviewId} />
     </div>
   ) : null;
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       {renderModifyButton}
-      <ReviewArticle post={convertedArticle} />
+      <ReviewArticle post={article} />
     </main>
   );
 }

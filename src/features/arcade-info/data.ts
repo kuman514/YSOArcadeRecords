@@ -5,6 +5,8 @@ import {
 import { selectData } from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
+import { convertArcadeInfoDBColumnToArcadeInfo } from './util';
+
 export async function getArcadeInfoList() {
   const result = await selectData<ArcadeInfoDBColumn[]>({
     select: '*',
@@ -12,7 +14,7 @@ export async function getArcadeInfoList() {
     where: [],
   });
 
-  return result;
+  return result.map(convertArcadeInfoDBColumnToArcadeInfo);
 }
 
 export async function getArcadeInfo(arcadeId: ArcadeInfo['arcadeId']) {
@@ -28,5 +30,5 @@ export async function getArcadeInfo(arcadeId: ArcadeInfo['arcadeId']) {
     ],
   });
 
-  return result[0];
+  return result.map(convertArcadeInfoDBColumnToArcadeInfo)[0];
 }

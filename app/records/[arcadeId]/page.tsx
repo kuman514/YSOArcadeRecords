@@ -3,10 +3,8 @@ import Image from 'next/image';
 import EmptyPng from '^/public/status/empty.png';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
-import { convertArcadeInfoDBColumnToArcadeInfo } from '^/src/features/arcade-info/util';
-import ArcadeRecordPostList from '^/src/features/arcade-record-post-list';
-import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-post-list/data';
-import { convertArcadeRecordPostDBColumnToItems } from '^/src/features/arcade-record-post-list/util';
+import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
+import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import { notFound } from 'next/navigation';
 
 interface Props {
@@ -17,17 +15,13 @@ interface Props {
 
 export default async function RecordListByTypeIdPage({ params }: Props) {
   const { arcadeId } = await params;
-  const data = (await getArcadeRecordPostListWithArcadeId(arcadeId)).map(
-    convertArcadeRecordPostDBColumnToItems
-  );
 
-  const arcadeInfoData = await getArcadeInfo(arcadeId);
-  if (!arcadeInfoData) {
+  const arcadeInfo = await getArcadeInfo(arcadeId);
+  if (!arcadeInfo) {
     notFound();
   }
 
-  const arcadeInfo = convertArcadeInfoDBColumnToArcadeInfo(arcadeInfoData);
-
+  const data = await getArcadeRecordPostListWithArcadeId(arcadeId);
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
     memo: datum.note ?? '메모 없음',

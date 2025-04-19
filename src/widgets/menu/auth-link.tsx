@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { signOutAction } from '^/src/features/auth/sign-out-action';
+import SignOutForm from '^/src/features/auth/sign-out-form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export default async function AuthLink() {
@@ -14,9 +14,7 @@ export default async function AuthLink() {
       <Link href="/create/records">새기록</Link>
       <Link href="/create/reviews">새리뷰</Link>
       <Link href="/create/gallery">새갤러리</Link>
-      <form action={signOutAction}>
-        <button type="submit">로그아웃</button>
-      </form>
+      <SignOutForm />
     </>
   ) : (
     <Link href="/signin">관리자 로그인</Link>

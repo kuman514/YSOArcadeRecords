@@ -9,8 +9,10 @@ import { v4 as uuidv4 } from 'uuid';
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
+import ImageList from '^/src/shared/image-picker/image-list';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
+import { ImageListElementValue } from '^/src/shared/image-picker/types';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -19,8 +21,6 @@ import {
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
-import { ImageListElementValue } from '^/src/shared/image-picker/types';
-import ImageList from '^/src/shared/image-picker/image-list';
 
 interface Props {
   post?: ReviewPost;
@@ -430,7 +430,7 @@ export default function ReviewForm({ post }: Props) {
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="releaseDate">출시일자</label>
         <input
-          className="w-full px-4 py-2 border border-primary rounded text-black"
+          className="w-full px-4 py-2 border border-primary rounded-sm text-black"
           type="date"
           id="releaseDate"
           name="releaseDate"
@@ -456,7 +456,7 @@ export default function ReviewForm({ post }: Props) {
               onClick={() => {
                 setReviewScore(score);
               }}
-              className="w-1/6 dark:invert"
+              className="w-1/6 dark:invert cursor-pointer"
             >
               {reviewScore >= score ? (
                 <Image src={FilledStarSvgRepoComSvg} alt={`${score}점`} />
@@ -594,7 +594,7 @@ export default function ReviewForm({ post }: Props) {
       {post?.thumbnailUrl && (
         <div className="w-full flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 border border-primary rounded relative flex justify-center items-center overflow-hidden">
+          <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
             <Image
               src={post.thumbnailUrl}
               alt="기존 썸네일 이미지"
@@ -625,7 +625,7 @@ export default function ReviewForm({ post }: Props) {
       {post && (
         <div className="w-full flex flex-col gap-2">
           <label htmlFor="presentImageUrls">등록된 원본 이미지</label>
-          <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
+          <div className="w-full min-h-40 border border-primary rounded-sm flex justify-center items-center flex-wrap gap-4">
             {presentImageUrls.length > 0 ? (
               <ImageList
                 images={presentImageUrls}
@@ -658,7 +658,7 @@ export default function ReviewForm({ post }: Props) {
       {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
         disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}

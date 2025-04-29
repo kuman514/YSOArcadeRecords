@@ -15,7 +15,7 @@ export default function ReviewThumbnailInteractivity({
   return (
     <button
       type="button"
-      className="absolute left-0 top-0 w-full h-full"
+      className="absolute left-0 top-0 w-full h-full cursor-pointer"
       onClick={() => {
         setModal({
           type: ModalType.IMAGE_VIEWER,

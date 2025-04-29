@@ -56,7 +56,7 @@ export default function SignInForm() {
       {formState.errors?.password && <p>{formState.errors.password}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300"
         disabled={!isSubmittable}
       >
         로그인

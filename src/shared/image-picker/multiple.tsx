@@ -39,7 +39,7 @@ export default function MultipleImagePicker({
 
   return (
     <div className="flex flex-row gap-4 flex-wrap">
-      <div className="w-full min-h-40 border border-primary rounded flex justify-center items-center flex-wrap gap-4">
+      <div className="w-full min-h-40 border border-primary rounded-sm flex justify-center items-center flex-wrap gap-4">
         {images.length > 0 ? (
           <ImageList images={images} onChangeImages={onChangeImages} />
         ) : (
@@ -57,7 +57,7 @@ export default function MultipleImagePicker({
         multiple
       />
       <button
-        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded"
+        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded-sm"
         type="button"
         onClick={handleOnClickLoad}
       >

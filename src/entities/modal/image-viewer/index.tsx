@@ -28,7 +28,7 @@ export default function ImageViewer() {
       <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
         <button
           type="button"
-          className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg"
+          className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg cursor-pointer"
           onClick={() => {
             setCurrentShowIndex(
               (currentShowIndex + imageUrls.length - 1) % imageUrls.length
@@ -43,7 +43,7 @@ export default function ImageViewer() {
         </button>
         <button
           type="button"
-          className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg"
+          className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg cursor-pointer"
           onClick={() => {
             setCurrentShowIndex((currentShowIndex + 1) % imageUrls.length);
           }}

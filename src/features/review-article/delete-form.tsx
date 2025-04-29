@@ -23,7 +23,7 @@ export default function DeleteReviewForm({ reviewId }: Props) {
       }}
     >
       <input type="hidden" id="reviewId" name="reviewId" value={reviewId} />
-      <button type="submit" disabled={isLoading}>
+      <button type="submit" disabled={isLoading} className="cursor-pointer">
         {isLoading ? '삭제 중' : '삭제하기'}
       </button>
     </form>

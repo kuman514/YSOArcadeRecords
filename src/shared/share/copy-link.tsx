@@ -13,7 +13,7 @@ export function CopyLinkButton() {
   return (
     <button
       type="button"
-      className="flex flex-row justify-center items-center rounded-full border border-black p-2.5 hover:bg-hovering dark:hover:bg-inverted-hovering dark:invert"
+      className="flex flex-row justify-center items-center rounded-full border border-black p-2.5 hover:bg-hovering dark:hover:bg-inverted-hovering dark:invert cursor-pointer"
       onClick={handleOnClickCopyLink}
     >
       <Image

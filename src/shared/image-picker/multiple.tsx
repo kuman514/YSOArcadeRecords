@@ -57,7 +57,7 @@ export default function MultipleImagePicker({
         multiple
       />
       <button
-        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded-sm"
+        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
         type="button"
         onClick={handleOnClickLoad}
       >

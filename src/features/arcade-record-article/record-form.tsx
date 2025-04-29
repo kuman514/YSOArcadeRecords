@@ -8,8 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import ImageList from '^/src/shared/image-picker/image-list';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
+import { ImageListElementValue } from '^/src/shared/image-picker/types';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -19,8 +21,6 @@ import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import axios from 'axios';
-import { ImageListElementValue } from '^/src/shared/image-picker/types';
-import ImageList from '^/src/shared/image-picker/image-list';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -565,7 +565,7 @@ export default function RecordForm({
       {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
         disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}

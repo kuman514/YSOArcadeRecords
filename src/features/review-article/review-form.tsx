@@ -9,8 +9,10 @@ import { v4 as uuidv4 } from 'uuid';
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
+import ImageList from '^/src/shared/image-picker/image-list';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
+import { ImageListElementValue } from '^/src/shared/image-picker/types';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -19,8 +21,6 @@ import {
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
-import { ImageListElementValue } from '^/src/shared/image-picker/types';
-import ImageList from '^/src/shared/image-picker/image-list';
 
 interface Props {
   post?: ReviewPost;
@@ -456,7 +456,7 @@ export default function ReviewForm({ post }: Props) {
               onClick={() => {
                 setReviewScore(score);
               }}
-              className="w-1/6 dark:invert"
+              className="w-1/6 dark:invert cursor-pointer"
             >
               {reviewScore >= score ? (
                 <Image src={FilledStarSvgRepoComSvg} alt={`${score}점`} />
@@ -658,7 +658,7 @@ export default function ReviewForm({ post }: Props) {
       {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
         disabled={!isSubmittable}
       >
         {post ? '수정하기' : '등록하기'}

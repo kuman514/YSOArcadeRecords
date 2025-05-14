@@ -63,7 +63,7 @@ export default function ImageListElement({
           className="absolute right-0 top-0 w-1/2 h-full"
         />
       </div>
-      <button type="button" onClick={onClickDelete}>
+      <button className="cursor-pointer" type="button" onClick={onClickDelete}>
         X
       </button>
     </div>

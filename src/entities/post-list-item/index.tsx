@@ -32,7 +32,7 @@ export default function PostListItem({
         {tags.map((tag, index) => (
           <span
             key={`post-tag-${index}`}
-            className="text-xs text-white px-1.5 py-1 rounded bg-[rgba(32,32,32,0.6)]"
+            className="text-xs text-white px-1.5 py-1 rounded-sm bg-[rgba(32,32,32,0.6)]"
           >
             {tag}
           </span>
@@ -47,11 +47,11 @@ export default function PostListItem({
   ) : null;
 
   return (
-    <li className="w-full h-80 rounded-2xl overflow-hidden [&_img]:hover:scale-125 [&_img]:transition-all [&_img]:hover:brightness-110">
+    <li className="w-full h-80 rounded-2xl overflow-hidden hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110">
       <Link href={href} className="w-full h-full relative flex">
         <div className="absolute left-0 top-0 w-full h-full z-0">
           <Image
-            className="object-cover"
+            className="object-cover post-thumbnail"
             src={thumbnailUrl}
             alt={`${title} ${memo}`}
             fill

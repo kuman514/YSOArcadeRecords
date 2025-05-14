@@ -9,7 +9,7 @@ export default function SignOutForm() {
 
   return (
     <form action={formAction}>
-      <button type="submit" disabled={isLoading}>
+      <button type="submit" disabled={isLoading} className="cursor-pointer">
         로그아웃
       </button>
     </form>

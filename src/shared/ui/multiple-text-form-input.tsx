@@ -39,6 +39,7 @@ export default function MultipleTextFormInput({
             onClick={() => {
               onDelete(index);
             }}
+            className="cursor-pointer"
           >
             X
           </button>
@@ -46,7 +47,7 @@ export default function MultipleTextFormInput({
       ))}
       <button
         type="button"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded disabled:bg-gray-300"
+        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer"
         onClick={onAppend}
       >
         {appendButtonLabel}

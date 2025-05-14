@@ -13,7 +13,7 @@ export default function SidebarCaller() {
   return (
     <button
       type="button"
-      className="w-12 h-12 p-2"
+      className="w-12 h-12 p-2 cursor-pointer"
       onClick={() => {
         setModal({
           type: ModalType.SIDEBAR,

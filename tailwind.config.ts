@@ -15,10 +15,6 @@ export default {
         player2: 'var(--player2-color)',
         error: 'var(--error-color)',
       },
-      backgroundImage: {
-        'vertical-gradient':
-          'linear-gradient(180deg, var(--tw-gradient-stops))',
-      },
     },
   },
   plugins: [

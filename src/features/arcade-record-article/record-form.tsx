@@ -352,7 +352,7 @@ export default function RecordForm({
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
         <input
-          className="w-full px-4 py-2 border border-primary rounded-sm text-black"
+          className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
           type="date"
           id="achievedAt"
           name="achievedAt"

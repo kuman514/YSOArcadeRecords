@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import SidebarCaller from '^/src/entities/modal/sidebar/caller';
+import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 
 export default function AlternativeHeader() {

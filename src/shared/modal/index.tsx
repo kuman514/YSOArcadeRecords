@@ -4,9 +4,9 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
+import ImageViewer from '^/src/features/image-viewer';
+import Sidebar from '^/src/features/sidebar';
 
-import ImageViewer from './image-viewer';
-import Sidebar from './sidebar';
 import { useModalStore } from './store';
 import { ModalType } from './types';
 

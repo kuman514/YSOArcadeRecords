@@ -1,10 +1,9 @@
 'use client';
 
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 import LinkTree from '^/src/shared/ui/link-tree';
 import { LinkTreeNode } from '^/src/shared/ui/types';
-
-import { useModalStore } from '../store';
-import { ModalType } from '../types';
 
 interface Props {
   linkTrees: LinkTreeNode[];

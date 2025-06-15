@@ -1,9 +1,9 @@
-import { selectData } from '^/src/shared/supabase/database';
+import { selectDataClientSide } from '^/src/shared/supabase/database-client';
 
 import { ArcadeRecordTypeCount, ArcadeRecordTypeCountDBColumn } from './types';
 
 export async function getArcadeRecordTypeCount() {
-  const result = await selectData<ArcadeRecordTypeCountDBColumn[]>({
+  const result = await selectDataClientSide<ArcadeRecordTypeCountDBColumn[]>({
     select: '*',
     from: 'arcade_record_type_counts',
     where: [],

@@ -22,7 +22,7 @@ export default function SidebarLinkTree() {
       setArcadeRecordTypeCount(
         data.map((item) => ({
           href: `/records/${item.arcadeId}`,
-          label: `${item.arcadeId} (${item.length})`,
+          label: `${item.label} (${item.length})`,
         }))
       );
     })();

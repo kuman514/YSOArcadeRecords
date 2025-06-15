@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Link from 'next/link';
 
-import Modal from '^/src/entities/modal';
-import SidebarCaller from '^/src/entities/modal/sidebar/caller';
+import SidebarCaller from '^/src/features/sidebar/caller';
+import Modal from '^/src/shared/modal';
 import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 
-import './globals.css';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

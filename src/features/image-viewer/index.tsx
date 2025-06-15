@@ -6,9 +6,8 @@ import { useState } from 'react';
 import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
 import ArrowSquareRightSvgRepoComSvg from '^/public/icons/arrow-square-right-svgrepo-com.svg';
 import ImageZoomController from '^/src/shared/image-zoom-controller';
-
-import { useModalStore } from '../store';
-import { ModalType } from '../types';
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 export default function ImageViewer() {
   const [currentShowIndex, setCurrentShowIndex] = useState<number>(0);

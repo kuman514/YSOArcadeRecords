@@ -7,6 +7,16 @@ export async function getArcadeRecordTypeCount() {
     select: '*',
     from: 'arcade_record_type_counts',
     where: [],
+    order: [
+      {
+        column: 'length',
+        isAscending: false,
+      },
+      {
+        column: 'arcade_title',
+        isAscending: true,
+      },
+    ],
   });
 
   return result.map(

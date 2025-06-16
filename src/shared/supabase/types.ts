@@ -15,7 +15,7 @@ export interface SelectOrder {
   isAscending: boolean;
 }
 
-export interface SeletRange {
+export interface SelectRange {
   from: number;
   to: number;
 }
@@ -25,7 +25,7 @@ export interface SelectQuery {
   from: string;
   where: Where[];
   order?: SelectOrder[];
-  range?: SeletRange;
+  range?: SelectRange;
 }
 
 export interface InsertQuery<T> {

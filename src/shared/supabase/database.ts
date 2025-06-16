@@ -12,6 +12,7 @@ export async function selectData<T>({
   from,
   where,
   order,
+  range,
 }: SelectQuery) {
   const supabase = await createServerSideClient();
 
@@ -30,7 +31,11 @@ export async function selectData<T>({
     queryWithWhere
   );
 
-  const { data: result, error } = await queryWithOrder;
+  const finalQuery = range
+    ? queryWithOrder.range(range.from, range.to)
+    : queryWithOrder;
+
+  const { data: result, error } = await finalQuery;
 
   if (error || !result) {
     throw new Error('Failed to select data.');

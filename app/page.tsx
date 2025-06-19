@@ -95,7 +95,12 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold mb-4">최근 포스트</h2>
         <section className="w-full flex flex-col md:flex-row justify-center items-center md:items-start gap-8">
           <article className="w-full md:w-40%">
-            <h3 className="text-xl font-bold mb-4">최근 기록</h3>
+            <header className="mb-4 w-full flex flex-row justify-between items-center">
+              <h3 className="text-xl font-bold">최근 기록</h3>
+              <Link href="/records" className="hover:text-hovering">
+                모두 보기 {'>'}
+              </Link>
+            </header>
             <Suspense
               fallback={
                 <div className="w-full flex flex-col gap-2">
@@ -110,7 +115,12 @@ export default function HomePage() {
             </Suspense>
           </article>
           <article className="w-full md:w-40%">
-            <h3 className="text-xl font-bold mb-4">최근 리뷰</h3>
+            <header className="mb-4 w-full flex flex-row justify-between items-center">
+              <h3 className="text-xl font-bold mb-4">최근 리뷰</h3>
+              <Link href="/reviews" className="hover:text-hovering">
+                모두 보기 {'>'}
+              </Link>
+            </header>
             <Suspense
               fallback={
                 <div className="w-full flex flex-col gap-2">

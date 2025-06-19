@@ -101,7 +101,7 @@ export async function POST(request: Request) {
       },
     });
 
-    revalidatePath('/reviews');
+    revalidatePath('/');
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch {
     return NextResponse.json(

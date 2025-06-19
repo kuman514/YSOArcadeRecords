@@ -32,6 +32,6 @@ export async function deleteArcadeRecordAction(_: null, formData: FormData) {
     ],
   });
 
-  revalidatePath('/records');
+  revalidatePath('/');
   redirect(`/records`);
 }

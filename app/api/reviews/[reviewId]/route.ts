@@ -114,7 +114,7 @@ export async function PUT(
       ],
     });
 
-    revalidatePath('/reviews');
+    revalidatePath('/');
     return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch {
     return NextResponse.json(

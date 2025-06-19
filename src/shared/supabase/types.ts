@@ -15,11 +15,17 @@ export interface SelectOrder {
   isAscending: boolean;
 }
 
+export interface SelectRange {
+  from: number;
+  to: number;
+}
+
 export interface SelectQuery {
   select: string;
   from: string;
   where: Where[];
   order?: SelectOrder[];
+  range?: SelectRange;
 }
 
 export interface InsertQuery<T> {

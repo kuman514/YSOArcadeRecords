@@ -93,7 +93,7 @@ export default function HomePage() {
 
       <section className="w-full max-w-4xl px-4 sm:px-8">
         <h2 className="text-2xl font-bold mb-4">최근 포스트</h2>
-        <section className="w-full flex flex-col md:flex-row justify-center items-center gap-8">
+        <section className="w-full flex flex-col md:flex-row justify-center items-center md:items-start gap-8">
           <article className="w-full md:w-40%">
             <h3 className="text-xl font-bold mb-4">최근 기록</h3>
             <Suspense

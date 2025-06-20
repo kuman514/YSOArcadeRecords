@@ -40,6 +40,18 @@ export async function POST(request: Request) {
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
+  const isExpectationsVerified = expectations.length > 0;
+  const isFirstImpressionsVerified = firstImpressions.length > 0;
+  const isPositivesVerified = positives.length > 0;
+  const isNegativesVerified = negatives.length > 0;
+  const isConclusionsVerified = conclusions.length > 0;
+  const isReviewVerified =
+    isExpectationsVerified ||
+    isFirstImpressionsVerified ||
+    isPositivesVerified ||
+    isNegativesVerified ||
+    isConclusionsVerified;
+
   if (
     !reviewId ||
     !title ||
@@ -48,11 +60,7 @@ export async function POST(request: Request) {
     !createdBy ||
     !releaseDate ||
     keyFeatures.length === 0 ||
-    expectations.length === 0 ||
-    firstImpressions.length === 0 ||
-    positives.length === 0 ||
-    negatives.length === 0 ||
-    conclusions.length === 0 ||
+    !isReviewVerified ||
     !reviewScore ||
     !thumbnailUrl ||
     originalImageUrls.length === 0

@@ -112,11 +112,19 @@ export default function ReviewForm({ post }: Props) {
   const isSubjectTypeVerified = subjectType.length > 0;
   const isCreatedByVerified = createdBy.length > 0;
   const isKeyFeaturesVerified = keyFeatures.length > 0;
+
   const isExpectationsVerified = expectations.length > 0;
   const isFirstImpressionsVerified = firstImpressions.length > 0;
   const isPositivesVerified = positives.length > 0;
   const isNegativesVerified = negatives.length > 0;
   const isConclusionsVerified = conclusions.length > 0;
+  const isReviewVerified =
+    isExpectationsVerified ||
+    isFirstImpressionsVerified ||
+    isPositivesVerified ||
+    isNegativesVerified ||
+    isConclusionsVerified;
+
   const isReviewScoreVerified = reviewScore > 0 && reviewScore <= 5;
 
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
@@ -129,11 +137,7 @@ export default function ReviewForm({ post }: Props) {
     isSubjectTypeVerified &&
     isCreatedByVerified &&
     isKeyFeaturesVerified &&
-    isExpectationsVerified &&
-    isFirstImpressionsVerified &&
-    isPositivesVerified &&
-    isNegativesVerified &&
-    isConclusionsVerified &&
+    isReviewVerified &&
     isReviewScoreVerified &&
     isThumbnailVerified &&
     isOriginalImagesVerified &&

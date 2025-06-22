@@ -3,10 +3,10 @@ import Image from 'next/image';
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
+import UnorderedReviewItemList from '^/src/entities/unordered-review-theme-list';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
-import UnorderedList from '^/src/shared/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
 
 import ReviewThumbnail from './review-thumbnail';
@@ -105,50 +105,27 @@ export default function ReviewArticle({ post }: Props) {
         </span>
       </section>
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">기대사항</h2>
-        <UnorderedList>
-          {post.expectations.map((expectation, index) => (
-            <li key={index}>{expectation}</li>
-          ))}
-        </UnorderedList>
-      </section>
+      <UnorderedReviewItemList title="특징" items={post.keyFeatures} />
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">첫인상</h2>
-        <UnorderedList>
-          {post.firstImpressions.map((firstImpression, index) => (
-            <li key={index}>{firstImpression}</li>
-          ))}
-        </UnorderedList>
-      </section>
+      {post.expectations.length > 0 ? (
+        <UnorderedReviewItemList title="기대사항" items={post.expectations} />
+      ) : null}
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">좋았던 점</h2>
-        <UnorderedList>
-          {post.positives.map((positive, index) => (
-            <li key={index}>{positive}</li>
-          ))}
-        </UnorderedList>
-      </section>
+      {post.firstImpressions.length > 0 ? (
+        <UnorderedReviewItemList title="첫인상" items={post.firstImpressions} />
+      ) : null}
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">아쉬웠던 점</h2>
-        <UnorderedList>
-          {post.negatives.map((negative, index) => (
-            <li key={index}>{negative}</li>
-          ))}
-        </UnorderedList>
-      </section>
+      {post.positives.length > 0 ? (
+        <UnorderedReviewItemList title="좋았던 점" items={post.positives} />
+      ) : null}
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">결론</h2>
-        <UnorderedList>
-          {post.conclusions.map((conclusion, index) => (
-            <li key={index}>{conclusion}</li>
-          ))}
-        </UnorderedList>
-      </section>
+      {post.negatives.length > 0 ? (
+        <UnorderedReviewItemList title="아쉬웠던 점" items={post.negatives} />
+      ) : null}
+
+      {post.conclusions.length > 0 ? (
+        <UnorderedReviewItemList title="결론" items={post.conclusions} />
+      ) : null}
 
       <section className="w-full flex flex-col gap-2">
         <h2 className="text-2xl font-bold">태그</h2>

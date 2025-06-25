@@ -3,7 +3,11 @@ import Link from 'next/link';
 
 import HomeBackgroundJpg from '^/public/background/home-background.jpg';
 import LogoPng from '^/public/logo/logo.png';
+import Skeleton from '^/src/shared/skeleton';
 import UnorderedList from '^/src/shared/unordered-list';
+import RecentArcadeRecordPostsWidget from '^/src/widgets/recent-post-widget/arcade-records';
+import RecentReviewPostsWidget from '^/src/widgets/recent-post-widget/reviews';
+import { Suspense } from 'react';
 
 export default function HomePage() {
   return (
@@ -85,6 +89,52 @@ export default function HomePage() {
             </span>
           </li>
         </UnorderedList>
+      </section>
+
+      <section className="w-full max-w-4xl px-4 sm:px-8">
+        <h2 className="text-2xl font-bold mb-4">최근 포스트</h2>
+        <section className="w-full flex flex-col md:flex-row justify-center items-center md:items-start gap-8">
+          <article className="w-full md:w-40%">
+            <header className="mb-4 w-full flex flex-row justify-between items-center">
+              <h3 className="text-xl font-bold">최근 기록</h3>
+              <Link href="/records" className="hover:text-hovering">
+                모두 보기 {'>'}
+              </Link>
+            </header>
+            <Suspense
+              fallback={
+                <div className="w-full flex flex-col gap-2">
+                  <Skeleton width="100%" height="12rem" borderRadius="0" />
+                  <Skeleton width="50%" height="2rem" borderRadius="0" />
+                  <Skeleton width="25%" height="1rem" borderRadius="0" />
+                  <Skeleton width="25%" height="1rem" borderRadius="0" />
+                </div>
+              }
+            >
+              <RecentArcadeRecordPostsWidget />
+            </Suspense>
+          </article>
+          <article className="w-full md:w-40%">
+            <header className="mb-4 w-full flex flex-row justify-between items-center">
+              <h3 className="text-xl font-bold mb-4">최근 리뷰</h3>
+              <Link href="/reviews" className="hover:text-hovering">
+                모두 보기 {'>'}
+              </Link>
+            </header>
+            <Suspense
+              fallback={
+                <div className="w-full flex flex-col gap-2">
+                  <Skeleton width="100%" height="12rem" borderRadius="0" />
+                  <Skeleton width="50%" height="2rem" borderRadius="0" />
+                  <Skeleton width="25%" height="1rem" borderRadius="0" />
+                  <Skeleton width="25%" height="1rem" borderRadius="0" />
+                </div>
+              }
+            >
+              <RecentReviewPostsWidget />
+            </Suspense>
+          </article>
+        </section>
       </section>
     </main>
   );

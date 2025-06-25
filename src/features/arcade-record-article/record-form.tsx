@@ -19,6 +19,7 @@ import {
 } from '^/src/shared/route-handler-call/types';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
+import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import axios from 'axios';
 
@@ -447,7 +448,7 @@ export default function RecordForm({
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="comment">코멘터리</label>
-        <FormInput
+        <FormTextArea
           type="text"
           id="comment"
           name="comment"

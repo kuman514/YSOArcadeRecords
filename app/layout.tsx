@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Link from 'next/link';
 
-import Modal from '^/src/entities/modal';
-import SidebarCaller from '^/src/entities/modal/sidebar/caller';
+import SidebarCaller from '^/src/features/sidebar/caller';
+import Modal from '^/src/shared/modal';
 import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 
-import './globals.css';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen min-h-dvh flex flex-col items-center`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <header
           className={`w-full h-32 flex flex-row items-end pl-6 pr-6 sm:pl-8 sm:pr-12 pb-4 bg-primary`}

@@ -1,11 +1,11 @@
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
 import { selectData } from '^/src/shared/supabase/database';
-import { ConditionType } from '^/src/shared/supabase/types';
+import { ConditionType, SelectRange } from '^/src/shared/supabase/types';
 
 import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
 
-export async function getArcadeRecordPostList() {
+export async function getArcadeRecordPostList(range?: SelectRange) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select: '*, arcade_info (*), methods (*)',
     from: 'records',
@@ -16,6 +16,7 @@ export async function getArcadeRecordPostList() {
         isAscending: false,
       },
     ],
+    range,
   });
 
   return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);

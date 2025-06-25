@@ -1,7 +1,7 @@
 'use client';
 
-import { useModalStore } from '^/src/entities/modal/store';
-import { ModalType } from '^/src/entities/modal/types';
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 interface Props {
   originalImageUrls: string[];

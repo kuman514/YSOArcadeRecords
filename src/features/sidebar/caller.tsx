@@ -3,9 +3,8 @@
 import Image from 'next/image';
 
 import StackSvgRepoComSvg from '^/public/icons/stack-svgrepo-com.svg';
-
-import { useModalStore } from '../store';
-import { ModalType } from '../types';
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 export default function SidebarCaller() {
   const setModal = useModalStore((state) => state.setModal);

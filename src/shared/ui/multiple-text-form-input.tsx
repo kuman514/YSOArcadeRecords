@@ -1,4 +1,4 @@
-import FormInput from './form-input';
+import FormTextArea from './form-textarea';
 import { MultipleFormValue } from './types';
 
 interface Props {
@@ -25,7 +25,7 @@ export default function MultipleTextFormInput({
       <label htmlFor={name}>{mainLabel}</label>
       {values.map((value, index) => (
         <span key={value.id} className="flex flex-row gap-2">
-          <FormInput
+          <FormTextArea
             type="text"
             id={name}
             name={name}

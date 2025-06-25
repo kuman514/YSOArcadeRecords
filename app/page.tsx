@@ -116,7 +116,7 @@ export default function HomePage() {
           </article>
           <article className="w-full md:w-40%">
             <header className="mb-4 w-full flex flex-row justify-between items-center">
-              <h3 className="text-xl font-bold mb-4">최근 리뷰</h3>
+              <h3 className="text-xl font-bold">최근 리뷰</h3>
               <Link href="/reviews" className="hover:text-hovering">
                 모두 보기 {'>'}
               </Link>

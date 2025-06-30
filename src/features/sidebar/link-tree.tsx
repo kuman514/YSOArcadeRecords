@@ -50,7 +50,7 @@ export default function SidebarLinkTree() {
 
   return (
     <div
-      className="flex flex-col justify-start items-center gap-4 overflow-y-scroll"
+      className="flex flex-col justify-start items-center gap-4 overflow-y-auto"
       onClick={(event) => {
         if (
           event.target instanceof HTMLAnchorElement &&

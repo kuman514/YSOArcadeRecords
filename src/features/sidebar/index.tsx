@@ -3,15 +3,12 @@ import Image from 'next/image';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 
 import SidebarLinkTree from './link-tree';
+import SidebarOpenChecker from './open-checker';
 
 export default function Sidebar() {
   return (
     <>
-      <input
-        type="checkbox"
-        id="sidebar-open-checker"
-        className="hidden [&_+_#sidebar-overlay]:hidden checked:[&_+_#sidebar-overlay]:block"
-      />
+      <SidebarOpenChecker />
       <div
         id="sidebar-overlay"
         className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"

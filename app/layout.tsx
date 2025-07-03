@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import Link from 'next/link';
 
 import SidebarCaller from '^/src/features/sidebar/caller';
@@ -8,17 +8,28 @@ import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 
+import Sidebar from '^/src/features/sidebar';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+const gyeonggiCheonnyeonJemok = localFont({
+  src: [
+    {
+      path: './GyeonggiCheonnyeonJemok-Light.otf',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: './GyeonggiCheonnyeonJemok-Medium.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './GyeonggiCheonnyeonJemok-Bold.otf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +46,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
+        className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <header
           className={`w-full h-32 flex flex-row items-end pl-6 pr-6 sm:pl-8 sm:pr-12 pb-4 bg-primary`}
@@ -66,6 +77,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
         </header>
         {children}
         <AlternativeHeader />
+        <Sidebar />
         <Modal />
       </body>
     </html>

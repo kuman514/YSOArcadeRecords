@@ -1,7 +1,6 @@
 export enum ModalType {
   OFF = 'off',
   IMAGE_VIEWER = 'image-viewer',
-  SIDEBAR = 'sidebar',
 }
 
 export interface OffModalState {
@@ -13,14 +12,7 @@ export interface ImageViewerModalState {
   imageUrls: string[];
 }
 
-export interface SidebarModalState {
-  type: ModalType.SIDEBAR;
-}
-
-export type ModalState =
-  | OffModalState
-  | ImageViewerModalState
-  | SidebarModalState;
+export type ModalState = OffModalState | ImageViewerModalState;
 
 export interface ModalActions {
   setModal: (newModalState: ModalState) => void;

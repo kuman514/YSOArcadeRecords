@@ -55,8 +55,11 @@ export default function SidebarLinkTree() {
           const sidebarOpenChecker = document.querySelector(
             'input#sidebar-open-checker'
           );
-          if (sidebarOpenChecker instanceof HTMLInputElement) {
-            sidebarOpenChecker.checked = false;
+          if (
+            sidebarOpenChecker instanceof HTMLInputElement &&
+            sidebarOpenChecker.checked
+          ) {
+            sidebarOpenChecker.click();
           }
         }
       }}

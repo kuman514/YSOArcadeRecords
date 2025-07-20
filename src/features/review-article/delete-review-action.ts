@@ -21,6 +21,7 @@ export async function deleteReviewAction(_: null, formData: FormData) {
 
   await deleteReviewPost(reviewId!);
 
-  revalidatePath('/');
+  revalidatePath('/', 'page');
+  revalidatePath('/reviews', 'layout');
   redirect(`/reviews`);
 }

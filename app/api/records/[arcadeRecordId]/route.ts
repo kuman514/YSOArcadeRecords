@@ -120,7 +120,8 @@ export async function PUT(
       ],
     });
 
-    revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
+    revalidatePath('/records', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch {
     return NextResponse.json(

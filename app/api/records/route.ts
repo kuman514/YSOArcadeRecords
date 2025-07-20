@@ -107,7 +107,8 @@ export async function POST(request: Request) {
       },
     });
 
-    revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
+    revalidatePath('/records', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch {
     return NextResponse.json(

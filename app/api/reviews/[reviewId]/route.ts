@@ -122,7 +122,8 @@ export async function PUT(
       ],
     });
 
-    revalidatePath('/');
+    revalidatePath('/', 'page');
+    revalidatePath('/reviews', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch {
     return NextResponse.json(

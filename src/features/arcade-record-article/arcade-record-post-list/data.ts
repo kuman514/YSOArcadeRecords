@@ -7,7 +7,8 @@ import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
 
 export async function getArcadeRecordPostList(range?: SelectRange) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
-    select: '*, arcade_info (*), methods (*)',
+    select:
+      'arcade_record_id, title, note, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
     from: 'records',
     where: [],
     order: [
@@ -26,7 +27,8 @@ export async function getArcadeRecordPostListWithArcadeId(
   arcadeId: ArcadeInfo['arcadeId']
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
-    select: '*, arcade_info (*), methods (*)',
+    select:
+      'arcade_record_id, title, note, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
     from: 'records',
     where: [
       {

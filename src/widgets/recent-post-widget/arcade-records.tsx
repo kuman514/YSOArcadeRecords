@@ -12,7 +12,7 @@ export default async function RecentArcadeRecordPostsWidget() {
     })
   ).map((datum) => ({
     title: datum.title,
-    memo: datum.note ?? '메모 없음',
+    memo: datum.note ?? '',
     dateToDisplay: datum.achievedAt,
     tags: datum.tags,
     isHaveYouTube: Boolean(datum.youTubeId),

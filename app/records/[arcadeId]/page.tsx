@@ -24,7 +24,7 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
   const data = await getArcadeRecordPostListWithArcadeId(arcadeId);
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
-    memo: datum.note ?? '메모 없음',
+    memo: datum.note ?? '',
     dateToDisplay: datum.achievedAt,
     tags: datum.tags,
     isHaveYouTube: Boolean(datum.youTubeId),

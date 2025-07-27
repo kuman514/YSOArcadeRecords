@@ -75,7 +75,7 @@ export default function HomePage() {
           <li>
             <span className="text-xl">
               남코 클래식 콜렉션 Vol. 1: 갤러그 어레인지먼트 - 노미스 ALL 및
-              1,338,850점 달성
+              1,374,440점 달성
             </span>
           </li>
           <li>

@@ -26,6 +26,9 @@ export default function PostListItem({
     );
   })();
 
+  const renderMemo =
+    memo.length > 0 ? <span className="text-white">{memo}</span> : null;
+
   const renderTags =
     tags.length > 0 ? (
       <div className="flex flex-row flex-wrap gap-1">
@@ -66,7 +69,7 @@ export default function PostListItem({
               <span className="text-xl text-white font-bold drop-shadow-[0_0_12px_rgba(32,32,32,1)] sm:text-2xl">
                 {title}
               </span>
-              <span className="text-white">{memo}</span>
+              {renderMemo}
             </div>
             {renderTags}
           </div>

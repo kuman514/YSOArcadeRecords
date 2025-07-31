@@ -18,12 +18,8 @@ export default function ImageViewer() {
     return state.imageUrls;
   });
 
-  return (
-    <>
-      <ImageZoomController
-        imageUrl={imageUrls[currentShowIndex]}
-        alt="아케이드 기록 관련 사진"
-      />
+  const renderPageController =
+    imageUrls.length > 1 ? (
       <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
         <button
           type="button"
@@ -54,6 +50,15 @@ export default function ImageViewer() {
           />
         </button>
       </div>
+    ) : null;
+
+  return (
+    <>
+      <ImageZoomController
+        imageUrl={imageUrls[currentShowIndex]}
+        alt="아케이드 기록 관련 사진"
+      />
+      {renderPageController}
     </>
   );
 }

@@ -52,6 +52,14 @@ export default function ImageViewer() {
       </div>
     ) : null;
 
+  const renderCurrentPage = (
+    <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-end items-center pointer-events-none pb-6">
+      <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
+        {currentShowIndex + 1} / {imageUrls.length}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <ImageZoomController
@@ -59,6 +67,7 @@ export default function ImageViewer() {
         alt="아케이드 기록 관련 사진"
       />
       {renderPageController}
+      {renderCurrentPage}
     </>
   );
 }

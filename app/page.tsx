@@ -18,16 +18,10 @@ export default function HomePage() {
           alt="YSOArcadeRecords home background"
           fill
           className="object-cover"
-          priority
           sizes="93.75rem"
         />
         <div className="w-full h-full flex justify-center items-center absolute left-0 top-0 bg-[rgba(0,0,0,0.4)] px-4">
-          <Image
-            src={LogoPng}
-            alt="YSOArcadeRecords logo"
-            priority
-            sizes="44.5rem"
-          />
+          <Image src={LogoPng} alt="YSOArcadeRecords logo" sizes="44.5rem" />
         </div>
       </div>
 

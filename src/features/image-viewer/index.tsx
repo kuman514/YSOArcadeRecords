@@ -34,6 +34,7 @@ export default function ImageViewer() {
             src={ArrowSquareLeftSvgRepoComSvg}
             className="w-full h-full fill-white"
             alt="이전 이미지"
+            unoptimized
           />
         </button>
         <button
@@ -47,6 +48,7 @@ export default function ImageViewer() {
             src={ArrowSquareRightSvgRepoComSvg}
             className="w-full h-full fill-white"
             alt="다음 이미지"
+            unoptimized
           />
         </button>
       </div>

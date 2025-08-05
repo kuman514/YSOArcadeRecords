@@ -115,6 +115,7 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
         alt={alt}
         fill
         sizes="100vw"
+        unoptimized
       />
     </div>
   );

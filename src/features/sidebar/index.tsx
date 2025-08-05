@@ -23,6 +23,7 @@ export default function Sidebar() {
                 src={CloseSvgRepoComSvg}
                 className="w-full h-full fill-white"
                 alt="사이드바 닫기"
+                unoptimized
               />
             </label>
           </div>

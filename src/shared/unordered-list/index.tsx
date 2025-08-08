@@ -5,5 +5,5 @@ interface Props {
 }
 
 export default function UnorderedList({ children }: Props) {
-  return <ul className="ps-8 [&_li]:marker:content-['•_']">{children}</ul>;
+  return <ul className="ps-8 list-disc">{children}</ul>;
 }

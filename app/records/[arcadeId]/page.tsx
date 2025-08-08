@@ -1,11 +1,12 @@
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 
 import EmptyPng from '^/public/status/empty.png';
+import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import { notFound } from 'next/navigation';
 
 interface Props {
   params: Promise<{
@@ -21,7 +22,10 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
     notFound();
   }
 
-  const data = await getArcadeRecordPostListWithArcadeId(arcadeId);
+  const data = await getArcadeRecordPostListWithArcadeId(arcadeId, {
+    from: 0,
+    to: ITEMS_PER_PAGE - 1,
+  });
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,
     memo: datum.note ?? '',

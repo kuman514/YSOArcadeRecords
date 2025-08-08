@@ -1,12 +1,16 @@
 import Image from 'next/image';
 
 import EmptyPng from '^/public/status/empty.png';
+import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 
 export default async function RecordListPage() {
-  const data = await getArcadeRecordPostList();
+  const data = await getArcadeRecordPostList({
+    from: 0,
+    to: ITEMS_PER_PAGE - 1,
+  });
 
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,

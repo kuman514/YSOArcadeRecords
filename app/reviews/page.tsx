@@ -1,12 +1,16 @@
 import Image from 'next/image';
 
 import EmptyPng from '^/public/status/empty.png';
+import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ReviewPostList from '^/src/features/review-article/review-post-list';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 
 export default async function ReviewListPage() {
-  const data = await getReviewPostList();
+  const data = await getReviewPostList({
+    from: 0,
+    to: ITEMS_PER_PAGE - 1,
+  });
 
   const postListItems: PostListItemProps[] = data.map((datum) => ({
     title: datum.title,

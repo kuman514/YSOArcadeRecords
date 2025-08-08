@@ -35,6 +35,7 @@ export function ShareToTwitterButton({ postTitle }: Props) {
         src={TwitterSvg}
         alt="Twitter로 공유하기"
         className="w-6 h-6 color-primary"
+        unoptimized
       />
     </button>
   );

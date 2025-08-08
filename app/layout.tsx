@@ -8,6 +8,7 @@ import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 
+import Contact from '^/src/features/contact';
 import Sidebar from '^/src/features/sidebar';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import './globals.css';
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
         </header>
         {children}
         <AlternativeHeader />
+        <Contact />
         <Sidebar />
         <Modal />
       </body>

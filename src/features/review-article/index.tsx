@@ -92,6 +92,7 @@ export default function ReviewArticle({ post }: Props) {
                 key={score}
                 src={FilledStarSvgRepoComSvg}
                 alt={`${score}점`}
+                unoptimized
               />
             ) : (
               <Image
@@ -99,6 +100,7 @@ export default function ReviewArticle({ post }: Props) {
                 key={score}
                 src={StarSvgRepoComSvg}
                 alt={`${score}점`}
+                unoptimized
               />
             )
           )}

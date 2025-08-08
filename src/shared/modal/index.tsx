@@ -44,6 +44,7 @@ export default function Modal() {
           src={CloseSvgRepoComSvg}
           className="w-full h-full fill-white"
           alt="모달 닫기"
+          unoptimized
         />
       </button>
     </div>

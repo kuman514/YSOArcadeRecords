@@ -50,7 +50,13 @@ export default function ImageListElement({
     >
       <div className="w-40 h-40 relative">
         {imageUrl ? (
-          <Image src={imageUrl} alt="유저 선택 이미지" fill sizes="10rem" />
+          <Image
+            src={imageUrl}
+            alt="유저 선택 이미지"
+            fill
+            sizes="10rem"
+            unoptimized
+          />
         ) : (
           <div className="w-full h-full" />
         )}

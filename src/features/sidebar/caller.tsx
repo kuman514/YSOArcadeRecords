@@ -12,6 +12,7 @@ export default function SidebarCaller() {
         src={StackSvgRepoComSvg}
         className="w-full h-full fill-white"
         alt="사이드바 열기"
+        unoptimized
       />
     </label>
   );

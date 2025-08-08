@@ -20,6 +20,7 @@ export function CopyLinkButton() {
         src={LinkSvg}
         alt="링크 복사하기"
         className="w-6 h-6 color-primary"
+        unoptimized
       />
     </button>
   );

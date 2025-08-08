@@ -508,6 +508,7 @@ export default function RecordForm({
               alt="기존 썸네일 이미지"
               fill
               sizes="10rem"
+              unoptimized
             />
           </div>
           <input

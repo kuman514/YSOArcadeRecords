@@ -3,6 +3,7 @@ import { ArcadeRecordPostDBColumn } from '^/src/entities/types/post';
 import { selectData } from '^/src/shared/supabase/database';
 import { ConditionType, SelectRange } from '^/src/shared/supabase/types';
 
+import { selectDataClientSide } from '^/src/shared/supabase/database-client';
 import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
 
 export async function getArcadeRecordPostList(range?: SelectRange) {
@@ -24,7 +25,8 @@ export async function getArcadeRecordPostList(range?: SelectRange) {
 }
 
 export async function getArcadeRecordPostListWithArcadeId(
-  arcadeId: ArcadeInfo['arcadeId']
+  arcadeId: ArcadeInfo['arcadeId'],
+  range?: SelectRange
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select:
@@ -43,6 +45,52 @@ export async function getArcadeRecordPostListWithArcadeId(
         isAscending: false,
       },
     ],
+    range,
+  });
+
+  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);
+}
+
+export async function getExtendedArcadeRecordPostList(range?: SelectRange) {
+  const result = await selectDataClientSide<ArcadeRecordPostDBColumn[]>({
+    select:
+      'arcade_record_id, title, note, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
+    from: 'records',
+    where: [],
+    order: [
+      {
+        column: 'achieved_at',
+        isAscending: false,
+      },
+    ],
+    range,
+  });
+
+  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);
+}
+
+export async function getExtendedArcadeRecordPostListWithArcadeId(
+  arcadeId: ArcadeInfo['arcadeId'],
+  range?: SelectRange
+) {
+  const result = await selectDataClientSide<ArcadeRecordPostDBColumn[]>({
+    select:
+      'arcade_record_id, title, note, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
+    from: 'records',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_id',
+        value: arcadeId,
+      },
+    ],
+    order: [
+      {
+        column: 'achieved_at',
+        isAscending: false,
+      },
+    ],
+    range,
   });
 
   return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);

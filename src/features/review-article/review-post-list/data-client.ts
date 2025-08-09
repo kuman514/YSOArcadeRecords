@@ -1,11 +1,11 @@
 import { ReviewPostDBColumn } from '^/src/entities/types/post';
-import { selectData } from '^/src/shared/supabase/database';
+import { selectDataClientSide } from '^/src/shared/supabase/database-client';
 import { SelectRange } from '^/src/shared/supabase/types';
 
 import { convertReviewPostDBColumnToReviewPost } from './util';
 
-export async function getReviewPostList(range?: SelectRange) {
-  const result = await selectData<ReviewPostDBColumn[]>({
+export async function getExtendedReviewPostList(range?: SelectRange) {
+  const result = await selectDataClientSide<ReviewPostDBColumn[]>({
     select:
       'review_id, title, subject_name, subject_type, created_at, tags, youtube_id, thumbnail_url',
     from: 'reviews',

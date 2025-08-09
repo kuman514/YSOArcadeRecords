@@ -3,6 +3,7 @@ import Image from 'next/image';
 import EmptyPng from '^/public/status/empty.png';
 import PostListItem from '^/src/entities/post-list-item';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
+import { convertReviewPostToPostListItem } from '^/src/features/review-article/review-post-list/util';
 
 export default async function RecentReviewPostsWidget() {
   const reviewPosts = (
@@ -10,15 +11,7 @@ export default async function RecentReviewPostsWidget() {
       from: 0,
       to: 2,
     })
-  ).map((datum) => ({
-    title: datum.title,
-    memo: `${datum.subjectType} - ${datum.subjectName}`,
-    dateToDisplay: datum.createdAt,
-    tags: datum.tags,
-    isHaveYouTube: Boolean(datum.youTubeId),
-    href: `/reviews/${datum.reviewId}`,
-    thumbnailUrl: datum.thumbnailUrl,
-  }));
+  ).map(convertReviewPostToPostListItem);
 
   return reviewPosts.length > 0 ? (
     <ul className="w-full flex flex-col gap-4">

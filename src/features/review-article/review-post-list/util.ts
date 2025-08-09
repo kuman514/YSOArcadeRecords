@@ -45,3 +45,24 @@ export function convertReviewPostDBColumnToReviewPost({
     modifiedAt: new Date(modified_at),
   };
 }
+
+export function convertReviewPostToPostListItem({
+  title,
+  subjectType,
+  subjectName,
+  createdAt,
+  tags,
+  youTubeId,
+  reviewId,
+  thumbnailUrl,
+}: ReviewPost) {
+  return {
+    title: title,
+    memo: `${subjectType} - ${subjectName} 리뷰`,
+    dateToDisplay: createdAt,
+    tags: tags,
+    isHaveYouTube: Boolean(youTubeId),
+    href: `/reviews/${reviewId}`,
+    thumbnailUrl: thumbnailUrl,
+  };
+}

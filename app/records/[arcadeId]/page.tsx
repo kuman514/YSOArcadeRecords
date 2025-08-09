@@ -1,11 +1,13 @@
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 
 import EmptyPng from '^/public/status/empty.png';
+import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostListWithArcadeId } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import { notFound } from 'next/navigation';
+import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
 
 interface Props {
   params: Promise<{
@@ -21,16 +23,13 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
     notFound();
   }
 
-  const data = await getArcadeRecordPostListWithArcadeId(arcadeId);
-  const postListItems: PostListItemProps[] = data.map((datum) => ({
-    title: datum.title,
-    memo: datum.note ?? '',
-    dateToDisplay: datum.achievedAt,
-    tags: datum.tags,
-    isHaveYouTube: Boolean(datum.youTubeId),
-    href: `/records/${datum.arcade.arcadeId}/${datum.arcadeRecordId}`,
-    thumbnailUrl: datum.thumbnailUrl,
-  }));
+  const data = await getArcadeRecordPostListWithArcadeId(arcadeId, {
+    from: 0,
+    to: ITEMS_PER_PAGE - 1,
+  });
+  const postListItems: PostListItemProps[] = data.map(
+    convertArcadeRecordPostToPostListItem
+  );
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">

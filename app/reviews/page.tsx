@@ -1,22 +1,21 @@
 import Image from 'next/image';
 
 import EmptyPng from '^/public/status/empty.png';
+import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ReviewPostList from '^/src/features/review-article/review-post-list';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
+import { convertReviewPostToPostListItem } from '^/src/features/review-article/review-post-list/util';
 
 export default async function ReviewListPage() {
-  const data = await getReviewPostList();
+  const data = await getReviewPostList({
+    from: 0,
+    to: ITEMS_PER_PAGE - 1,
+  });
 
-  const postListItems: PostListItemProps[] = data.map((datum) => ({
-    title: datum.title,
-    memo: `${datum.subjectType} - ${datum.subjectName}`,
-    dateToDisplay: datum.createdAt,
-    tags: datum.tags,
-    isHaveYouTube: Boolean(datum.youTubeId),
-    href: `/reviews/${datum.reviewId}`,
-    thumbnailUrl: datum.thumbnailUrl,
-  }));
+  const postListItems: PostListItemProps[] = data.map(
+    convertReviewPostToPostListItem
+  );
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">

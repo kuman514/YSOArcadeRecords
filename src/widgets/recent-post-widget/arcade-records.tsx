@@ -3,6 +3,7 @@ import Image from 'next/image';
 import EmptyPng from '^/public/status/empty.png';
 import PostListItem from '^/src/entities/post-list-item';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
+import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
 
 export default async function RecentArcadeRecordPostsWidget() {
   const arcadeRecordPosts = (
@@ -10,15 +11,7 @@ export default async function RecentArcadeRecordPostsWidget() {
       from: 0,
       to: 2,
     })
-  ).map((datum) => ({
-    title: datum.title,
-    memo: datum.note ?? '',
-    dateToDisplay: datum.achievedAt,
-    tags: datum.tags,
-    isHaveYouTube: Boolean(datum.youTubeId),
-    href: `/records/${datum.arcade.arcadeId}/${datum.arcadeRecordId}`,
-    thumbnailUrl: datum.thumbnailUrl,
-  }));
+  ).map(convertArcadeRecordPostToPostListItem);
 
   return arcadeRecordPosts.length > 0 ? (
     <ul className="w-full flex flex-col gap-4">

@@ -5,6 +5,7 @@ import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
+import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
 
 export default async function RecordListPage() {
   const data = await getArcadeRecordPostList({
@@ -12,15 +13,9 @@ export default async function RecordListPage() {
     to: ITEMS_PER_PAGE - 1,
   });
 
-  const postListItems: PostListItemProps[] = data.map((datum) => ({
-    title: datum.title,
-    memo: datum.note ?? '',
-    dateToDisplay: datum.achievedAt,
-    tags: datum.tags,
-    isHaveYouTube: Boolean(datum.youTubeId),
-    href: `/records/${datum.arcade.arcadeId}/${datum.arcadeRecordId}`,
-    thumbnailUrl: datum.thumbnailUrl,
-  }));
+  const postListItems: PostListItemProps[] = data.map(
+    convertArcadeRecordPostToPostListItem
+  );
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">

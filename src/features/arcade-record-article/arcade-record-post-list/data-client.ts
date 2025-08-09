@@ -28,6 +28,10 @@ export async function getExtendedArcadeRecordPostList(
         column: 'achieved_at',
         isAscending: false,
       },
+      {
+        column: 'created_at',
+        isAscending: false,
+      },
     ],
     range: {
       from: page * ITEMS_PER_PAGE,

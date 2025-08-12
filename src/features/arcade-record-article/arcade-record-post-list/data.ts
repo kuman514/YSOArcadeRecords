@@ -5,6 +5,11 @@ import { ConditionType, SelectRange } from '^/src/shared/supabase/types';
 
 import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
 
+/**
+ * @todo
+ * Unify `getArcadeRecordPostList` and `getArcadeRecordPostListWithArcadeId`.
+ */
+
 export async function getArcadeRecordPostList(range?: SelectRange) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select:
@@ -24,7 +29,8 @@ export async function getArcadeRecordPostList(range?: SelectRange) {
 }
 
 export async function getArcadeRecordPostListWithArcadeId(
-  arcadeId: ArcadeInfo['arcadeId']
+  arcadeId: ArcadeInfo['arcadeId'],
+  range?: SelectRange
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select:
@@ -43,6 +49,7 @@ export async function getArcadeRecordPostListWithArcadeId(
         isAscending: false,
       },
     ],
+    range,
   });
 
   return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);

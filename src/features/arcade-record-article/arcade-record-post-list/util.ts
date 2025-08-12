@@ -54,3 +54,24 @@ export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
     modifiedAt: new Date(modified_at),
   };
 }
+
+export function convertArcadeRecordPostToPostListItem({
+  title,
+  note,
+  achievedAt,
+  tags,
+  youTubeId,
+  arcade,
+  arcadeRecordId,
+  thumbnailUrl,
+}: ArcadeRecordPost) {
+  return {
+    title: title,
+    memo: note ?? '',
+    dateToDisplay: achievedAt,
+    tags: tags,
+    isHaveYouTube: Boolean(youTubeId),
+    href: `/records/${arcade.arcadeId}/${arcadeRecordId}`,
+    thumbnailUrl: thumbnailUrl,
+  };
+}

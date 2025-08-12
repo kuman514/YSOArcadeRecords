@@ -79,14 +79,16 @@ export default function RecordForm({
   const isTitleVerified = title.length > 0;
   const isArcadeIdVerified = arcadeId.length > 0;
   const isMethodIdVerified = methodId.length > 0;
-  const isEvaluationVerified = (() => {
-    try {
-      parseEvaluation(evaluation);
-      return true;
-    } catch {
-      return false;
-    }
-  })();
+  const isEvaluationVerified =
+    evaluation.length > 0 &&
+    (() => {
+      try {
+        parseEvaluation(evaluation);
+        return true;
+      } catch {
+        return false;
+      }
+    })();
   const isStageVerified = stage.length > 0;
   const isCommentVerified = comment.length > 0;
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
@@ -508,6 +510,7 @@ export default function RecordForm({
               alt="기존 썸네일 이미지"
               fill
               sizes="10rem"
+              unoptimized
             />
           </div>
           <input

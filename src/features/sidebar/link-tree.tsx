@@ -8,19 +8,24 @@ import { LinkTreeNode } from '^/src/shared/ui/types';
 import { getArcadeRecordTypeCount } from './data';
 
 export default function SidebarLinkTree() {
-  const [arcadeRecordTypeCount, setArcadeRecordTypeCount] = useState<
-    LinkTreeNode[]
-  >([]);
+  const [arcadeRecordTypeCount, setArcadeRecordTypeCount] =
+    useState<LinkTreeNode>({
+      href: '/records',
+      label: '아케이드 게임 기록',
+    });
 
   useEffect(() => {
     (async () => {
       const data = await getArcadeRecordTypeCount();
-      setArcadeRecordTypeCount(
-        data.map((item) => ({
+      const total = data.reduce((prev, current) => prev + current.length, 0);
+      setArcadeRecordTypeCount({
+        ...arcadeRecordTypeCount,
+        label: `아케이드 게임 기록 (${total})`,
+        children: data.map((item) => ({
           href: `/records/${item.arcadeId}`,
           label: `${item.label} (${item.length})`,
-        }))
-      );
+        })),
+      });
     })();
   }, []);
 
@@ -29,11 +34,7 @@ export default function SidebarLinkTree() {
       href: '/',
       label: 'YSOArcadeRecords',
     },
-    {
-      href: '/records',
-      label: '아케이드 게임 기록',
-      children: arcadeRecordTypeCount,
-    },
+    arcadeRecordTypeCount,
     {
       href: '/reviews',
       label: '아케이드 관련 리뷰',

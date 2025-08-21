@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
@@ -85,25 +83,15 @@ export default function ReviewArticle({ post }: Props) {
       <section className="w-full flex flex-col gap-2">
         <h2 className="text-2xl font-bold">평점: {post.reviewScore} / 5점</h2>
         <span className="w-full flex flex-row justify-center items-center dark:invert">
-          {[1, 2, 3, 4, 5].map((score) =>
-            post.reviewScore >= score ? (
-              <Image
-                className="w-1/6"
-                key={score}
-                src={FilledStarSvgRepoComSvg}
-                alt={`${score}점`}
-                unoptimized
-              />
-            ) : (
-              <Image
-                className="w-1/6"
-                key={score}
-                src={StarSvgRepoComSvg}
-                alt={`${score}점`}
-                unoptimized
-              />
-            )
-          )}
+          {[1, 2, 3, 4, 5].map((score) => (
+            <div key={`${score}점`} className="w-1/6">
+              {post.reviewScore >= score ? (
+                <FilledStarSvgRepoComSvg width="100%" height="100%" />
+              ) : (
+                <StarSvgRepoComSvg width="100%" height="100%" />
+              )}
+            </div>
+          ))}
         </span>
       </section>
 

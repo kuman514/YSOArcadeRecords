@@ -463,13 +463,9 @@ export default function ReviewForm({ post }: Props) {
               className="w-1/6 dark:invert cursor-pointer"
             >
               {reviewScore >= score ? (
-                <Image
-                  src={FilledStarSvgRepoComSvg}
-                  unoptimized
-                  alt={`${score}점`}
-                />
+                <FilledStarSvgRepoComSvg width="100%" height="100%" />
               ) : (
-                <Image src={StarSvgRepoComSvg} unoptimized alt={`${score}점`} />
+                <StarSvgRepoComSvg width="100%" height="100%" />
               )}
             </button>
           ))}

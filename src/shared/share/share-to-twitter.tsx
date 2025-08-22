@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-
 import TwitterSvg from '^/public/icons/twitter.svg';
 
 interface Props {
@@ -17,26 +15,13 @@ export function ShareToTwitterButton({ postTitle }: Props) {
     window.open(tweet, '_blank');
   }
 
-  /**
-   * @todo
-   * Reinstall svgr-webpack.
-   * Configure svgr-webpack to work without errors like render tree mismatch.
-   * Change all SVGs used by Image in next/image into SVGR components.
-   * Apply fill color (CSS property) to Twitter SVG icon on hovering this share button.
-   */
-
   return (
     <button
       type="button"
-      className="flex flex-row justify-center items-center rounded-full border border-black p-2.5 hover:bg-hovering dark:hover:bg-inverted-hovering dark:invert cursor-pointer"
+      className="w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border border-black hover:bg-hovering dark:hover:bg-inverted-hovering dark:invert cursor-pointer"
       onClick={handleOnClickShareToTwitter}
     >
-      <Image
-        src={TwitterSvg}
-        alt="Twitter로 공유하기"
-        className="w-6 h-6 color-primary"
-        unoptimized
-      />
+      <TwitterSvg width="100%" height="100%" fill="#000000" />
     </button>
   );
 }

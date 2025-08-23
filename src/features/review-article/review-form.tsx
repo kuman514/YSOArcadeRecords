@@ -460,7 +460,7 @@ export default function ReviewForm({ post }: Props) {
               onClick={() => {
                 setReviewScore(score);
               }}
-              className="w-1/6 dark:invert cursor-pointer"
+              className="w-1/6 cursor-pointer stroke-black fill-black dark:stroke-white dark:fill-white"
             >
               {reviewScore >= score ? (
                 <FilledStarSvgRepoComSvg width="100%" height="100%" />

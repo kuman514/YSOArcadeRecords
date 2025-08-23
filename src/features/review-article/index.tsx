@@ -82,7 +82,7 @@ export default function ReviewArticle({ post }: Props) {
 
       <section className="w-full flex flex-col gap-2">
         <h2 className="text-2xl font-bold">평점: {post.reviewScore} / 5점</h2>
-        <span className="w-full flex flex-row justify-center items-center dark:invert">
+        <span className="w-full flex flex-row justify-center items-center stroke-black fill-black dark:stroke-white dark:fill-white">
           {[1, 2, 3, 4, 5].map((score) => (
             <div key={`${score}점`} className="w-1/6">
               {post.reviewScore >= score ? (

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 
 import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
@@ -30,12 +29,7 @@ export default function ImageViewer() {
             );
           }}
         >
-          <Image
-            src={ArrowSquareLeftSvgRepoComSvg}
-            className="w-full h-full fill-white"
-            alt="이전 이미지"
-            unoptimized
-          />
+          <ArrowSquareLeftSvgRepoComSvg width="100%" height="100%" />
         </button>
         <button
           type="button"
@@ -44,12 +38,7 @@ export default function ImageViewer() {
             setCurrentShowIndex((currentShowIndex + 1) % imageUrls.length);
           }}
         >
-          <Image
-            src={ArrowSquareRightSvgRepoComSvg}
-            className="w-full h-full fill-white"
-            alt="다음 이미지"
-            unoptimized
-          />
+          <ArrowSquareRightSvgRepoComSvg width="100%" height="100%" />
         </button>
       </div>
     ) : null;

@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import StackSvgRepoComSvg from '^/public/icons/stack-svgrepo-com.svg';
 
 export default function SidebarCaller() {
@@ -8,12 +6,7 @@ export default function SidebarCaller() {
       htmlFor="sidebar-open-checker"
       className="w-12 h-12 p-2 cursor-pointer"
     >
-      <Image
-        src={StackSvgRepoComSvg}
-        className="w-full h-full fill-white"
-        alt="사이드바 열기"
-        unoptimized
-      />
+      <StackSvgRepoComSvg width="100%" height="100%" />
     </label>
   );
 }

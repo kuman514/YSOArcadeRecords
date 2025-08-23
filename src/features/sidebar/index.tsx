@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 
 import SidebarLinkTree from './link-tree';
@@ -19,12 +17,7 @@ export default function Sidebar() {
               htmlFor="sidebar-open-checker"
               className="w-12 h-12 p-2 cursor-pointer"
             >
-              <Image
-                src={CloseSvgRepoComSvg}
-                className="w-full h-full fill-white"
-                alt="사이드바 닫기"
-                unoptimized
-              />
+              <CloseSvgRepoComSvg width="100%" height="100%" />
             </label>
           </div>
           <SidebarLinkTree />

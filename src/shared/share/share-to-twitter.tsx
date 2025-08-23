@@ -18,10 +18,10 @@ export function ShareToTwitterButton({ postTitle }: Props) {
   return (
     <button
       type="button"
-      className="w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border border-black hover:bg-hovering dark:hover:bg-inverted-hovering dark:invert cursor-pointer"
+      className="w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border border-black hover:bg-hovering dark:border-white dark:stroke-white dark:fill-white cursor-pointer"
       onClick={handleOnClickShareToTwitter}
     >
-      <TwitterSvg width="100%" height="100%" fill="#000000" />
+      <TwitterSvg width="100%" height="100%" />
     </button>
   );
 }

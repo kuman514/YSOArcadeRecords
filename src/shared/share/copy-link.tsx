@@ -11,10 +11,10 @@ export function CopyLinkButton() {
   return (
     <button
       type="button"
-      className="w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border border-black hover:bg-hovering dark:hover:bg-inverted-hovering dark:invert cursor-pointer"
+      className="w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border border-black hover:bg-hovering stroke-black dark:border-white dark:stroke-white cursor-pointer"
       onClick={handleOnClickCopyLink}
     >
-      <LinkSvg width="100%" height="100%" stroke="#000000" />
+      <LinkSvg width="100%" height="100%" />
     </button>
   );
 }

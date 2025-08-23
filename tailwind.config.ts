@@ -10,7 +10,6 @@ export default {
         foreground: 'var(--foreground)',
         primary: 'var(--primary-color)',
         hovering: 'var(--hovering-color)',
-        'inverted-hovering': 'var(--inverted-hovering-color)',
         player1: 'var(--player1-color)',
         player2: 'var(--player2-color)',
         error: 'var(--error-color)',

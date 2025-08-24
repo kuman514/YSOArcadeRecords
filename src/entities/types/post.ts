@@ -92,6 +92,7 @@ export type ReviewPostDBColumn = ReviewPostDBInput;
 export interface GalleryPost extends BasePost, Gallery {}
 
 export interface GalleryPostDBInput {
+  id: GalleryPost['postId'];
   gallery_id: GalleryPost['galleryId'];
   title: GalleryPost['title'];
   thumbnail_url: GalleryPost['thumbnailUrl'];

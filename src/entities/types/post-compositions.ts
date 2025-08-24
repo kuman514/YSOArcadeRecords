@@ -16,6 +16,10 @@ export interface HavingThumbnail {
 
 // ===========================================
 
+export interface HavingSingleImage {
+  imageUrl: string;
+}
+
 export interface HavingImages {
   imageUrls: string[];
 }

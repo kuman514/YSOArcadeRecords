@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import { GalleryPost } from '^/src/entities/types/post';
 import Link from 'next/link';
 
 // interface Props {
@@ -24,15 +23,17 @@ export default function GalleryListElement(/* { post }: Props */) {
   return (
     <Link
       href="/gallery"
-      className="w-1/3 aspect-square p-0.5 overflow-hidden hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110 relative"
+      className="w-1/3 aspect-square p-0.5 hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110 relative"
     >
-      <Image
-        fill
-        className="w-full h-full post-thumbnail object-cover"
-        src="https://pbs.twimg.com/profile_banners/2580505316/1587998528"
-        alt="애기코이시"
-        unoptimized
-      />
+      <div className="w-full h-full overflow-hidden relative">
+        <Image
+          fill
+          className="w-full h-full post-thumbnail object-cover"
+          src="https://pbs.twimg.com/profile_banners/2580505316/1587998528"
+          alt="애기코이시"
+          unoptimized
+        />
+      </div>
     </Link>
   );
 }

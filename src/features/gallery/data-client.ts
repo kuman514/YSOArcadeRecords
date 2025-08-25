@@ -1,10 +1,10 @@
+import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { GalleryPostDBColumn } from '^/src/entities/types/post';
 import { selectDataClientSide } from '^/src/shared/supabase/database-client';
-import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 
 import { convertGalleryDBColumnToGalleryPost } from './util';
 
-export async function getExtendedArcadeRecordPostList(page: number) {
+export async function getExtendedGalleryList(page: number) {
   const result = await selectDataClientSide<GalleryPostDBColumn[]>({
     select: '*, gallery_theme (*)',
     from: 'gallery',

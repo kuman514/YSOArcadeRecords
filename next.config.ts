@@ -24,6 +24,13 @@ const nextConfig: NextConfig = {
         pathname: '/storage/**',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'https://pbs.twimg.com',
+        port: '',
+        pathname: '/**',
+        search: '',
+      },
     ],
   },
   webpack: (config) => {

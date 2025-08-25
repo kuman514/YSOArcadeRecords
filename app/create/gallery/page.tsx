@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 
-import PreparingNotice from '^/src/shared/notice/preparing';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export default async function CreateGalleryPage() {
@@ -11,5 +10,13 @@ export default async function CreateGalleryPage() {
     redirect('/');
   }
 
-  return <PreparingNotice />;
+  return (
+    <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
+      <h1 className="text-4xl font-bold">새 갤러리 사진</h1>
+      {/**
+       * @todo
+       * Add gallery form here
+       */}
+    </main>
+  );
 }

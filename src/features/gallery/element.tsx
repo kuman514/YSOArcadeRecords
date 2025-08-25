@@ -7,7 +7,7 @@ interface Props {
   post: GalleryPost;
 }
 
-export default function GalleryListElement({ post }: Props) {
+export default function GalleryElement({ post }: Props) {
   return (
     <Link
       href={`/gallery/${post.galleryId}`}

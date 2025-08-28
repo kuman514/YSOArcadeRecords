@@ -4,6 +4,7 @@ import { GalleryPostDBInput } from '^/src/entities/types/post';
 import { updateData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
+import { revalidatePath } from 'next/cache';
 
 export async function PUT(
   request: Request,
@@ -78,11 +79,14 @@ export async function PUT(
         },
       ],
     });
+
+    revalidatePath('/gallery', 'layout');
+    return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '아케이드 기록 등록 실패. 다시 시도하여 주십시오.',
+        error: '갤러리 사진 등록 실패. 다시 시도하여 주십시오.',
       },
       { status: 500 }
     );

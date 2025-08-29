@@ -4,6 +4,8 @@ import { getGallery } from '^/src/features/gallery/data';
 import ImageZoomController from '^/src/shared/image-zoom-controller';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import { notFound } from 'next/navigation';
+import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
+import { CopyLinkButton } from '^/src/shared/share/copy-link';
 
 interface Props {
   params: Promise<{
@@ -37,6 +39,10 @@ export default async function GalleryPostPage({ params }: Props) {
         >
           <CloseSvgRepoComSvg width="100%" height="100%" />
         </Link>
+        <div className="fixed flex flex-row gap-2 right-0 top-0 p-2 m-2">
+          <ShareToTwitterButton postTitle={data.title} />
+          <CopyLinkButton />
+        </div>
       </div>
     </main>
   );

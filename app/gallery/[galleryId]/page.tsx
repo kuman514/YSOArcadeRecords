@@ -27,7 +27,7 @@ export default async function GalleryPostPage({ params }: Props) {
   }
 
   const renderModifyButton = !(error || !data?.user) ? (
-    <div className="w-full flex flex-row justify-end gap-2">
+    <div className="w-full flex flex-row justify-end gap-2 pointer-events-auto">
       <Link
         className="px-4 py-2 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
         href={`/gallery/${galleryId}/modify`}

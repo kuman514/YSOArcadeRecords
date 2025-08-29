@@ -1,0 +1,36 @@
+import { notFound, redirect } from 'next/navigation';
+
+import { createServerSideClient } from '^/src/shared/supabase/server';
+import { getGallery, getGalleryTheme } from '^/src/features/gallery/data';
+import GalleryForm from '^/src/features/gallery/form';
+
+interface Props {
+  params: Promise<{
+    galleryId: string;
+  }>;
+}
+
+export default async function ModifyGalleryPage({ params }: Props) {
+  const supabase = await createServerSideClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
+    redirect('/');
+  }
+
+  const { galleryId } = await params;
+
+  const galleryPost = await getGallery(galleryId);
+  if (!galleryPost) {
+    notFound();
+  }
+
+  const galleryThemeList = await getGalleryTheme();
+
+  return (
+    <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
+      <h1 className="text-4xl font-bold">갤러리 사진 편집하기</h1>
+      <GalleryForm post={galleryPost} galleryThemeList={galleryThemeList} />
+    </main>
+  );
+}

@@ -54,18 +54,16 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
   return (
     <>
       {renderData}
-      <li>
-        <button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-          onClick={() => {
-            fetchNextPage();
-          }}
-          disabled={isNextPageButtonDisabled}
-        >
-          {nextPageLabel}
-        </button>
-      </li>
+      <button
+        type="button"
+        className="w-full mt-4 p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
+        onClick={() => {
+          fetchNextPage();
+        }}
+        disabled={isNextPageButtonDisabled}
+      >
+        {nextPageLabel}
+      </button>
     </>
   );
 }

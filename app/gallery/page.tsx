@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import EmptyPng from '^/public/status/empty.png';
 import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import Gallery from '^/src/features/gallery';
+import GalleryPostList from '^/src/features/gallery';
 import { getGalleryList } from '^/src/features/gallery/data';
 
 export default async function GalleryPage() {
@@ -12,10 +12,10 @@ export default async function GalleryPage() {
   });
 
   return (
-    <main className="w-full h-full max-w-3xl px-4 sm:px-8 py-32">
+    <main className="w-full h-full max-w-3xl px-4 sm:px-8 py-32 flex flex-col gap-4">
       <h1 className="text-4xl font-bold">아케이드 갤러리</h1>
       {data.length > 0 ? (
-        <Gallery galleryPosts={data} />
+        <GalleryPostList galleryPosts={data} />
       ) : (
         <div className="w-full flex flex-col items-center">
           <div className="w-full h-40 relative">

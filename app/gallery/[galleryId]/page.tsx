@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getGallery } from '^/src/features/gallery/data';
 import ImageZoomController from '^/src/shared/image-zoom-controller';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
+import { notFound } from 'next/navigation';
 
 interface Props {
   params: Promise<{
@@ -14,6 +15,9 @@ export default async function GalleryPostPage({ params }: Props) {
   const { galleryId } = await params;
 
   const data = await getGallery(galleryId);
+  if (!data) {
+    notFound();
+  }
 
   return (
     <main className="w-full h-full max-w-3xl px-4 sm:px-8 py-32">

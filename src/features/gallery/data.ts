@@ -1,12 +1,13 @@
 import { GalleryThemeDBColumn } from '^/src/entities/types/gallery-theme';
 import { GalleryPostDBColumn } from '^/src/entities/types/post';
 import { selectData } from '^/src/shared/supabase/database';
-import { SelectRange } from '^/src/shared/supabase/types';
+import { ConditionType, SelectRange } from '^/src/shared/supabase/types';
 
 import {
   convertGalleryDBColumnToGalleryPost,
   convertGalleryThemeDBColumnToGalleryTheme,
 } from './util';
+import { Gallery } from '^/src/entities/types/gallery';
 
 export async function getGalleryList(range?: SelectRange) {
   const result = await selectData<GalleryPostDBColumn[]>({
@@ -23,6 +24,22 @@ export async function getGalleryList(range?: SelectRange) {
   });
 
   return result.map(convertGalleryDBColumnToGalleryPost);
+}
+
+export async function getGallery(galleryId: Gallery['galleryId']) {
+  const result = await selectData<GalleryPostDBColumn[]>({
+    select: '*, gallery_theme (*)',
+    from: 'gallery',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'gallery_id',
+        value: galleryId,
+      },
+    ],
+  });
+
+  return result.map(convertGalleryDBColumnToGalleryPost)[0];
 }
 
 export async function getGalleryTheme() {

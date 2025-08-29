@@ -4,9 +4,13 @@ import TwitterSvg from '^/public/icons/twitter.svg';
 
 interface Props {
   postTitle: string;
+  additionalClassName?: string;
 }
 
-export function ShareToTwitterButton({ postTitle }: Props) {
+export function ShareToTwitterButton({
+  postTitle,
+  additionalClassName,
+}: Props) {
   function handleOnClickShareToTwitter() {
     const urlToUri = encodeURI(window.location.href);
     const textToUri = encodeURI(postTitle);
@@ -18,10 +22,13 @@ export function ShareToTwitterButton({ postTitle }: Props) {
   return (
     <button
       type="button"
-      className="w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border border-black hover:bg-hovering dark:border-white dark:stroke-white dark:fill-white cursor-pointer"
+      className={`w-11 h-11 p-2.5 flex flex-row justify-center items-center rounded-full border cursor-pointer hover:bg-hovering ${
+        additionalClassName ??
+        'border-black fill-black stroke-black dark:border-white dark:stroke-white dark:fill-white'
+      }`}
       onClick={handleOnClickShareToTwitter}
     >
-      <TwitterSvg width="100%" height="100%" />
+      <TwitterSvg fill="inherit" width="100%" height="100%" />
     </button>
   );
 }

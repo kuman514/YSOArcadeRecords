@@ -50,7 +50,7 @@ export default async function GalleryPostPage({ params }: Props) {
           <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] mt-12 sm:mt-0 rounded-lg">
             주제: {galleryPost.theme.galleryThemeTitle}
           </div>
-          <div className="flex flex-col gap-2 justify-center items-center">
+          <div className="w-full flex px-4 flex-col gap-2 justify-center items-center">
             <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
               {galleryPost.title}
             </div>

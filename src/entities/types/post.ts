@@ -1,3 +1,4 @@
+import { Gallery } from './gallery';
 import { ArcadeInfo, ArcadeInfoDBColumn } from './arcade-info';
 import { ArcadeRecord } from './arcade-record';
 import { PlayerInfo } from './arcade-record-compositions';
@@ -10,8 +11,9 @@ import {
   Taggable,
 } from './post-compositions';
 import { Review } from './review';
+import { GalleryTheme, GalleryThemeDBColumn } from './gallery-theme';
 
-export interface BasePost extends Taggable {
+export interface BasePost {
   postId: number;
   title: string;
   createdAt: Date;
@@ -20,6 +22,7 @@ export interface BasePost extends Taggable {
 
 export interface ArcadeRecordPost
   extends BasePost,
+    Taggable,
     Commentable,
     ArcadeRecord,
     HavingThumbnail,
@@ -55,6 +58,7 @@ export interface ArcadeRecordPostDBColumn extends ArcadeRecordPostDBInput {
 
 export interface ReviewPost
   extends BasePost,
+    Taggable,
     Review,
     HavingThumbnail,
     HavingImages,
@@ -84,3 +88,20 @@ export interface ReviewPostDBInput {
 }
 
 export type ReviewPostDBColumn = ReviewPostDBInput;
+
+export interface GalleryPost extends BasePost, Gallery {}
+
+export interface GalleryPostDBInput {
+  id: GalleryPost['postId'];
+  gallery_id: GalleryPost['galleryId'];
+  title: GalleryPost['title'];
+  thumbnail_url: GalleryPost['thumbnailUrl'];
+  image_url: GalleryPost['imageUrl'];
+  gallery_theme_id: GalleryTheme['galleryThemeId'];
+  created_at: string;
+  modified_at: string;
+}
+
+export interface GalleryPostDBColumn extends GalleryPostDBInput {
+  gallery_theme: GalleryThemeDBColumn;
+}

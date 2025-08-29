@@ -14,6 +14,7 @@ export default function GalleryNotFoundPage() {
           className="object-contain"
           priority
           sizes="37.5rem"
+          unoptimized
         />
         이미지를 찾을 수 없습니다.
         <Link

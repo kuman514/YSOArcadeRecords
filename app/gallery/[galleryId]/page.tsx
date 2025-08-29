@@ -28,12 +28,12 @@ export default async function GalleryPostPage({ params }: Props) {
 
   const renderModifyButton = !(error || !data?.user) ? (
     <div className="fixed flex flex-row gap-2 right-0 bottom-0 p-2 m-2">
-      {/* <Link
+      <Link
         className="px-4 py-2 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
-        href={`/records/${galleryId}/modify`}
+        href={`/gallery/${galleryId}/modify`}
       >
         수정하기
-      </Link> */}
+      </Link>
       <DeleteGalleryForm galleryId={galleryId} />
     </div>
   ) : null;

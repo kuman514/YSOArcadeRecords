@@ -54,10 +54,7 @@ export async function PUT(
     }
   }
 
-  const createdDate = new Date();
-  const formattedDate = `${createdDate.getFullYear()}-${String(
-    createdDate.getMonth() + 1
-  ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+  const modifiedDate = new Date().toISOString();
 
   try {
     await updateData<Partial<GalleryPostDBInput>>({
@@ -68,8 +65,7 @@ export async function PUT(
         gallery_theme_id: galleryThemeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
         image_url: originalImageUrl ?? presentImageUrl,
-        created_at: formattedDate,
-        modified_at: formattedDate,
+        modified_at: modifiedDate,
       },
       where: [
         {

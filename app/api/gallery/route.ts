@@ -46,10 +46,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const createdDate = new Date();
-  const formattedDate = `${createdDate.getFullYear()}-${String(
-    createdDate.getMonth() + 1
-  ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+  const createdDate = new Date().toISOString();
 
   try {
     await insertData<Omit<GalleryPostDBInput, 'id'>>({
@@ -60,8 +57,8 @@ export async function POST(request: Request) {
         gallery_theme_id: galleryThemeId,
         thumbnail_url: thumbnailUrl,
         image_url: originalImageUrl,
-        created_at: formattedDate,
-        modified_at: formattedDate,
+        created_at: createdDate,
+        modified_at: createdDate,
       },
     });
 

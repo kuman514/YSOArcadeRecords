@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from 'react-toastify';
+
 import LinkSvg from '^/public/icons/link.svg';
 
 interface Props {
@@ -9,7 +11,7 @@ interface Props {
 export function CopyLinkButton({ additionalClassName }: Props) {
   function handleOnClickCopyLink() {
     navigator.clipboard.writeText(window.location.href);
-    alert('링크가 복사되었습니다.');
+    toast('링크가 복사되었습니다.');
   }
 
   return (

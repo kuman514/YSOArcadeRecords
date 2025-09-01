@@ -4,6 +4,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
 import { GalleryTheme } from '^/src/entities/types/gallery-theme';
@@ -52,9 +53,20 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
 
   useEffect(() => {
     if (isSuccess) {
+      toast(
+        post ? '갤러리 사진이 수정되었습니다.' : '갤러리 사진이 등록되었습니다.'
+      );
       route.replace(`/gallery/${galleryId}`);
     }
-  }, [isSuccess, galleryId, route]);
+  }, [post, isSuccess, galleryId, route]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast(errorMessage, {
+        type: 'error',
+      });
+    }
+  }, [errorMessage]);
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -291,7 +303,6 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       </div>
       {!isImageVerified && <p>이미지를 등록해주세요.</p>}
 
-      {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"

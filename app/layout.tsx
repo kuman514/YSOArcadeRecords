@@ -2,15 +2,16 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Link from 'next/link';
 
+import Contact from '^/src/features/contact';
+import Sidebar from '^/src/features/sidebar';
 import SidebarCaller from '^/src/features/sidebar/caller';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import Modal from '^/src/shared/modal';
 import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
+import { ToastContainer } from 'react-toastify';
 
-import Contact from '^/src/features/contact';
-import Sidebar from '^/src/features/sidebar';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import './globals.css';
 
 const gyeonggiCheonnyeonJemok = localFont({
@@ -76,11 +77,16 @@ export default function RootLayout({ children }: Readonly<Props>) {
             </div>
           </div>
         </header>
+
         {children}
+
         <AlternativeHeader />
         <Contact />
+
         <Sidebar />
         <Modal />
+
+        <ToastContainer />
       </body>
     </html>
   );

@@ -1,8 +1,10 @@
 'use client';
 
+import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
@@ -21,7 +23,6 @@ import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
-import axios from 'axios';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -109,9 +110,18 @@ export default function RecordForm({
 
   useEffect(() => {
     if (isSuccess) {
+      toast(post ? '기록이 수정되었습니다.' : '기록이 등록되었습니다.');
       route.replace(`/records/${arcadeId}/${arcadeRecordId}`);
     }
-  }, [isSuccess, arcadeId, route, arcadeRecordId]);
+  }, [post, isSuccess, arcadeId, route, arcadeRecordId]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast(errorMessage, {
+        type: 'error',
+      });
+    }
+  }, [errorMessage]);
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -566,7 +576,6 @@ export default function RecordForm({
       </div>
       {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
-      {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"

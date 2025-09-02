@@ -46,28 +46,30 @@ export default function SidebarLinkTree() {
   ];
 
   return (
-    <div
-      className="flex flex-col justify-start items-center gap-4 overflow-y-auto"
-      onClick={(event) => {
-        if (
-          event.target instanceof HTMLAnchorElement &&
-          event.target.nodeName === 'A'
-        ) {
-          const sidebarOpenChecker = document.querySelector(
-            'input#sidebar-open-checker'
-          );
+    <nav className="overflow-y-auto">
+      <ul
+        className="flex flex-col justify-start items-center gap-4"
+        onClick={(event) => {
           if (
-            sidebarOpenChecker instanceof HTMLInputElement &&
-            sidebarOpenChecker.checked
+            event.target instanceof HTMLAnchorElement &&
+            event.target.nodeName === 'A'
           ) {
-            sidebarOpenChecker.click();
+            const sidebarOpenChecker = document.querySelector(
+              'input#sidebar-open-checker'
+            );
+            if (
+              sidebarOpenChecker instanceof HTMLInputElement &&
+              sidebarOpenChecker.checked
+            ) {
+              sidebarOpenChecker.click();
+            }
           }
-        }
-      }}
-    >
-      {totalLinkTrees.map((linkTree, index) => (
-        <LinkTree key={`link-tree-${index}`} node={linkTree} />
-      ))}
-    </div>
+        }}
+      >
+        {totalLinkTrees.map((linkTree, index) => (
+          <LinkTree key={`link-tree-${index}`} node={linkTree} />
+        ))}
+      </ul>
+    </nav>
   );
 }

@@ -11,20 +11,18 @@ export default function Sidebar() {
         id="sidebar-overlay"
         className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"
       >
-        <div className="w-full h-full bg-primary text-white max-w-[40rem] grid grid-rows-[4rem_1fr_4rem]">
-          <div className="w-full flex flex-row justify-start items-center px-2">
-            <label
-              htmlFor="sidebar-open-checker"
-              className="w-12 h-12 p-2 cursor-pointer"
-            >
-              <CloseSvgRepoComSvg width="100%" height="100%" />
-            </label>
-          </div>
+        <aside className="w-full h-full bg-primary text-white max-w-[40rem] grid grid-rows-[4rem_1fr_4rem]">
+          <label
+            htmlFor="sidebar-open-checker"
+            className="w-16 h-16 p-4 cursor-pointer"
+          >
+            <CloseSvgRepoComSvg width="100%" height="100%" />
+          </label>
           <SidebarLinkTree />
-          <div className="w-full h-full flex justify-center items-center">
+          <footer className="w-full h-full flex justify-center items-center">
             YSO as kuman514
-          </div>
-        </div>
+          </footer>
+        </aside>
       </div>
     </>
   );

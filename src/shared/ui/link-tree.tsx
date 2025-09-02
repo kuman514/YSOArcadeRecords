@@ -7,16 +7,18 @@ interface Props {
 }
 
 export default function LinkTree({ node }: Props) {
-  const renderSubnode = node.children
-    ? node.children.map((subnode, index) => (
+  const renderSubnode = node.children ? (
+    <ul className="flex flex-col gap-2">
+      {node.children.map((subnode, index) => (
         <LinkTree key={`subnode-${index}`} node={subnode} />
-      ))
-    : null;
+      ))}
+    </ul>
+  ) : null;
 
   return (
-    <div className="w-full max-w-[18rem] pl-4 flex flex-col gap-2">
+    <li className="w-full max-w-[18rem] pl-4 flex flex-col gap-2">
       <Link href={node.href}>{node.label}</Link>
       {renderSubnode}
-    </div>
+    </li>
   );
 }

@@ -4,6 +4,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
@@ -146,9 +147,18 @@ export default function ReviewForm({ post }: Props) {
 
   useEffect(() => {
     if (isSuccess) {
+      toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.');
       route.replace(`/reviews/${reviewId}`);
     }
-  }, [isSuccess, reviewId, route]);
+  }, [post, isSuccess, reviewId, route]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast(errorMessage, {
+        type: 'error',
+      });
+    }
+  }, [errorMessage]);
 
   function handleOnChangeMultipleTextFormInput(
     values: MultipleFormValue<string>,
@@ -659,7 +669,6 @@ export default function ReviewForm({ post }: Props) {
       </div>
       {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
-      {errorMessage && <p>{errorMessage}</p>}
       <button
         type="submit"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"

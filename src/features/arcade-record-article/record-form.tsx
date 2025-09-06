@@ -309,7 +309,7 @@ export default function RecordForm({
 
   return (
     <form
-      className="w-full flex flex-col justify-center items-start gap-8"
+      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
       onSubmit={handleOnSubmit}
     >
       <p className="w-full flex flex-col gap-2">
@@ -323,10 +323,10 @@ export default function RecordForm({
             setTitle(event.currentTarget.value);
           }}
         />
+        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
       </p>
-      {!isTitleVerified && <p>제목을 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="arcadeId">아케이드 부문</label>
         <FormDropdown
           id="arcadeId"
@@ -338,10 +338,10 @@ export default function RecordForm({
         >
           {renderArcadeSelectOptions}
         </FormDropdown>
+        {!isArcadeIdVerified && <span>아케이드 부문을 선택해주세요.</span>}
       </p>
-      {!isArcadeIdVerified && <p>아케이드 부문을 선택해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="methodId">수단</label>
         <FormDropdown
           id="methodId"
@@ -353,10 +353,10 @@ export default function RecordForm({
         >
           {renderMethodSelectOptions}
         </FormDropdown>
+        {!isMethodIdVerified && <span>플레이 수단을 선택해주세요.</span>}
       </p>
-      {!isMethodIdVerified && <p>플레이 수단을 선택해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
         <input
           className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
@@ -372,7 +372,7 @@ export default function RecordForm({
         />
       </p>
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="evaluation">점수 / 클리어 타임</label>
         <FormInput
           type="text"
@@ -383,15 +383,15 @@ export default function RecordForm({
             setEvaluation(event.currentTarget.value);
           }}
         />
+        {!isEvaluationVerified && (
+          <span>
+            점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의
+            시간)의 형식에 맞게 입력해주세요.
+          </span>
+        )}
       </p>
-      {!isEvaluationVerified && (
-        <p>
-          점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의 시간)의
-          형식에 맞게 입력해주세요.
-        </p>
-      )}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
         <FormInput
           type="text"
@@ -402,10 +402,12 @@ export default function RecordForm({
             setStage(event.currentTarget.value);
           }}
         />
+        {!isStageVerified && (
+          <span>어느 스테이지까지 도달하였는지 입력해주세요.</span>
+        )}
       </p>
-      {!isStageVerified && <p>어느 스테이지까지 도달하였는지 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="rank">최종 등급</label>
         <FormInput
           type="text"
@@ -429,8 +431,8 @@ export default function RecordForm({
             setComment(event.currentTarget.value);
           }}
         />
+        {!isCommentVerified && <span>코멘터리를 입력해주세요.</span>}
       </p>
-      {!isCommentVerified && <p>코멘터리를 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
@@ -472,7 +474,7 @@ export default function RecordForm({
       </p>
 
       {post?.thumbnailUrl && (
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
           <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
             <Image
@@ -493,15 +495,15 @@ export default function RecordForm({
         </div>
       )}
 
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-12/25 flex flex-col gap-2">
         <label htmlFor="thumbnail">새로운 썸네일</label>
         <SingleImagePicker
           name="thumbnail"
           currentFile={localThumbnail}
           onSelectFile={setLocalThumbnail}
         />
+        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
       </div>
-      {!isThumbnailVerified && <p>썸네일을 등록해주세요.</p>}
 
       {post && (
         <div className="w-full flex flex-col gap-2">
@@ -533,8 +535,8 @@ export default function RecordForm({
           images={localOriginalImages}
           onChangeImages={setLocalOriginalImages}
         />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>
-      {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
       <button
         type="submit"

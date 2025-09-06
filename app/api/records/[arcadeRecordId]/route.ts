@@ -32,8 +32,6 @@ export async function PUT(
   const arcadeId = formData.get('arcadeId')?.toString();
   const methodId = formData.get('methodId')?.toString();
   const achievedAt = formData.get('achievedAt')?.toString();
-  const players = formData.get('players')?.toString();
-  const playerSide = formData.get('playerSide')?.toString();
   const evaluation = formData.get('evaluation')?.toString();
   const stage = formData.get('stage')?.toString();
   const rank = formData.get('rank')?.toString();
@@ -63,8 +61,6 @@ export async function PUT(
     !arcadeId ||
     !methodId ||
     !achievedAt ||
-    !players ||
-    !playerSide ||
     !evaluation ||
     !isEvaluationVerified ||
     !stage ||

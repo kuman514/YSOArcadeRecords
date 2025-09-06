@@ -51,10 +51,6 @@ export default function RecordForm({
   const [achievedAt, setAchievedAt] = useState<Date>(
     post?.achievedAt ?? new Date()
   );
-  const [players, setPlayers] = useState<number>(post?.playerInfo.players ?? 1);
-  const [playerSide, setPlayerSide] = useState<number>(
-    post?.playerInfo.playerSide ?? 1
-  );
   const [evaluation, setEvaluation] = useState<string>(post?.evaluation ?? '');
   const [stage, setStage] = useState<string>(post?.stage ?? '');
   const [rank, setRank] = useState<string>(post?.rank ?? '');
@@ -229,8 +225,6 @@ export default function RecordForm({
     recordFormData.append('arcadeId', arcadeId);
     recordFormData.append('methodId', methodId);
     recordFormData.append('achievedAt', achievedAt.toISOString());
-    recordFormData.append('players', String(players));
-    recordFormData.append('playerSide', String(playerSide));
     recordFormData.append('evaluation', evaluation);
     recordFormData.append('stage', stage);
     recordFormData.append('rank', rank);
@@ -376,40 +370,6 @@ export default function RecordForm({
             setAchievedAt(new Date(event.currentTarget.value));
           }}
         />
-      </p>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="players">플레이어 수</label>
-        <FormDropdown
-          id="players"
-          name="players"
-          value={players}
-          onChange={(event) => {
-            setPlayers(parseInt(event.currentTarget.value, 10));
-          }}
-        >
-          <option value={1}>1명</option>
-          <option value={2}>2명</option>
-          <option value={3}>3명</option>
-          <option value={4}>4명</option>
-        </FormDropdown>
-      </p>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="players">작성자의 플레이 사이드</label>
-        <FormDropdown
-          id="playerSide"
-          name="playerSide"
-          value={playerSide}
-          onChange={(event) => {
-            setPlayerSide(parseInt(event.currentTarget.value, 10));
-          }}
-        >
-          <option value={1}>1P</option>
-          <option value={2}>2P</option>
-          <option value={3}>3P</option>
-          <option value={4}>4P</option>
-        </FormDropdown>
       </p>
 
       <p className="w-full flex flex-col gap-2">

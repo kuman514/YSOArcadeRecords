@@ -1,7 +1,7 @@
-import { Gallery } from './gallery';
 import { ArcadeInfo, ArcadeInfoDBColumn } from './arcade-info';
 import { ArcadeRecord } from './arcade-record';
-import { PlayerInfo } from './arcade-record-compositions';
+import { Gallery } from './gallery';
+import { GalleryTheme, GalleryThemeDBColumn } from './gallery-theme';
 import { Method, MethodDBColumn } from './method';
 import {
   Commentable,
@@ -11,7 +11,6 @@ import {
   Taggable,
 } from './post-compositions';
 import { Review } from './review';
-import { GalleryTheme, GalleryThemeDBColumn } from './gallery-theme';
 
 export interface BasePost {
   postId: number;
@@ -35,8 +34,6 @@ export interface ArcadeRecordPostDBInput {
   title: ArcadeRecordPost['title'];
   arcade_id: ArcadeInfo['arcadeId'];
   method_id: Method['methodId'];
-  players: PlayerInfo['players'];
-  player_side: PlayerInfo['playerSide'];
   evaluation: ArcadeRecordPost['evaluation'];
   stage: ArcadeRecordPost['stage'];
   rank?: ArcadeRecordPost['rank'];

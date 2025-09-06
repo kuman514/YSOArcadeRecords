@@ -8,7 +8,6 @@ import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
-import { PLAYER_CLASS } from './constants';
 
 interface Props {
   post: ArcadeRecordPost;
@@ -29,26 +28,6 @@ export default function ArcadeRecordArticle({ post }: Props) {
         수정일자: {modifiedAtText}
       </span>
     ) : null;
-
-  const renderPlayerInfo =
-    post.playerInfo.players === 1 ? (
-      <li>
-        <span className="font-bold">플레이 위치</span>:{' '}
-        <span className={PLAYER_CLASS[post.playerInfo.playerSide]}>
-          {post.playerInfo.playerSide}P
-        </span>{' '}
-        사이드
-      </li>
-    ) : (
-      <li>
-        <span className="font-bold">플레이어 수</span>:{' '}
-        {post.playerInfo.players}명 (작성자 본인은{' '}
-        <span className={PLAYER_CLASS[post.playerInfo.playerSide]}>
-          {post.playerInfo.playerSide}P
-        </span>{' '}
-        사이드)
-      </li>
-    );
 
   const renderEvaluation = (() => {
     switch (evaluationObject.evaluationCriterion) {
@@ -134,7 +113,6 @@ export default function ArcadeRecordArticle({ post }: Props) {
               <span className="font-bold">장소 및 수단</span>:{' '}
               {post.method.label}
             </li>
-            {renderPlayerInfo}
             {renderEvaluation}
             <li>
               <span className="font-bold">최종 스테이지</span>: {post.stage}

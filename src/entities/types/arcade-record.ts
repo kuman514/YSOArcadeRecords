@@ -1,11 +1,7 @@
 import { HavingArcadeInfo } from './arcade-info';
 import { HavingMethod } from './method';
-import { HavingPlayerInfo } from './arcade-record-compositions';
 
-export interface ArcadeRecord
-  extends HavingArcadeInfo,
-    HavingPlayerInfo,
-    HavingMethod {
+export interface ArcadeRecord extends HavingArcadeInfo, HavingMethod {
   arcadeRecordId: string;
 
   /**

@@ -93,8 +93,6 @@ export async function PUT(
         title: title,
         arcade_id: arcadeId,
         method_id: methodId,
-        players: Number(players),
-        player_side: Number(playerSide),
         evaluation: evaluation,
         stage: stage,
         rank,

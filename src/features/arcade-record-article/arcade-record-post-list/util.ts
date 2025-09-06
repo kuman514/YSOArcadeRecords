@@ -9,8 +9,6 @@ export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
   title,
   arcade_info,
   methods,
-  players,
-  player_side,
   evaluation,
   stage,
   rank,
@@ -35,10 +33,6 @@ export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
     method: {
       methodId: methods.method_id,
       label: methods.method_name,
-    },
-    playerInfo: {
-      players,
-      playerSide: player_side,
     },
     evaluation,
     stage,

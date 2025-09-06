@@ -86,8 +86,6 @@ export async function POST(request: Request) {
         arcade_id: arcadeId,
         arcade_record_id: arcadeRecordId,
         method_id: methodId,
-        players: Number(players),
-        player_side: Number(playerSide),
         evaluation: evaluation,
         stage: stage,
         rank,

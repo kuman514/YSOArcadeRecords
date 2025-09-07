@@ -49,42 +49,10 @@ export default function ReviewForm({ post }: Props) {
     post?.releaseDate ?? new Date()
   );
 
-  const [keyFeatures, setKeyFeatures] = useState<MultipleFormValue<string>>(
-    post?.keyFeatures.map((keyFeature, index) => ({
+  const [details, setDetails] = useState<MultipleFormValue<string>>(
+    post?.details?.map((detail, index) => ({
       id: index,
-      value: keyFeature,
-    })) ?? []
-  );
-  const [expectations, setExpectations] = useState<MultipleFormValue<string>>(
-    post?.expectations.map((expectation, index) => ({
-      id: index,
-      value: expectation,
-    })) ?? []
-  );
-  const [firstImpressions, setFirstImpressions] = useState<
-    MultipleFormValue<string>
-  >(
-    post?.firstImpressions.map((firstImpression, index) => ({
-      id: index,
-      value: firstImpression,
-    })) ?? []
-  );
-  const [positives, setPositives] = useState<MultipleFormValue<string>>(
-    post?.positives.map((positive, index) => ({
-      id: index,
-      value: positive,
-    })) ?? []
-  );
-  const [negatives, setNegatives] = useState<MultipleFormValue<string>>(
-    post?.negatives.map((negative, index) => ({
-      id: index,
-      value: negative,
-    })) ?? []
-  );
-  const [conclusions, setConclusions] = useState<MultipleFormValue<string>>(
-    post?.conclusions.map((conclusion, index) => ({
-      id: index,
-      value: conclusion,
+      value: detail,
     })) ?? []
   );
 
@@ -112,19 +80,7 @@ export default function ReviewForm({ post }: Props) {
   const isSubjectNameVerified = subjectName.length > 0;
   const isSubjectTypeVerified = subjectType.length > 0;
   const isCreatedByVerified = createdBy.length > 0;
-  const isKeyFeaturesVerified = keyFeatures.length > 0;
-
-  const isExpectationsVerified = expectations.length > 0;
-  const isFirstImpressionsVerified = firstImpressions.length > 0;
-  const isPositivesVerified = positives.length > 0;
-  const isNegativesVerified = negatives.length > 0;
-  const isConclusionsVerified = conclusions.length > 0;
-  const isReviewVerified =
-    isExpectationsVerified ||
-    isFirstImpressionsVerified ||
-    isPositivesVerified ||
-    isNegativesVerified ||
-    isConclusionsVerified;
+  const isDetailsVerified = details.length > 0;
 
   const isReviewScoreVerified = reviewScore > 0 && reviewScore <= 5;
 
@@ -137,8 +93,7 @@ export default function ReviewForm({ post }: Props) {
     isSubjectNameVerified &&
     isSubjectTypeVerified &&
     isCreatedByVerified &&
-    isKeyFeaturesVerified &&
-    isReviewVerified &&
+    isDetailsVerified &&
     isReviewScoreVerified &&
     isThumbnailVerified &&
     isOriginalImagesVerified &&
@@ -308,23 +263,8 @@ export default function ReviewForm({ post }: Props) {
     reviewFormData.append('subjectType', subjectType);
     reviewFormData.append('createdBy', createdBy);
     reviewFormData.append('releaseDate', releaseDate.toISOString());
-    keyFeatures.forEach((keyFeature) => {
-      reviewFormData.append('keyFeatures', keyFeature.value);
-    });
-    expectations.forEach((expectation) => {
-      reviewFormData.append('expectations', expectation.value);
-    });
-    firstImpressions.forEach((firstImpression) => {
-      reviewFormData.append('firstImpressions', firstImpression.value);
-    });
-    positives.forEach((positive) => {
-      reviewFormData.append('positives', positive.value);
-    });
-    negatives.forEach((negative) => {
-      reviewFormData.append('negatives', negative.value);
-    });
-    conclusions.forEach((conclusion) => {
-      reviewFormData.append('conclusions', conclusion.value);
+    details.forEach((detail) => {
+      reviewFormData.append('details', detail.value);
     });
     reviewFormData.append('reviewScore', String(reviewScore));
     reviewFormData.append('youTubeId', youTubeId);
@@ -484,99 +424,13 @@ export default function ReviewForm({ post }: Props) {
       {!isReviewScoreVerified && <p>총점을 입력해주세요.</p>}
 
       <MultipleTextFormInput
-        name="keyFeatures"
-        values={keyFeatures}
-        mainLabel="특징"
-        appendButtonLabel="새 특징"
-        onChange={handleOnChangeMultipleTextFormInput(
-          keyFeatures,
-          setKeyFeatures
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          keyFeatures,
-          setKeyFeatures
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          keyFeatures,
-          setKeyFeatures
-        )}
-      />
-
-      <MultipleTextFormInput
-        name="expectations"
-        values={expectations}
-        mainLabel="기대사항"
-        appendButtonLabel="새 기대사항"
-        onChange={handleOnChangeMultipleTextFormInput(
-          expectations,
-          setExpectations
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          expectations,
-          setExpectations
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          expectations,
-          setExpectations
-        )}
-      />
-
-      <MultipleTextFormInput
-        name="firstImpressions"
-        values={firstImpressions}
-        mainLabel="첫인상"
-        appendButtonLabel="새 첫인상"
-        onChange={handleOnChangeMultipleTextFormInput(
-          firstImpressions,
-          setFirstImpressions
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          firstImpressions,
-          setFirstImpressions
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          firstImpressions,
-          setFirstImpressions
-        )}
-      />
-
-      <MultipleTextFormInput
-        name="positives"
-        values={positives}
-        mainLabel="장점"
-        appendButtonLabel="새 장점"
-        onChange={handleOnChangeMultipleTextFormInput(positives, setPositives)}
-        onAppend={handleOnAppendMultipleTextFormInput(positives, setPositives)}
-        onDelete={handleOnDeleteMultipleTextFormInput(positives, setPositives)}
-      />
-
-      <MultipleTextFormInput
-        name="negatives"
-        values={negatives}
-        mainLabel="단점"
-        appendButtonLabel="새 단점"
-        onChange={handleOnChangeMultipleTextFormInput(negatives, setNegatives)}
-        onAppend={handleOnAppendMultipleTextFormInput(negatives, setNegatives)}
-        onDelete={handleOnDeleteMultipleTextFormInput(negatives, setNegatives)}
-      />
-
-      <MultipleTextFormInput
-        name="conclusions"
-        values={conclusions}
-        mainLabel="결론"
-        appendButtonLabel="새 결론"
-        onChange={handleOnChangeMultipleTextFormInput(
-          conclusions,
-          setConclusions
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          conclusions,
-          setConclusions
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          conclusions,
-          setConclusions
-        )}
+        name="details"
+        values={details}
+        mainLabel="상세"
+        appendButtonLabel="새 상세"
+        onChange={handleOnChangeMultipleTextFormInput(details, setDetails)}
+        onAppend={handleOnAppendMultipleTextFormInput(details, setDetails)}
+        onDelete={handleOnDeleteMultipleTextFormInput(details, setDetails)}
       />
 
       <p className="w-full flex flex-col gap-2">

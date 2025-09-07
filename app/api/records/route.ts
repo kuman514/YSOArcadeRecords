@@ -5,6 +5,7 @@ import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { EvaluationCriterion } from '^/src/shared/util/types';
 
 export async function POST(request: Request) {
   const supabase = await createServerSideClient();
@@ -27,7 +28,8 @@ export async function POST(request: Request) {
   const arcadeId = formData.get('arcadeId')?.toString();
   const methodId = formData.get('methodId')?.toString();
   const achievedAt = formData.get('achievedAt')?.toString();
-  const evaluation = formData.get('evaluation')?.toString();
+  const score = formData.get('score')?.toString() ?? '';
+  const elapsedTime = formData.get('elapsedTime')?.toString() ?? '';
   const stage = formData.get('stage')?.toString();
   const rank = formData.get('rank')?.toString();
   const comment = formData.get('comment')?.toString();
@@ -38,14 +40,28 @@ export async function POST(request: Request) {
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
-  const isEvaluationVerified = (() => {
+  const isScoreVerified = (() => {
     try {
-      parseEvaluation(evaluation ?? '');
-      return true;
+      const result = parseEvaluation(score);
+      return result.evaluationCriterion === EvaluationCriterion.SCORE;
     } catch {
       return false;
     }
   })();
+  const isElapsedTimeVerified = (() => {
+    if (elapsedTime.length === 0) {
+      return true;
+    }
+    try {
+      const result = parseEvaluation(elapsedTime);
+      return result.evaluationCriterion === EvaluationCriterion.TIME;
+    } catch {
+      return false;
+    }
+  })();
+  const isEvaluationInputted = score.length > 0 || elapsedTime.length > 0;
+  const isEvaluationVerified =
+    isEvaluationInputted && isScoreVerified && isElapsedTimeVerified;
 
   if (
     !arcadeRecordId ||
@@ -53,7 +69,6 @@ export async function POST(request: Request) {
     !arcadeId ||
     !methodId ||
     !achievedAt ||
-    !evaluation ||
     !isEvaluationVerified ||
     !stage ||
     !comment ||
@@ -82,7 +97,9 @@ export async function POST(request: Request) {
         arcade_id: arcadeId,
         arcade_record_id: arcadeRecordId,
         method_id: methodId,
-        evaluation: evaluation,
+        evaluation: '',
+        score,
+        elapsed_time: elapsedTime,
         stage: stage,
         rank,
         comment: comment,

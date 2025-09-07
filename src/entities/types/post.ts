@@ -35,6 +35,8 @@ export interface ArcadeRecordPostDBInput {
   arcade_id: ArcadeInfo['arcadeId'];
   method_id: Method['methodId'];
   evaluation: ArcadeRecordPost['evaluation'];
+  score: ArcadeRecordPost['score'];
+  elapsed_time: ArcadeRecordPost['elapsedTime'];
   stage: ArcadeRecordPost['stage'];
   rank?: ArcadeRecordPost['rank'];
   comment: ArcadeRecordPost['comment'];

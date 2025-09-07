@@ -23,6 +23,7 @@ import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { EvaluationCriterion } from '^/src/shared/util/types';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -51,7 +52,38 @@ export default function RecordForm({
   const [achievedAt, setAchievedAt] = useState<Date>(
     post?.achievedAt ?? new Date()
   );
-  const [evaluation, setEvaluation] = useState<string>(post?.evaluation ?? '');
+  const [score, setScore] = useState<string>(
+    post?.score ??
+      (() => {
+        try {
+          const result = parseEvaluation(post?.evaluation ?? '');
+          if (result.evaluationCriterion === EvaluationCriterion.SCORE) {
+            return post?.evaluation;
+          } else {
+            return '';
+          }
+        } catch {
+          return '';
+        }
+      })() ??
+      ''
+  );
+  const [elapsedTime, setElapsedTime] = useState<string>(
+    post?.elapsedTime ??
+      (() => {
+        try {
+          const result = parseEvaluation(post?.evaluation ?? '');
+          if (result.evaluationCriterion === EvaluationCriterion.TIME) {
+            return result.value;
+          } else {
+            return '';
+          }
+        } catch {
+          return '';
+        }
+      })() ??
+      ''
+  );
   const [stage, setStage] = useState<string>(post?.stage ?? '');
   const [rank, setRank] = useState<string>(post?.rank ?? '');
   const [comment, setComment] = useState<string>(post?.comment ?? '');
@@ -76,16 +108,28 @@ export default function RecordForm({
   const isTitleVerified = title.length > 0;
   const isArcadeIdVerified = arcadeId.length > 0;
   const isMethodIdVerified = methodId.length > 0;
+  const isScoreVerified = (() => {
+    try {
+      const result = parseEvaluation(score);
+      return result.evaluationCriterion === EvaluationCriterion.SCORE;
+    } catch {
+      return false;
+    }
+  })();
+  const isElapsedTimeVerified = (() => {
+    if (elapsedTime.length === 0) {
+      return true;
+    }
+    try {
+      const result = parseEvaluation(elapsedTime);
+      return result.evaluationCriterion === EvaluationCriterion.TIME;
+    } catch {
+      return false;
+    }
+  })();
+  const isEvaluationInputted = score.length > 0 || elapsedTime.length > 0;
   const isEvaluationVerified =
-    evaluation.length > 0 &&
-    (() => {
-      try {
-        parseEvaluation(evaluation);
-        return true;
-      } catch {
-        return false;
-      }
-    })();
+    isEvaluationInputted && isScoreVerified && isElapsedTimeVerified;
   const isStageVerified = stage.length > 0;
   const isCommentVerified = comment.length > 0;
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
@@ -225,7 +269,8 @@ export default function RecordForm({
     recordFormData.append('arcadeId', arcadeId);
     recordFormData.append('methodId', methodId);
     recordFormData.append('achievedAt', achievedAt.toISOString());
-    recordFormData.append('evaluation', evaluation);
+    recordFormData.append('score', score);
+    recordFormData.append('elapsedTime', elapsedTime);
     recordFormData.append('stage', stage);
     recordFormData.append('rank', rank);
     recordFormData.append('comment', comment);
@@ -356,7 +401,7 @@ export default function RecordForm({
         {!isMethodIdVerified && <span>플레이 수단을 선택해주세요.</span>}
       </p>
 
-      <p className="w-12/25 flex flex-col gap-2">
+      <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
         <input
           className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
@@ -372,24 +417,40 @@ export default function RecordForm({
         />
       </p>
 
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="evaluation">점수 / 클리어 타임</label>
-        <FormInput
-          type="text"
-          id="evaluation"
-          name="evaluation"
-          value={evaluation}
-          onChange={(event) => {
-            setEvaluation(event.currentTarget.value);
-          }}
-        />
+      <div className="w-full flex flex-col gap-2">
+        <div className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8">
+          <p className="w-12/25 flex flex-col gap-2">
+            <label htmlFor="score">점수</label>
+            <FormInput
+              type="text"
+              id="score"
+              name="score"
+              value={score}
+              onChange={(event) => {
+                setScore(event.currentTarget.value);
+              }}
+            />
+          </p>
+          <p className="w-12/25 flex flex-col gap-2">
+            <label htmlFor="elapsedTime">클리어 타임</label>
+            <FormInput
+              type="text"
+              id="elapsedTime"
+              name="elapsedTime"
+              value={elapsedTime}
+              onChange={(event) => {
+                setElapsedTime(event.currentTarget.value);
+              }}
+            />
+          </p>
+        </div>
         {!isEvaluationVerified && (
-          <span>
+          <p>
             점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의
-            시간)의 형식에 맞게 입력해주세요.
-          </span>
+            시간)을 형식에 맞게 입력해주세요.
+          </p>
         )}
-      </p>
+      </div>
 
       <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>

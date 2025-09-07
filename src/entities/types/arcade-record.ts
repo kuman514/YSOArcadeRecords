@@ -10,6 +10,8 @@ export interface ArcadeRecord extends HavingArcadeInfo, HavingMethod {
    * For example, score in Shmups or time taken to clear in TGM3.
    */
   evaluation: string;
+  score: string;
+  elapsedTime: string;
 
   /**
    * The stage at the end of play.

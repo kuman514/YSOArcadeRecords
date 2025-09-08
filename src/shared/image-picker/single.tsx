@@ -42,7 +42,7 @@ export default function SingleImagePicker({
   }
 
   return (
-    <div className="flex flex-row gap-2 flex-wrap">
+    <div className="flex flex-col gap-2">
       <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
         {imageUrl ? (
           <Image src={imageUrl} alt="유저 선택 이미지" fill unoptimized />
@@ -60,7 +60,7 @@ export default function SingleImagePicker({
         onChange={handleOnChange}
       />
       <button
-        className="h-fit p-4 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
+        className="w-40 h-fit p-4 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
         type="button"
         onClick={handleOnClickLoad}
       >

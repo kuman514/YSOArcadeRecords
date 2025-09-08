@@ -1,11 +1,7 @@
 import { HavingArcadeInfo } from './arcade-info';
 import { HavingMethod } from './method';
-import { HavingPlayerInfo } from './arcade-record-compositions';
 
-export interface ArcadeRecord
-  extends HavingArcadeInfo,
-    HavingPlayerInfo,
-    HavingMethod {
+export interface ArcadeRecord extends HavingArcadeInfo, HavingMethod {
   arcadeRecordId: string;
 
   /**
@@ -14,6 +10,8 @@ export interface ArcadeRecord
    * For example, score in Shmups or time taken to clear in TGM3.
    */
   evaluation: string;
+  score: string;
+  elapsedTime: string;
 
   /**
    * The stage at the end of play.

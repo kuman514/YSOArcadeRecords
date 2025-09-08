@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
-import ImageList from '^/src/shared/image-picker/image-list';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import { ImageListElementValue } from '^/src/shared/image-picker/types';
@@ -23,6 +22,7 @@ import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { EvaluationCriterion } from '^/src/shared/util/types';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -51,11 +51,38 @@ export default function RecordForm({
   const [achievedAt, setAchievedAt] = useState<Date>(
     post?.achievedAt ?? new Date()
   );
-  const [players, setPlayers] = useState<number>(post?.playerInfo.players ?? 1);
-  const [playerSide, setPlayerSide] = useState<number>(
-    post?.playerInfo.playerSide ?? 1
+  const [score, setScore] = useState<string>(
+    post?.score ??
+      (() => {
+        try {
+          const result = parseEvaluation(post?.evaluation ?? '');
+          if (result.evaluationCriterion === EvaluationCriterion.SCORE) {
+            return post?.evaluation;
+          } else {
+            return '';
+          }
+        } catch {
+          return '';
+        }
+      })() ??
+      ''
   );
-  const [evaluation, setEvaluation] = useState<string>(post?.evaluation ?? '');
+  const [elapsedTime, setElapsedTime] = useState<string>(
+    post?.elapsedTime ??
+      (() => {
+        try {
+          const result = parseEvaluation(post?.evaluation ?? '');
+          if (result.evaluationCriterion === EvaluationCriterion.TIME) {
+            return result.value;
+          } else {
+            return '';
+          }
+        } catch {
+          return '';
+        }
+      })() ??
+      ''
+  );
   const [stage, setStage] = useState<string>(post?.stage ?? '');
   const [rank, setRank] = useState<string>(post?.rank ?? '');
   const [comment, setComment] = useState<string>(post?.comment ?? '');
@@ -63,38 +90,43 @@ export default function RecordForm({
   const [note, setNote] = useState<string>(post?.note ?? '');
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
-  const [presentImageUrls, setPresentImageUrls] = useState<
-    ImageListElementValue[]
-  >(
+  const [images, setImages] = useState<ImageListElementValue[]>(
     post?.imageUrls.map((imageUrl, index) => ({
       tmpId: `${new Date().getTime()}-${index}`,
       sourceUrl: imageUrl,
     })) ?? []
   );
-
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
-  const [localOriginalImages, setLocalOriginalImages] = useState<
-    ImageListElementValue[]
-  >([]);
 
   const isTitleVerified = title.length > 0;
   const isArcadeIdVerified = arcadeId.length > 0;
   const isMethodIdVerified = methodId.length > 0;
+  const isScoreVerified = (() => {
+    try {
+      const result = parseEvaluation(score);
+      return result.evaluationCriterion === EvaluationCriterion.SCORE;
+    } catch {
+      return false;
+    }
+  })();
+  const isElapsedTimeVerified = (() => {
+    if (elapsedTime.length === 0) {
+      return true;
+    }
+    try {
+      const result = parseEvaluation(elapsedTime);
+      return result.evaluationCriterion === EvaluationCriterion.TIME;
+    } catch {
+      return false;
+    }
+  })();
+  const isEvaluationInputted = score.length > 0 || elapsedTime.length > 0;
   const isEvaluationVerified =
-    evaluation.length > 0 &&
-    (() => {
-      try {
-        parseEvaluation(evaluation);
-        return true;
-      } catch {
-        return false;
-      }
-    })();
+    isEvaluationInputted && isScoreVerified && isElapsedTimeVerified;
   const isStageVerified = stage.length > 0;
   const isCommentVerified = comment.length > 0;
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
-  const isOriginalImagesVerified =
-    presentImageUrls.length > 0 || localOriginalImages.length > 0;
+  const isOriginalImagesVerified = images.length > 0;
 
   const isSubmittable =
     isTitleVerified &&
@@ -176,9 +208,9 @@ export default function RecordForm({
     }
 
     const originalImageUrls = await Promise.all<string | null>(
-      localOriginalImages.map(async ({ localFile }, index) => {
+      images.map(async ({ sourceUrl, localFile }, index) => {
         if (!localFile) {
-          return null;
+          return sourceUrl ?? null;
         }
 
         const imageFormData = new FormData();
@@ -229,9 +261,8 @@ export default function RecordForm({
     recordFormData.append('arcadeId', arcadeId);
     recordFormData.append('methodId', methodId);
     recordFormData.append('achievedAt', achievedAt.toISOString());
-    recordFormData.append('players', String(players));
-    recordFormData.append('playerSide', String(playerSide));
-    recordFormData.append('evaluation', evaluation);
+    recordFormData.append('score', score);
+    recordFormData.append('elapsedTime', elapsedTime);
     recordFormData.append('stage', stage);
     recordFormData.append('rank', rank);
     recordFormData.append('comment', comment);
@@ -244,9 +275,6 @@ export default function RecordForm({
     }
     recordFormData.append('thumbnailUrl', thumbnailUrl);
 
-    presentImageUrls.forEach(({ sourceUrl }) => {
-      recordFormData.append('presentImageUrls', sourceUrl!);
-    });
     filteredOriginalImages.forEach((imageUrl) => {
       recordFormData.append('originalImageUrls', imageUrl);
     });
@@ -315,7 +343,7 @@ export default function RecordForm({
 
   return (
     <form
-      className="w-full flex flex-col justify-center items-start gap-8"
+      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
       onSubmit={handleOnSubmit}
     >
       <p className="w-full flex flex-col gap-2">
@@ -329,10 +357,10 @@ export default function RecordForm({
             setTitle(event.currentTarget.value);
           }}
         />
+        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
       </p>
-      {!isTitleVerified && <p>제목을 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="arcadeId">아케이드 부문</label>
         <FormDropdown
           id="arcadeId"
@@ -344,10 +372,10 @@ export default function RecordForm({
         >
           {renderArcadeSelectOptions}
         </FormDropdown>
+        {!isArcadeIdVerified && <span>아케이드 부문을 선택해주세요.</span>}
       </p>
-      {!isArcadeIdVerified && <p>아케이드 부문을 선택해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="methodId">수단</label>
         <FormDropdown
           id="methodId"
@@ -359,8 +387,8 @@ export default function RecordForm({
         >
           {renderMethodSelectOptions}
         </FormDropdown>
+        {!isMethodIdVerified && <span>플레이 수단을 선택해주세요.</span>}
       </p>
-      {!isMethodIdVerified && <p>플레이 수단을 선택해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="achievedAt">달성일자</label>
@@ -378,60 +406,42 @@ export default function RecordForm({
         />
       </p>
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="players">플레이어 수</label>
-        <FormDropdown
-          id="players"
-          name="players"
-          value={players}
-          onChange={(event) => {
-            setPlayers(parseInt(event.currentTarget.value, 10));
-          }}
-        >
-          <option value={1}>1명</option>
-          <option value={2}>2명</option>
-          <option value={3}>3명</option>
-          <option value={4}>4명</option>
-        </FormDropdown>
-      </p>
+      <div className="w-full flex flex-col gap-2">
+        <div className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8">
+          <p className="w-12/25 flex flex-col gap-2">
+            <label htmlFor="score">점수</label>
+            <FormInput
+              type="text"
+              id="score"
+              name="score"
+              value={score}
+              onChange={(event) => {
+                setScore(event.currentTarget.value);
+              }}
+            />
+          </p>
+          <p className="w-12/25 flex flex-col gap-2">
+            <label htmlFor="elapsedTime">클리어 타임</label>
+            <FormInput
+              type="text"
+              id="elapsedTime"
+              name="elapsedTime"
+              value={elapsedTime}
+              onChange={(event) => {
+                setElapsedTime(event.currentTarget.value);
+              }}
+            />
+          </p>
+        </div>
+        {!isEvaluationVerified && (
+          <p>
+            점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의
+            시간)을 형식에 맞게 입력해주세요.
+          </p>
+        )}
+      </div>
 
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="players">작성자의 플레이 사이드</label>
-        <FormDropdown
-          id="playerSide"
-          name="playerSide"
-          value={playerSide}
-          onChange={(event) => {
-            setPlayerSide(parseInt(event.currentTarget.value, 10));
-          }}
-        >
-          <option value={1}>1P</option>
-          <option value={2}>2P</option>
-          <option value={3}>3P</option>
-          <option value={4}>4P</option>
-        </FormDropdown>
-      </p>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="evaluation">점수 / 클리어 타임</label>
-        <FormInput
-          type="text"
-          id="evaluation"
-          name="evaluation"
-          value={evaluation}
-          onChange={(event) => {
-            setEvaluation(event.currentTarget.value);
-          }}
-        />
-      </p>
-      {!isEvaluationVerified && (
-        <p>
-          점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의 시간)의
-          형식에 맞게 입력해주세요.
-        </p>
-      )}
-
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
         <FormInput
           type="text"
@@ -442,10 +452,12 @@ export default function RecordForm({
             setStage(event.currentTarget.value);
           }}
         />
+        {!isStageVerified && (
+          <span>어느 스테이지까지 도달하였는지 입력해주세요.</span>
+        )}
       </p>
-      {!isStageVerified && <p>어느 스테이지까지 도달하였는지 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="rank">최종 등급</label>
         <FormInput
           type="text"
@@ -469,8 +481,8 @@ export default function RecordForm({
             setComment(event.currentTarget.value);
           }}
         />
+        {!isCommentVerified && <span>코멘터리를 입력해주세요.</span>}
       </p>
-      {!isCommentVerified && <p>코멘터리를 입력해주세요.</p>}
 
       <p className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
@@ -512,7 +524,7 @@ export default function RecordForm({
       </p>
 
       {post?.thumbnailUrl && (
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
           <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
             <Image
@@ -533,48 +545,25 @@ export default function RecordForm({
         </div>
       )}
 
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-12/25 flex flex-col gap-2">
         <label htmlFor="thumbnail">새로운 썸네일</label>
         <SingleImagePicker
           name="thumbnail"
           currentFile={localThumbnail}
           onSelectFile={setLocalThumbnail}
         />
+        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
       </div>
-      {!isThumbnailVerified && <p>썸네일을 등록해주세요.</p>}
-
-      {post && (
-        <div className="w-full flex flex-col gap-2">
-          <label htmlFor="presentImageUrls">등록된 원본 이미지</label>
-          <div className="w-full min-h-40 border border-primary rounded-sm flex justify-center items-center flex-wrap gap-4">
-            {presentImageUrls.length > 0 ? (
-              <ImageList
-                images={presentImageUrls}
-                onChangeImages={setPresentImageUrls}
-              />
-            ) : (
-              '이미지 없음'
-            )}
-          </div>
-          <input
-            id="presentImageUrls"
-            name="presentImageUrls"
-            type="hidden"
-            value={JSON.stringify(presentImageUrls)}
-            readOnly
-          />
-        </div>
-      )}
 
       <div className="w-full flex flex-col gap-2">
-        <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
+        <label htmlFor="originalImages">원본 이미지</label>
         <MultipleImagePicker
           name="originalImages"
-          images={localOriginalImages}
-          onChangeImages={setLocalOriginalImages}
+          images={images}
+          onChangeImages={setImages}
         />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>
-      {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
       <button
         type="submit"

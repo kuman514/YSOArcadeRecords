@@ -1,7 +1,7 @@
-import { Gallery } from './gallery';
 import { ArcadeInfo, ArcadeInfoDBColumn } from './arcade-info';
 import { ArcadeRecord } from './arcade-record';
-import { PlayerInfo } from './arcade-record-compositions';
+import { Gallery } from './gallery';
+import { GalleryTheme, GalleryThemeDBColumn } from './gallery-theme';
 import { Method, MethodDBColumn } from './method';
 import {
   Commentable,
@@ -11,7 +11,6 @@ import {
   Taggable,
 } from './post-compositions';
 import { Review } from './review';
-import { GalleryTheme, GalleryThemeDBColumn } from './gallery-theme';
 
 export interface BasePost {
   postId: number;
@@ -35,9 +34,9 @@ export interface ArcadeRecordPostDBInput {
   title: ArcadeRecordPost['title'];
   arcade_id: ArcadeInfo['arcadeId'];
   method_id: Method['methodId'];
-  players: PlayerInfo['players'];
-  player_side: PlayerInfo['playerSide'];
   evaluation: ArcadeRecordPost['evaluation'];
+  score: ArcadeRecordPost['score'];
+  elapsed_time: ArcadeRecordPost['elapsedTime'];
   stage: ArcadeRecordPost['stage'];
   rank?: ArcadeRecordPost['rank'];
   comment: ArcadeRecordPost['comment'];
@@ -73,12 +72,13 @@ export interface ReviewPostDBInput {
   subject_type: ReviewPost['subjectType'];
   created_by: ReviewPost['createdBy'];
   release_date: string;
-  key_features: ReviewPost['keyFeatures'];
-  expectations: ReviewPost['expectations'];
-  first_impressions: ReviewPost['firstImpressions'];
-  positives: ReviewPost['positives'];
-  negatives: ReviewPost['negatives'];
-  conclusions: ReviewPost['conclusions'];
+  details: ReviewPost['details'];
+  key_features: ReviewPost['details'];
+  expectations: ReviewPost['details'];
+  first_impressions: ReviewPost['details'];
+  positives: ReviewPost['details'];
+  negatives: ReviewPost['details'];
+  conclusions: ReviewPost['details'];
   review_score: ReviewPost['reviewScore'];
   youtube_id?: ReviewPost['youTubeId'];
   thumbnail_url: ReviewPost['thumbnailUrl'];

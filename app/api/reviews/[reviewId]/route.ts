@@ -33,31 +33,15 @@ export async function PUT(
   const subjectType = formData.get('subjectType')?.toString();
   const createdBy = formData.get('createdBy')?.toString();
   const releaseDate = formData.get('releaseDate')?.toString();
-  const keyFeatures = formData.getAll('keyFeatures') as string[];
-  const expectations = formData.getAll('expectations') as string[];
-  const firstImpressions = formData.getAll('firstImpressions') as string[];
-  const positives = formData.getAll('positives') as string[];
-  const negatives = formData.getAll('negatives') as string[];
-  const conclusions = formData.getAll('conclusions') as string[];
+  const details = formData.getAll('details') as string[];
   const reviewScore = formData.get('reviewScore')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
-  const presentImageUrls = formData.getAll('presentImageUrls') as string[];
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
-  const isExpectationsVerified = expectations.length > 0;
-  const isFirstImpressionsVerified = firstImpressions.length > 0;
-  const isPositivesVerified = positives.length > 0;
-  const isNegativesVerified = negatives.length > 0;
-  const isConclusionsVerified = conclusions.length > 0;
-  const isReviewVerified =
-    isExpectationsVerified ||
-    isFirstImpressionsVerified ||
-    isPositivesVerified ||
-    isNegativesVerified ||
-    isConclusionsVerified;
+  const isDetailsVerified = details.length > 0;
 
   if (
     !reviewId ||
@@ -66,11 +50,10 @@ export async function PUT(
     !subjectType ||
     !createdBy ||
     !releaseDate ||
-    keyFeatures.length === 0 ||
-    !isReviewVerified ||
+    !isDetailsVerified ||
     !reviewScore ||
     (!thumbnailUrl && !presentThumbnailUrl) ||
-    (presentImageUrls.length === 0 && originalImageUrls.length === 0)
+    originalImageUrls.length === 0
   ) {
     return NextResponse.json(
       {
@@ -101,16 +84,17 @@ export async function PUT(
         subject_type: subjectType,
         created_by: createdBy,
         release_date: releaseDate,
-        key_features: keyFeatures,
-        expectations: expectations,
-        first_impressions: firstImpressions,
-        positives: positives,
-        negatives: negatives,
-        conclusions: conclusions,
+        details: details,
+        key_features: [],
+        expectations: [],
+        first_impressions: [],
+        positives: [],
+        negatives: [],
+        conclusions: [],
         review_score: parseInt(reviewScore),
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
-        image_urls: presentImageUrls.concat(originalImageUrls),
+        image_urls: originalImageUrls,
         modified_at: formattedDate,
       },
       where: [

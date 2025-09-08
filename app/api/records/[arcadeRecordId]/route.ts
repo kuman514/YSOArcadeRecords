@@ -43,8 +43,6 @@ export async function PUT(
   const tags = formData.get('tags')?.toString();
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
-  const presentImageUrls = formData.getAll('presentImageUrls') as string[];
-
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
@@ -81,7 +79,7 @@ export async function PUT(
     !stage ||
     !comment ||
     (!thumbnailUrl && !presentThumbnailUrl) ||
-    (presentImageUrls.length === 0 && originalImageUrls.length === 0)
+    originalImageUrls.length === 0
   ) {
     return NextResponse.json(
       {
@@ -118,7 +116,7 @@ export async function PUT(
         note,
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
-        image_urls: presentImageUrls.concat(originalImageUrls),
+        image_urls: originalImageUrls,
         achieved_at: achievedAt,
         modified_at: formattedDate,
       },

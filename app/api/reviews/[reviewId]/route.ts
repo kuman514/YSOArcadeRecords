@@ -38,7 +38,6 @@ export async function PUT(
   const youTubeId = formData.get('youTubeId')?.toString();
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
-  const presentImageUrls = formData.getAll('presentImageUrls') as string[];
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
@@ -54,7 +53,7 @@ export async function PUT(
     !isDetailsVerified ||
     !reviewScore ||
     (!thumbnailUrl && !presentThumbnailUrl) ||
-    (presentImageUrls.length === 0 && originalImageUrls.length === 0)
+    originalImageUrls.length === 0
   ) {
     return NextResponse.json(
       {
@@ -95,7 +94,7 @@ export async function PUT(
         review_score: parseInt(reviewScore),
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
-        image_urls: presentImageUrls.concat(originalImageUrls),
+        image_urls: originalImageUrls,
         modified_at: formattedDate,
       },
       where: [

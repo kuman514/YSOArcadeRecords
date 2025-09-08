@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
-import ImageList from '^/src/shared/image-picker/image-list';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import { ImageListElementValue } from '^/src/shared/image-picker/types';
@@ -62,19 +61,13 @@ export default function ReviewForm({ post }: Props) {
 
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
-  const [presentImageUrls, setPresentImageUrls] = useState<
-    ImageListElementValue[]
-  >(
+  const [images, setImages] = useState<ImageListElementValue[]>(
     post?.imageUrls.map((imageUrl, index) => ({
       tmpId: `${new Date().getTime()}-${index}`,
       sourceUrl: imageUrl,
     })) ?? []
   );
-
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
-  const [localOriginalImages, setLocalOriginalImages] = useState<
-    ImageListElementValue[]
-  >([]);
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;
@@ -85,8 +78,7 @@ export default function ReviewForm({ post }: Props) {
   const isReviewScoreVerified = reviewScore > 0 && reviewScore <= 5;
 
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
-  const isOriginalImagesVerified =
-    presentImageUrls.length > 0 || localOriginalImages.length > 0;
+  const isOriginalImagesVerified = images.length > 0;
 
   const isSubmittable =
     isTitleVerified &&
@@ -209,9 +201,9 @@ export default function ReviewForm({ post }: Props) {
     }
 
     const originalImageUrls = await Promise.all<string | null>(
-      localOriginalImages.map(async ({ localFile }, index) => {
+      images.map(async ({ sourceUrl, localFile }, index) => {
         if (!localFile) {
-          return null;
+          return sourceUrl ?? null;
         }
 
         const imageFormData = new FormData();
@@ -275,9 +267,6 @@ export default function ReviewForm({ post }: Props) {
     }
     reviewFormData.append('thumbnailUrl', thumbnailUrl);
 
-    presentImageUrls.forEach(({ sourceUrl }) => {
-      reviewFormData.append('presentImageUrls', sourceUrl!);
-    });
     filteredOriginalImages.forEach((imageUrl) => {
       reviewFormData.append('originalImageUrls', imageUrl);
     });
@@ -492,35 +481,12 @@ export default function ReviewForm({ post }: Props) {
         {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
       </div>
 
-      {post && (
-        <div className="w-full flex flex-col gap-2">
-          <label htmlFor="presentImageUrls">등록된 원본 이미지</label>
-          <div className="w-full min-h-40 border border-primary rounded-sm flex justify-center items-center flex-wrap gap-4">
-            {presentImageUrls.length > 0 ? (
-              <ImageList
-                images={presentImageUrls}
-                onChangeImages={setPresentImageUrls}
-              />
-            ) : (
-              '이미지 없음'
-            )}
-          </div>
-          <input
-            id="presentImageUrls"
-            name="presentImageUrls"
-            type="hidden"
-            value={JSON.stringify(presentImageUrls)}
-            readOnly
-          />
-        </div>
-      )}
-
       <div className="w-full flex flex-col gap-2">
-        <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
+        <label htmlFor="originalImages">원본 이미지</label>
         <MultipleImagePicker
           name="originalImages"
-          images={localOriginalImages}
-          onChangeImages={setLocalOriginalImages}
+          images={images}
+          onChangeImages={setImages}
         />
         {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>

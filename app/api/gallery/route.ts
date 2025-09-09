@@ -28,18 +28,46 @@ export async function POST(request: Request) {
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrl = formData.get('originalImageUrl')?.toString();
 
-  if (
-    !galleryId ||
-    !title ||
-    !galleryThemeId ||
-    !thumbnailUrl ||
-    !originalImageUrl
-  ) {
+  if (!galleryId) {
     {
       return NextResponse.json(
         {
           result: 'failed',
-          error: '올바르지 않은 입력이 있습니다. 확인해 주십시오.',
+          error:
+            '갤러리 ID가 존재하지 않습니다. 새로고침하여 다시 시도해주십시오.',
+        },
+        { status: 400 }
+      );
+    }
+  }
+  if (!title) {
+    {
+      return NextResponse.json(
+        {
+          result: 'failed',
+          error: '제목을 입력해주세요.',
+        },
+        { status: 400 }
+      );
+    }
+  }
+  if (!galleryThemeId) {
+    {
+      return NextResponse.json(
+        {
+          result: 'failed',
+          error: '주제를 선택해주세요.',
+        },
+        { status: 400 }
+      );
+    }
+  }
+  if (!thumbnailUrl || !originalImageUrl) {
+    {
+      return NextResponse.json(
+        {
+          result: 'failed',
+          error: '사진을 첨부해주세요.',
         },
         { status: 400 }
       );
@@ -70,7 +98,7 @@ export async function POST(request: Request) {
         result: 'failed',
         error: '갤러리 사진 등록 실패. 다시 시도하여 주십시오.',
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }

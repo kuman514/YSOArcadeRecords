@@ -69,22 +69,102 @@ export async function PUT(
   const isEvaluationVerified =
     isEvaluationInputted && isScoreVerified && isElapsedTimeVerified;
 
-  if (
-    !arcadeRecordId ||
-    !title ||
-    !arcadeId ||
-    !methodId ||
-    !achievedAt ||
-    !isEvaluationVerified ||
-    !stage ||
-    !comment ||
-    (!thumbnailUrl && !presentThumbnailUrl) ||
-    originalImageUrls.length === 0
-  ) {
+  if (!arcadeRecordId) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '올바르지 않은 입력이 있습니다. 확인해 주십시오.',
+        error:
+          '아케이드 기록 ID가 존재하지 않습니다. 새로고침하여 다시 시도해주십시오.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!title) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '제목을 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!arcadeId) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '아케이드 부문을 선택해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!methodId) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '플레이 수단을 선택해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!achievedAt) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '달성 일자를 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!isEvaluationVerified) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '점수나 시간을 올바르게 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!stage) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '최종 스테이지를 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!comment) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '코멘터리를 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!thumbnailUrl && !presentThumbnailUrl) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '썸네일을 첨부해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (originalImageUrls.length === 0) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '원본 이미지를 첨부해주세요.',
       },
       { status: 400 }
     );
@@ -138,7 +218,7 @@ export async function PUT(
         result: 'failed',
         error: '아케이드 기록 수정 실패. 다시 시도하여 주십시오.',
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }

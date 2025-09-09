@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         result: 'failed',
         error: '이미지 업로드에 실패하였습니다. 다시 시도해 주십시오.',
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }

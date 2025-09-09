@@ -31,7 +31,7 @@ export async function saveImage(
     .upload(`${directory}/${finalFileName}`, file);
 
   if (error || !result) {
-    throw new Error('Failed to save image.');
+    throw new Error(error?.message ?? 'Failed to save image.');
   }
 
   const {

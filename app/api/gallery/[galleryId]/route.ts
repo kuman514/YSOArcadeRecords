@@ -109,11 +109,11 @@ export async function PUT(
 
     revalidatePath('/gallery', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 200 });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '갤러리 사진 등록 실패. 다시 시도하여 주십시오.',
+        error: `서버에서 에러가 발생했습니다. (${error})`,
       },
       { status: 502 }
     );

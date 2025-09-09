@@ -212,11 +212,11 @@ export async function PUT(
     revalidatePath('/', 'page');
     revalidatePath('/records', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 200 });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '아케이드 기록 수정 실패. 다시 시도하여 주십시오.',
+        error: `서버에서 에러가 발생했습니다. (${error})`,
       },
       { status: 502 }
     );

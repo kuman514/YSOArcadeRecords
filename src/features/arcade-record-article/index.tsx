@@ -8,7 +8,6 @@ import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
-import { PLAYER_CLASS } from './constants';
 
 interface Props {
   post: ArcadeRecordPost;
@@ -17,7 +16,16 @@ interface Props {
 export default function ArcadeRecordArticle({ post }: Props) {
   const createdAtText = parseDateToString(post.createdAt);
   const modifiedAtText = parseDateToString(post.modifiedAt);
-  const evaluationObject = parseEvaluation(post.evaluation);
+  const legacyEvaluationObject = (() => {
+    if (!post?.evaluation) {
+      return null;
+    }
+    try {
+      return parseEvaluation(post.evaluation);
+    } catch {
+      return null;
+    }
+  })();
 
   const renderCreatedAt = (
     <span className="w-full text-right text-sm">작성일자: {createdAtText}</span>
@@ -30,44 +38,52 @@ export default function ArcadeRecordArticle({ post }: Props) {
       </span>
     ) : null;
 
-  const renderPlayerInfo =
-    post.playerInfo.players === 1 ? (
-      <li>
-        <span className="font-bold">플레이 위치</span>:{' '}
-        <span className={PLAYER_CLASS[post.playerInfo.playerSide]}>
-          {post.playerInfo.playerSide}P
-        </span>{' '}
-        사이드
-      </li>
-    ) : (
-      <li>
-        <span className="font-bold">플레이어 수</span>:{' '}
-        {post.playerInfo.players}명 (작성자 본인은{' '}
-        <span className={PLAYER_CLASS[post.playerInfo.playerSide]}>
-          {post.playerInfo.playerSide}P
-        </span>{' '}
-        사이드)
-      </li>
-    );
+  const renderEvaluation = legacyEvaluationObject
+    ? (() => {
+        switch (legacyEvaluationObject.evaluationCriterion) {
+          case EvaluationCriterion.SCORE:
+            return (
+              <li>
+                <span className="font-bold">점수</span>:{' '}
+                {legacyEvaluationObject.value}
+              </li>
+            );
+          case EvaluationCriterion.TIME:
+            return (
+              <li>
+                <span className="font-bold">시간</span>:{' '}
+                {legacyEvaluationObject.value}
+              </li>
+            );
+          default:
+            return null;
+        }
+      })()
+    : null;
 
-  const renderEvaluation = (() => {
-    switch (evaluationObject.evaluationCriterion) {
-      case EvaluationCriterion.SCORE:
-        return (
-          <li>
-            <span className="font-bold">점수</span>: {evaluationObject.value}
-          </li>
-        );
-      case EvaluationCriterion.TIME:
-        return (
-          <li>
-            <span className="font-bold">시간</span>: {evaluationObject.value}
-          </li>
-        );
-      default:
-        return null;
-    }
-  })();
+  const renderScore =
+    (!legacyEvaluationObject ||
+      legacyEvaluationObject.value.length === 0 ||
+      legacyEvaluationObject.evaluationCriterion ===
+        EvaluationCriterion.TIME) &&
+    post.score ? (
+      <li>
+        <span className="font-bold">점수</span>:{' '}
+        {parseEvaluation(post.score).value}
+      </li>
+    ) : null;
+
+  const renderElapsedTime =
+    (!legacyEvaluationObject ||
+      legacyEvaluationObject.value.length === 0 ||
+      legacyEvaluationObject.evaluationCriterion ===
+        EvaluationCriterion.SCORE) &&
+    post.elapsedTime ? (
+      <li>
+        <span className="font-bold">시간</span>:{' '}
+        {parseEvaluation(post.elapsedTime).value}
+      </li>
+    ) : null;
 
   const renderRank = post.rank ? (
     <li>
@@ -134,8 +150,9 @@ export default function ArcadeRecordArticle({ post }: Props) {
               <span className="font-bold">장소 및 수단</span>:{' '}
               {post.method.label}
             </li>
-            {renderPlayerInfo}
             {renderEvaluation}
+            {renderScore}
+            {renderElapsedTime}
             <li>
               <span className="font-bold">최종 스테이지</span>: {post.stage}
             </li>

@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
-import ImageList from '^/src/shared/image-picker/image-list';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import { ImageListElementValue } from '^/src/shared/image-picker/types';
@@ -49,42 +48,10 @@ export default function ReviewForm({ post }: Props) {
     post?.releaseDate ?? new Date()
   );
 
-  const [keyFeatures, setKeyFeatures] = useState<MultipleFormValue<string>>(
-    post?.keyFeatures.map((keyFeature, index) => ({
+  const [details, setDetails] = useState<MultipleFormValue<string>>(
+    post?.details?.map((detail, index) => ({
       id: index,
-      value: keyFeature,
-    })) ?? []
-  );
-  const [expectations, setExpectations] = useState<MultipleFormValue<string>>(
-    post?.expectations.map((expectation, index) => ({
-      id: index,
-      value: expectation,
-    })) ?? []
-  );
-  const [firstImpressions, setFirstImpressions] = useState<
-    MultipleFormValue<string>
-  >(
-    post?.firstImpressions.map((firstImpression, index) => ({
-      id: index,
-      value: firstImpression,
-    })) ?? []
-  );
-  const [positives, setPositives] = useState<MultipleFormValue<string>>(
-    post?.positives.map((positive, index) => ({
-      id: index,
-      value: positive,
-    })) ?? []
-  );
-  const [negatives, setNegatives] = useState<MultipleFormValue<string>>(
-    post?.negatives.map((negative, index) => ({
-      id: index,
-      value: negative,
-    })) ?? []
-  );
-  const [conclusions, setConclusions] = useState<MultipleFormValue<string>>(
-    post?.conclusions.map((conclusion, index) => ({
-      id: index,
-      value: conclusion,
+      value: detail,
     })) ?? []
   );
 
@@ -94,51 +61,31 @@ export default function ReviewForm({ post }: Props) {
 
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
-  const [presentImageUrls, setPresentImageUrls] = useState<
-    ImageListElementValue[]
-  >(
+  const [images, setImages] = useState<ImageListElementValue[]>(
     post?.imageUrls.map((imageUrl, index) => ({
       tmpId: `${new Date().getTime()}-${index}`,
       sourceUrl: imageUrl,
     })) ?? []
   );
-
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
-  const [localOriginalImages, setLocalOriginalImages] = useState<
-    ImageListElementValue[]
-  >([]);
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;
   const isSubjectTypeVerified = subjectType.length > 0;
   const isCreatedByVerified = createdBy.length > 0;
-  const isKeyFeaturesVerified = keyFeatures.length > 0;
-
-  const isExpectationsVerified = expectations.length > 0;
-  const isFirstImpressionsVerified = firstImpressions.length > 0;
-  const isPositivesVerified = positives.length > 0;
-  const isNegativesVerified = negatives.length > 0;
-  const isConclusionsVerified = conclusions.length > 0;
-  const isReviewVerified =
-    isExpectationsVerified ||
-    isFirstImpressionsVerified ||
-    isPositivesVerified ||
-    isNegativesVerified ||
-    isConclusionsVerified;
+  const isDetailsVerified = details.length > 0;
 
   const isReviewScoreVerified = reviewScore > 0 && reviewScore <= 5;
 
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;
-  const isOriginalImagesVerified =
-    presentImageUrls.length > 0 || localOriginalImages.length > 0;
+  const isOriginalImagesVerified = images.length > 0;
 
   const isSubmittable =
     isTitleVerified &&
     isSubjectNameVerified &&
     isSubjectTypeVerified &&
     isCreatedByVerified &&
-    isKeyFeaturesVerified &&
-    isReviewVerified &&
+    isDetailsVerified &&
     isReviewScoreVerified &&
     isThumbnailVerified &&
     isOriginalImagesVerified &&
@@ -254,9 +201,9 @@ export default function ReviewForm({ post }: Props) {
     }
 
     const originalImageUrls = await Promise.all<string | null>(
-      localOriginalImages.map(async ({ localFile }, index) => {
+      images.map(async ({ sourceUrl, localFile }, index) => {
         if (!localFile) {
-          return null;
+          return sourceUrl ?? null;
         }
 
         const imageFormData = new FormData();
@@ -308,23 +255,8 @@ export default function ReviewForm({ post }: Props) {
     reviewFormData.append('subjectType', subjectType);
     reviewFormData.append('createdBy', createdBy);
     reviewFormData.append('releaseDate', releaseDate.toISOString());
-    keyFeatures.forEach((keyFeature) => {
-      reviewFormData.append('keyFeatures', keyFeature.value);
-    });
-    expectations.forEach((expectation) => {
-      reviewFormData.append('expectations', expectation.value);
-    });
-    firstImpressions.forEach((firstImpression) => {
-      reviewFormData.append('firstImpressions', firstImpression.value);
-    });
-    positives.forEach((positive) => {
-      reviewFormData.append('positives', positive.value);
-    });
-    negatives.forEach((negative) => {
-      reviewFormData.append('negatives', negative.value);
-    });
-    conclusions.forEach((conclusion) => {
-      reviewFormData.append('conclusions', conclusion.value);
+    details.forEach((detail) => {
+      reviewFormData.append('details', detail.value);
     });
     reviewFormData.append('reviewScore', String(reviewScore));
     reviewFormData.append('youTubeId', youTubeId);
@@ -335,9 +267,6 @@ export default function ReviewForm({ post }: Props) {
     }
     reviewFormData.append('thumbnailUrl', thumbnailUrl);
 
-    presentImageUrls.forEach(({ sourceUrl }) => {
-      reviewFormData.append('presentImageUrls', sourceUrl!);
-    });
     filteredOriginalImages.forEach((imageUrl) => {
       reviewFormData.append('originalImageUrls', imageUrl);
     });
@@ -382,11 +311,11 @@ export default function ReviewForm({ post }: Props) {
 
   return (
     <form
-      className="w-full flex flex-col justify-center items-start gap-8"
+      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
       onSubmit={handleOnSubmit}
     >
       <p className="w-full flex flex-col gap-2">
-        <label htmlFor="title">포스트 제목</label>
+        <label htmlFor="title">리뷰 제목</label>
         <FormInput
           type="text"
           id="title"
@@ -396,10 +325,10 @@ export default function ReviewForm({ post }: Props) {
             setTitle(event.currentTarget.value);
           }}
         />
+        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
       </p>
-      {!isTitleVerified && <p>제목을 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="subjectName">리뷰 대상</label>
         <FormInput
           type="text"
@@ -410,10 +339,10 @@ export default function ReviewForm({ post }: Props) {
             setSubjectName(event.currentTarget.value);
           }}
         />
+        {!isSubjectNameVerified && <span>리뷰 대상을 입력해주세요.</span>}
       </p>
-      {!isSubjectNameVerified && <p>리뷰 대상을 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="subjectType">리뷰 대상의 종류</label>
         <FormInput
           type="text"
@@ -424,10 +353,12 @@ export default function ReviewForm({ post }: Props) {
             setSubjectType(event.currentTarget.value);
           }}
         />
+        {!isSubjectTypeVerified && (
+          <span>리뷰 대상의 종류를 입력해주세요.</span>
+        )}
       </p>
-      {!isSubjectTypeVerified && <p>리뷰 대상의 종류를 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="createdBy">제작사</label>
         <FormInput
           type="text"
@@ -438,10 +369,10 @@ export default function ReviewForm({ post }: Props) {
             setCreatedBy(event.currentTarget.value);
           }}
         />
+        {!isCreatedByVerified && <span>제작사를 입력해주세요.</span>}
       </p>
-      {!isCreatedByVerified && <p>제작사를 입력해주세요.</p>}
 
-      <p className="w-full flex flex-col gap-2">
+      <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="releaseDate">출시일자</label>
         <input
           className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
@@ -480,103 +411,17 @@ export default function ReviewForm({ post }: Props) {
             </button>
           ))}
         </div>
+        {!isReviewScoreVerified && <span>총점을 입력해주세요.</span>}
       </div>
-      {!isReviewScoreVerified && <p>총점을 입력해주세요.</p>}
 
       <MultipleTextFormInput
-        name="keyFeatures"
-        values={keyFeatures}
-        mainLabel="특징"
-        appendButtonLabel="새 특징"
-        onChange={handleOnChangeMultipleTextFormInput(
-          keyFeatures,
-          setKeyFeatures
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          keyFeatures,
-          setKeyFeatures
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          keyFeatures,
-          setKeyFeatures
-        )}
-      />
-
-      <MultipleTextFormInput
-        name="expectations"
-        values={expectations}
-        mainLabel="기대사항"
-        appendButtonLabel="새 기대사항"
-        onChange={handleOnChangeMultipleTextFormInput(
-          expectations,
-          setExpectations
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          expectations,
-          setExpectations
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          expectations,
-          setExpectations
-        )}
-      />
-
-      <MultipleTextFormInput
-        name="firstImpressions"
-        values={firstImpressions}
-        mainLabel="첫인상"
-        appendButtonLabel="새 첫인상"
-        onChange={handleOnChangeMultipleTextFormInput(
-          firstImpressions,
-          setFirstImpressions
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          firstImpressions,
-          setFirstImpressions
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          firstImpressions,
-          setFirstImpressions
-        )}
-      />
-
-      <MultipleTextFormInput
-        name="positives"
-        values={positives}
-        mainLabel="장점"
-        appendButtonLabel="새 장점"
-        onChange={handleOnChangeMultipleTextFormInput(positives, setPositives)}
-        onAppend={handleOnAppendMultipleTextFormInput(positives, setPositives)}
-        onDelete={handleOnDeleteMultipleTextFormInput(positives, setPositives)}
-      />
-
-      <MultipleTextFormInput
-        name="negatives"
-        values={negatives}
-        mainLabel="단점"
-        appendButtonLabel="새 단점"
-        onChange={handleOnChangeMultipleTextFormInput(negatives, setNegatives)}
-        onAppend={handleOnAppendMultipleTextFormInput(negatives, setNegatives)}
-        onDelete={handleOnDeleteMultipleTextFormInput(negatives, setNegatives)}
-      />
-
-      <MultipleTextFormInput
-        name="conclusions"
-        values={conclusions}
-        mainLabel="결론"
-        appendButtonLabel="새 결론"
-        onChange={handleOnChangeMultipleTextFormInput(
-          conclusions,
-          setConclusions
-        )}
-        onAppend={handleOnAppendMultipleTextFormInput(
-          conclusions,
-          setConclusions
-        )}
-        onDelete={handleOnDeleteMultipleTextFormInput(
-          conclusions,
-          setConclusions
-        )}
+        name="details"
+        values={details}
+        mainLabel="상세"
+        appendButtonLabel="새 상세"
+        onChange={handleOnChangeMultipleTextFormInput(details, setDetails)}
+        onAppend={handleOnAppendMultipleTextFormInput(details, setDetails)}
+        onDelete={handleOnDeleteMultipleTextFormInput(details, setDetails)}
       />
 
       <p className="w-full flex flex-col gap-2">
@@ -606,7 +451,7 @@ export default function ReviewForm({ post }: Props) {
       </p>
 
       {post?.thumbnailUrl && (
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
           <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
             <Image
@@ -626,48 +471,25 @@ export default function ReviewForm({ post }: Props) {
         </div>
       )}
 
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-12/25 flex flex-col gap-2">
         <label htmlFor="thumbnail">새로운 썸네일</label>
         <SingleImagePicker
           name="thumbnail"
           currentFile={localThumbnail}
           onSelectFile={setLocalThumbnail}
         />
+        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
       </div>
-      {!isThumbnailVerified && <p>썸네일을 등록해주세요.</p>}
-
-      {post && (
-        <div className="w-full flex flex-col gap-2">
-          <label htmlFor="presentImageUrls">등록된 원본 이미지</label>
-          <div className="w-full min-h-40 border border-primary rounded-sm flex justify-center items-center flex-wrap gap-4">
-            {presentImageUrls.length > 0 ? (
-              <ImageList
-                images={presentImageUrls}
-                onChangeImages={setPresentImageUrls}
-              />
-            ) : (
-              '이미지 없음'
-            )}
-          </div>
-          <input
-            id="presentImageUrls"
-            name="presentImageUrls"
-            type="hidden"
-            value={JSON.stringify(presentImageUrls)}
-            readOnly
-          />
-        </div>
-      )}
 
       <div className="w-full flex flex-col gap-2">
-        <label htmlFor="thumbnail">추가할 원본 이미지 (여러 개 첨부)</label>
+        <label htmlFor="originalImages">원본 이미지</label>
         <MultipleImagePicker
           name="originalImages"
-          images={localOriginalImages}
-          onChangeImages={setLocalOriginalImages}
+          images={images}
+          onChangeImages={setImages}
         />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>
-      {!isOriginalImagesVerified && <p>원본 이미지를 첨부해주세요.</p>}
 
       <button
         type="submit"

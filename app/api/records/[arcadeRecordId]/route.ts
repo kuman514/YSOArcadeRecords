@@ -6,6 +6,7 @@ import { updateData } from '^/src/shared/supabase/database';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { EvaluationCriterion } from '^/src/shared/util/types';
 
 export async function PUT(
   request: Request,
@@ -32,9 +33,8 @@ export async function PUT(
   const arcadeId = formData.get('arcadeId')?.toString();
   const methodId = formData.get('methodId')?.toString();
   const achievedAt = formData.get('achievedAt')?.toString();
-  const players = formData.get('players')?.toString();
-  const playerSide = formData.get('playerSide')?.toString();
-  const evaluation = formData.get('evaluation')?.toString();
+  const score = formData.get('score')?.toString() ?? '';
+  const elapsedTime = formData.get('elapsedTime')?.toString() ?? '';
   const stage = formData.get('stage')?.toString();
   const rank = formData.get('rank')?.toString();
   const comment = formData.get('comment')?.toString();
@@ -43,19 +43,31 @@ export async function PUT(
   const tags = formData.get('tags')?.toString();
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
-  const presentImageUrls = formData.getAll('presentImageUrls') as string[];
-
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
-  const isEvaluationVerified = (() => {
+  const isScoreVerified = (() => {
     try {
-      parseEvaluation(evaluation ?? '');
-      return true;
+      const result = parseEvaluation(score);
+      return result.evaluationCriterion === EvaluationCriterion.SCORE;
     } catch {
       return false;
     }
   })();
+  const isElapsedTimeVerified = (() => {
+    if (elapsedTime.length === 0) {
+      return true;
+    }
+    try {
+      const result = parseEvaluation(elapsedTime);
+      return result.evaluationCriterion === EvaluationCriterion.TIME;
+    } catch {
+      return false;
+    }
+  })();
+  const isEvaluationInputted = score.length > 0 || elapsedTime.length > 0;
+  const isEvaluationVerified =
+    isEvaluationInputted && isScoreVerified && isElapsedTimeVerified;
 
   if (
     !arcadeRecordId ||
@@ -63,14 +75,11 @@ export async function PUT(
     !arcadeId ||
     !methodId ||
     !achievedAt ||
-    !players ||
-    !playerSide ||
-    !evaluation ||
     !isEvaluationVerified ||
     !stage ||
     !comment ||
     (!thumbnailUrl && !presentThumbnailUrl) ||
-    (presentImageUrls.length === 0 && originalImageUrls.length === 0)
+    originalImageUrls.length === 0
   ) {
     return NextResponse.json(
       {
@@ -93,9 +102,9 @@ export async function PUT(
         title: title,
         arcade_id: arcadeId,
         method_id: methodId,
-        players: Number(players),
-        player_side: Number(playerSide),
-        evaluation: evaluation,
+        score,
+        evaluation: '',
+        elapsed_time: elapsedTime,
         stage: stage,
         rank,
         comment: comment,
@@ -107,7 +116,7 @@ export async function PUT(
         note,
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
-        image_urls: presentImageUrls.concat(originalImageUrls),
+        image_urls: originalImageUrls,
         achieved_at: achievedAt,
         modified_at: formattedDate,
       },

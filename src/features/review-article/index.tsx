@@ -95,27 +95,7 @@ export default function ReviewArticle({ post }: Props) {
         </span>
       </section>
 
-      <UnorderedReviewItemList title="특징" items={post.keyFeatures} />
-
-      {post.expectations.length > 0 ? (
-        <UnorderedReviewItemList title="기대사항" items={post.expectations} />
-      ) : null}
-
-      {post.firstImpressions.length > 0 ? (
-        <UnorderedReviewItemList title="첫인상" items={post.firstImpressions} />
-      ) : null}
-
-      {post.positives.length > 0 ? (
-        <UnorderedReviewItemList title="좋았던 점" items={post.positives} />
-      ) : null}
-
-      {post.negatives.length > 0 ? (
-        <UnorderedReviewItemList title="아쉬웠던 점" items={post.negatives} />
-      ) : null}
-
-      {post.conclusions.length > 0 ? (
-        <UnorderedReviewItemList title="결론" items={post.conclusions} />
-      ) : null}
+      <UnorderedReviewItemList title="상세" items={post.details} />
 
       <section className="w-full flex flex-col gap-2">
         <h2 className="text-2xl font-bold">태그</h2>

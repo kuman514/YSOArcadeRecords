@@ -197,6 +197,9 @@ export default function ReviewForm({ post }: Props) {
       : post?.thumbnailUrl;
 
     if (!thumbnailUrl) {
+      toast('썸네일 업로드에 실패했습니다.', {
+        type: 'error',
+      });
       return false;
     }
 
@@ -245,6 +248,9 @@ export default function ReviewForm({ post }: Props) {
       (imageUrl) => imageUrl !== null
     );
     if (filteredOriginalImages.length !== originalImageUrls.length) {
+      toast('원본 이미지 업로드에 실패했습니다.', {
+        type: 'error',
+      });
       return false;
     }
 

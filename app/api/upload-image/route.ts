@@ -43,13 +43,13 @@ export async function POST(request: Request) {
       path
     );
     return NextResponse.json({ result: 'success', imageUrl }, { status: 201 });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '이미지 업로드에 실패하였습니다. 다시 시도해 주십시오.',
+        error: `서버에서 에러가 발생했습니다. (${error})`,
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }

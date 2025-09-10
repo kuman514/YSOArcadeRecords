@@ -117,6 +117,9 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       : post?.thumbnailUrl;
 
     if (!thumbnailUrl) {
+      toast('사진 업로드에 실패했습니다.', {
+        type: 'error',
+      });
       return false;
     }
 
@@ -160,6 +163,9 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       : post?.imageUrl;
 
     if (!originalImagelUrl) {
+      toast('사진 업로드에 실패했습니다.', {
+        type: 'error',
+      });
       return false;
     }
 

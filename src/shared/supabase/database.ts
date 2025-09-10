@@ -38,7 +38,7 @@ export async function selectData<T>({
   const { data: result, error } = await finalQuery;
 
   if (error || !result) {
-    throw new Error('Failed to select data.');
+    throw new Error(error.message);
   }
 
   return result as T;
@@ -49,7 +49,7 @@ export async function insertData<T>({ insertInto, value }: InsertQuery<T>) {
   const { error } = await supabase.from(insertInto).insert(value);
 
   if (error) {
-    throw new Error('Failed to insert data.');
+    throw new Error(error.message);
   }
 }
 
@@ -66,7 +66,7 @@ export async function updateData<T>({ update, set, where }: UpdateQuery<T>) {
   }, supabase.from(update).update(set));
 
   if (error) {
-    throw new Error('Failed to modify data.');
+    throw new Error(error.message);
   }
 }
 
@@ -83,6 +83,6 @@ export async function deleteData({ deleteFrom, where }: DeleteQuery) {
   }, supabase.from(deleteFrom).delete());
 
   if (error) {
-    throw new Error('Failed to modify data.');
+    throw new Error(error.message);
   }
 }

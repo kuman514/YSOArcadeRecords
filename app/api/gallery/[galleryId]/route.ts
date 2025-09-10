@@ -36,10 +36,41 @@ export async function PUT(
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
   const originalImageUrl = formData.get('originalImageUrl')?.toString();
 
+  if (!galleryId) {
+    {
+      return NextResponse.json(
+        {
+          result: 'failed',
+          error:
+            '갤러리 ID가 존재하지 않습니다. 새로고침하여 다시 시도해주십시오.',
+        },
+        { status: 400 }
+      );
+    }
+  }
+  if (!title) {
+    {
+      return NextResponse.json(
+        {
+          result: 'failed',
+          error: '제목을 입력해주세요.',
+        },
+        { status: 400 }
+      );
+    }
+  }
+  if (!galleryThemeId) {
+    {
+      return NextResponse.json(
+        {
+          result: 'failed',
+          error: '주제를 선택해주세요.',
+        },
+        { status: 400 }
+      );
+    }
+  }
   if (
-    !galleryId ||
-    !title ||
-    !galleryThemeId ||
     (!thumbnailUrl && !presentThumbnailUrl) ||
     (!originalImageUrl && !presentImageUrl)
   ) {
@@ -47,7 +78,7 @@ export async function PUT(
       return NextResponse.json(
         {
           result: 'failed',
-          error: '올바르지 않은 입력이 있습니다. 확인해 주십시오.',
+          error: '사진을 첨부해주세요.',
         },
         { status: 400 }
       );
@@ -78,13 +109,13 @@ export async function PUT(
 
     revalidatePath('/gallery', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 200 });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '갤러리 사진 등록 실패. 다시 시도하여 주십시오.',
+        error: `서버에서 에러가 발생했습니다. (${error})`,
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }

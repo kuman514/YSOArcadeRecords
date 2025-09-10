@@ -204,6 +204,9 @@ export default function RecordForm({
       : post?.thumbnailUrl;
 
     if (!thumbnailUrl) {
+      toast('썸네일 업로드에 실패했습니다.', {
+        type: 'error',
+      });
       return false;
     }
 
@@ -252,6 +255,9 @@ export default function RecordForm({
       (imageUrl) => imageUrl !== null
     );
     if (filteredOriginalImages.length !== originalImageUrls.length) {
+      toast('원본 이미지 업로드에 실패했습니다.', {
+        type: 'error',
+      });
       return false;
     }
 

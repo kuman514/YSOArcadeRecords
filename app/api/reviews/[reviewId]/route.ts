@@ -43,22 +43,101 @@ export async function PUT(
 
   const isDetailsVerified = details.length > 0;
 
-  if (
-    !reviewId ||
-    !title ||
-    !subjectName ||
-    !subjectType ||
-    !createdBy ||
-    !releaseDate ||
-    !isDetailsVerified ||
-    !reviewScore ||
-    (!thumbnailUrl && !presentThumbnailUrl) ||
-    originalImageUrls.length === 0
-  ) {
+  if (!reviewId) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '올바르지 않은 입력이 있습니다. 확인해 주십시오.',
+        error: '리뷰 ID가 존재하지 않습니다. 새로고침하여 다시 시도해주십시오.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!title) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '제목을 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!subjectName) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '리뷰 대상을 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!subjectType) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '리뷰 대상의 종류를 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!createdBy) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '제작사를 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!releaseDate) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '출시 일자를 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!isDetailsVerified) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '상세 내용을 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!reviewScore) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '총점을 입력해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!thumbnailUrl && !presentThumbnailUrl) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '썸네일을 첨부해주세요.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (originalImageUrls.length === 0) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '원본 이미지를 첨부해주세요.',
       },
       { status: 400 }
     );
@@ -109,13 +188,13 @@ export async function PUT(
     revalidatePath('/', 'page');
     revalidatePath('/reviews', 'layout');
     return NextResponse.json({ result: 'success' }, { status: 200 });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       {
         result: 'failed',
-        error: '리뷰 수정 실패. 다시 시도하여 주십시오.',
+        error: `서버에서 에러가 발생했습니다. (${error})`,
       },
-      { status: 500 }
+      { status: 502 }
     );
   }
 }

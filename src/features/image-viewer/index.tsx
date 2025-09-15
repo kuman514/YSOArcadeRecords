@@ -54,6 +54,7 @@ export default function ImageViewer() {
   return (
     <>
       <ImageZoomController
+        key={new Date().getTime()}
         imageUrl={imageUrls[currentShowIndex]}
         alt="아케이드 기록 관련 사진"
       />

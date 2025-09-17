@@ -1,8 +1,11 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { ReviewPost } from '^/src/entities/types/post';
+
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 import { deleteReviewAction } from './delete-review-action';
 
@@ -12,6 +15,25 @@ interface Props {
 
 export default function DeleteReviewForm({ reviewId }: Props) {
   const [, formAction, isLoading] = useActionState(deleteReviewAction, null);
+  const setModal = useModalStore((state) => state.setModal);
+
+  useEffect(() => {
+    if (isLoading) {
+      setModal({
+        type: ModalType.LOADING_BLOCK,
+      });
+    } else {
+      setModal({
+        type: ModalType.OFF,
+      });
+    }
+
+    return () => {
+      setModal({
+        type: ModalType.OFF,
+      });
+    };
+  }, [isLoading, setModal]);
 
   return (
     <form

@@ -1,11 +1,14 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 import FormInput from '^/src/shared/ui/form-input';
 
 import { checkIsEmailValid } from '^/src/shared/lib/email';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
+
 import { AuthActionState } from './action-state';
 import { signInAction } from './sign-in-action';
 
@@ -14,6 +17,7 @@ export default function SignInForm() {
     AuthActionState,
     FormData
   >(signInAction, {});
+  const setModal = useModalStore((state) => state.setModal);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -22,6 +26,24 @@ export default function SignInForm() {
     !isLoading &&
     checkIsEmailValid(email).isPass &&
     checkIsPasswordValid(password).isPass;
+
+  useEffect(() => {
+    if (isLoading) {
+      setModal({
+        type: ModalType.LOADING_BLOCK,
+      });
+    } else {
+      setModal({
+        type: ModalType.OFF,
+      });
+    }
+
+    return () => {
+      setModal({
+        type: ModalType.OFF,
+      });
+    };
+  }, [isLoading, setModal]);
 
   return (
     <form

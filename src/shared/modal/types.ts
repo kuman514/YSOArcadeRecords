@@ -15,7 +15,6 @@ export interface ImageViewerModalState {
 
 export interface LoadingBlockModalState {
   type: ModalType.LOADING_BLOCK;
-  message: string;
 }
 
 export type ModalState =

@@ -10,8 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GalleryTheme } from '^/src/entities/types/gallery-theme';
 import { GalleryPost } from '^/src/entities/types/post';
 import SingleImagePicker from '^/src/shared/image-picker/single';
-import { useModalStore } from '^/src/shared/modal/store';
-import { ModalType } from '^/src/shared/modal/types';
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -27,11 +26,12 @@ interface Props {
 
 export default function GalleryForm({ post, galleryThemeList }: Props) {
   const route = useRouter();
-  const setModal = useModalStore((state) => state.setModal);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useLoadingBlockModal(isLoading);
 
   const galleryId = useRef<string>(post?.galleryId ?? uuidv4()).current;
 
@@ -70,24 +70,6 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       });
     }
   }, [errorMessage]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setModal({
-        type: ModalType.LOADING_BLOCK,
-      });
-    } else {
-      setModal({
-        type: ModalType.OFF,
-      });
-    }
-
-    return () => {
-      setModal({
-        type: ModalType.OFF,
-      });
-    };
-  }, [isLoading, setModal]);
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

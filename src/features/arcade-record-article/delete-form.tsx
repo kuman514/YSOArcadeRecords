@@ -1,11 +1,10 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState } from 'react';
 
 import { ArcadeRecordPost } from '^/src/entities/types/post';
-import { useModalStore } from '^/src/shared/modal/store';
-import { ModalType } from '^/src/shared/modal/types';
 
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import { deleteArcadeRecordAction } from './delete-arcade-record-action';
 
 interface Props {
@@ -17,25 +16,7 @@ export default function DeleteArcadeRecordForm({ arcadeRecordId }: Props) {
     deleteArcadeRecordAction,
     null
   );
-  const setModal = useModalStore((state) => state.setModal);
-
-  useEffect(() => {
-    if (isLoading) {
-      setModal({
-        type: ModalType.LOADING_BLOCK,
-      });
-    } else {
-      setModal({
-        type: ModalType.OFF,
-      });
-    }
-
-    return () => {
-      setModal({
-        type: ModalType.OFF,
-      });
-    };
-  }, [isLoading, setModal]);
+  useLoadingBlockModal(isLoading);
 
   return (
     <form

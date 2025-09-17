@@ -13,8 +13,7 @@ import { ReviewPost } from '^/src/entities/types/post';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import { ImageListElementValue } from '^/src/shared/image-picker/types';
-import { useModalStore } from '^/src/shared/modal/store';
-import { ModalType } from '^/src/shared/modal/types';
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -30,11 +29,12 @@ interface Props {
 
 export default function ReviewForm({ post }: Props) {
   const route = useRouter();
-  const setModal = useModalStore((state) => state.setModal);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useLoadingBlockModal(isLoading);
 
   const reviewId = useRef<string>(post?.reviewId ?? uuidv4()).current;
 
@@ -109,24 +109,6 @@ export default function ReviewForm({ post }: Props) {
       });
     }
   }, [errorMessage]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setModal({
-        type: ModalType.LOADING_BLOCK,
-      });
-    } else {
-      setModal({
-        type: ModalType.OFF,
-      });
-    }
-
-    return () => {
-      setModal({
-        type: ModalType.OFF,
-      });
-    };
-  }, [isLoading, setModal]);
 
   function handleOnChangeMultipleTextFormInput(
     values: MultipleFormValue<string>,

@@ -28,8 +28,8 @@ export default function Modal() {
         return <ImageViewer />;
       case ModalType.LOADING_BLOCK:
         return (
-          <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-center items-center pointer-events-none animate-spin">
-            <LoadingSvg fill="white" />
+          <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-center items-center pointer-events-none animate-spin fill-hovering">
+            <LoadingSvg fill="interit" />
           </div>
         );
       default:

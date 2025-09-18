@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 
 import { ReviewPost } from '^/src/entities/types/post';
 
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import { deleteReviewAction } from './delete-review-action';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 
 export default function DeleteReviewForm({ reviewId }: Props) {
   const [, formAction, isLoading] = useActionState(deleteReviewAction, null);
+  useLoadingBlockModal(isLoading);
 
   return (
     <form

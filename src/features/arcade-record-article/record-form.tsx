@@ -13,6 +13,7 @@ import { ArcadeRecordPost } from '^/src/entities/types/post';
 import MultipleImagePicker from '^/src/shared/image-picker/multiple';
 import SingleImagePicker from '^/src/shared/image-picker/single';
 import { ImageListElementValue } from '^/src/shared/image-picker/types';
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -40,6 +41,8 @@ export default function RecordForm({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useLoadingBlockModal(isLoading);
 
   const arcadeRecordId = useRef<string>(
     post?.arcadeRecordId ?? uuidv4()

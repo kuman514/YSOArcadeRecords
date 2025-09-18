@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GalleryTheme } from '^/src/entities/types/gallery-theme';
 import { GalleryPost } from '^/src/entities/types/post';
 import SingleImagePicker from '^/src/shared/image-picker/single';
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -29,6 +30,8 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useLoadingBlockModal(isLoading);
 
   const galleryId = useRef<string>(post?.galleryId ?? uuidv4()).current;
 

@@ -1,6 +1,7 @@
 export enum ModalType {
   OFF = 'off',
   IMAGE_VIEWER = 'image-viewer',
+  LOADING_BLOCK = 'loading-block',
 }
 
 export interface OffModalState {
@@ -12,7 +13,14 @@ export interface ImageViewerModalState {
   imageUrls: string[];
 }
 
-export type ModalState = OffModalState | ImageViewerModalState;
+export interface LoadingBlockModalState {
+  type: ModalType.LOADING_BLOCK;
+}
+
+export type ModalState =
+  | OffModalState
+  | ImageViewerModalState
+  | LoadingBlockModalState;
 
 export interface ModalActions {
   setModal: (newModalState: ModalState) => void;

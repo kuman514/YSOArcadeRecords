@@ -3,7 +3,9 @@
 import { useActionState } from 'react';
 
 import { GalleryPost } from '^/src/entities/types/post';
-import { deleteGalleryAction } from '^/src/features/gallery/delete-gallery-action';
+
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+import { deleteGalleryAction } from './delete-gallery-action';
 
 interface Props {
   galleryId: GalleryPost['galleryId'];
@@ -11,6 +13,7 @@ interface Props {
 
 export default function DeleteGalleryForm({ galleryId }: Props) {
   const [, formAction, isLoading] = useActionState(deleteGalleryAction, null);
+  useLoadingBlockModal(isLoading);
 
   return (
     <form

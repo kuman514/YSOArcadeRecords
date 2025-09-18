@@ -5,9 +5,8 @@ import { useEffect } from 'react';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import LoadingSvg from '^/public/icons/loading.svg';
 import ImageViewer from '^/src/features/image-viewer';
-
-import { useModalStore } from './store';
-import { ModalType } from './types';
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 export default function Modal() {
   const { type, setModal } = useModalStore();

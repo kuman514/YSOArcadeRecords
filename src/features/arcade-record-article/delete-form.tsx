@@ -3,8 +3,8 @@
 import { useActionState } from 'react';
 
 import { ArcadeRecordPost } from '^/src/entities/types/post';
-
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+
 import { deleteArcadeRecordAction } from './delete-arcade-record-action';
 
 interface Props {

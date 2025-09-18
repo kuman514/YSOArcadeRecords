@@ -6,8 +6,8 @@ import FormInput from '^/src/shared/ui/form-input';
 
 import { checkIsEmailValid } from '^/src/shared/lib/email';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
-
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+
 import { AuthActionState } from './action-state';
 import { signInAction } from './sign-in-action';
 

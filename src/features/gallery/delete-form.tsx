@@ -3,8 +3,8 @@
 import { useActionState } from 'react';
 
 import { GalleryPost } from '^/src/entities/types/post';
-
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+
 import { deleteGalleryAction } from './delete-gallery-action';
 
 interface Props {

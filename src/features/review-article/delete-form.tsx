@@ -3,8 +3,8 @@
 import { useActionState } from 'react';
 
 import { ReviewPost } from '^/src/entities/types/post';
-
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+
 import { deleteReviewAction } from './delete-review-action';
 
 interface Props {

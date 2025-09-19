@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 
 import { deleteArcadeRecordAction } from './delete-arcade-record-action';
 
@@ -15,6 +16,7 @@ export default function DeleteArcadeRecordForm({ arcadeRecordId }: Props) {
     deleteArcadeRecordAction,
     null
   );
+  useLoadingBlockModal(isLoading);
 
   return (
     <form

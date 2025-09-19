@@ -11,6 +11,9 @@ export default function ArcadeRecordThumbnail({
   thumbnailUrl,
   originalImageUrls,
 }: Props) {
+  const additionalFigCaptionText =
+    originalImageUrls.length > 1 ? `${originalImageUrls.length}개 ` : null;
+
   return (
     <figure className="flex flex-col justify-center items-center gap-2">
       <div className="relative w-full sm:w-80 h-80 bg-black">
@@ -26,7 +29,7 @@ export default function ArcadeRecordThumbnail({
         />
       </div>
       <figcaption className="text-xs">
-        [ 썸네일을 클릭하여 이미지 보기 ]
+        [ 썸네일을 클릭하여 이미지 {additionalFigCaptionText}보기 ]
       </figcaption>
     </figure>
   );

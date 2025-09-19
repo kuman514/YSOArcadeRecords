@@ -6,10 +6,10 @@ import Contact from '^/src/features/contact';
 import Sidebar from '^/src/features/sidebar';
 import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
-import Modal from '^/src/shared/modal';
 import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
+import Modal from '^/src/widgets/modal';
 import { ToastContainer } from 'react-toastify';
 
 import './globals.css';

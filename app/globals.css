@@ -67,3 +67,39 @@ body {
 body::-webkit-scrollbar-track {
   background-color: #d6d6d6;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+form,
+input,
+textarea,
+button,
+select,
+optgroup,
+option,
+label figcaption,
+a,
+link,
+nav,
+ul,
+ol,
+li,
+div,
+span,
+header,
+footer,
+main,
+section,
+article,
+aside,
+details,
+dialog,
+summary,
+data {
+  letter-spacing: -0.0375em;
+}

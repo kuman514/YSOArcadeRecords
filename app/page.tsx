@@ -73,20 +73,29 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold mb-4">개인 통산 최고 성과</h2>
         <UnorderedList>
           <li>
-            <span className="text-xl">
+            <Link
+              href="records/galagaarrangement/8c5a0838-1bca-4a71-95fc-2bf4753a9e54"
+              className="text-xl hover:text-hovering"
+            >
               남코 클래식 콜렉션 Vol. 1: 갤러그 어레인지먼트 - 노미스 ALL 및
               1,374,440점 달성
-            </span>
+            </Link>
           </li>
           <li>
-            <span className="text-xl">
+            <Link
+              href="records/dodonpachi-cshot/3fa5eb2a-9336-493a-90d9-7e73be48a33b"
+              className="text-xl hover:text-hovering"
+            >
               도돈파치 (1997): C-Shot - 원코인(노컨티뉴) 2-6 진출 및 1억점 달성
-            </span>
+            </Link>
           </li>
           <li>
-            <span className="text-xl">
+            <Link
+              href="records/inthehunt/46595bac-be5c-43ef-bf60-b4c8fa0f53d6"
+              className="text-xl hover:text-hovering"
+            >
               인더헌트 (해저대전쟁 해외판) - 원코인(노컨티뉴) ALL 달성
-            </span>
+            </Link>
           </li>
         </UnorderedList>
       </section>

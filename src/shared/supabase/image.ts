@@ -66,3 +66,25 @@ export async function getImageList(directory: string) {
 
   return result.map((file) => file.name);
 }
+
+export async function removeUnusedImages(
+  directory: string,
+  usedImages: string[]
+) {
+  try {
+    const imageList = await getImageList(directory);
+    const unusedImages = imageList.filter(
+      (image) => !usedImages.includes(image)
+    );
+    unusedImages.forEach(async (image) => {
+      try {
+        deleteImage(`${directory}/${image}`);
+      } catch (error) {
+        console.error(error);
+      }
+      console.log(`${directory}/${image} deleted.`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}

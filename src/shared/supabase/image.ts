@@ -53,3 +53,16 @@ export async function deleteImage(savedFilePath: string) {
     throw new Error(error?.message ?? 'Failed to remove image.');
   }
 }
+
+export async function getImageList(directory: string) {
+  const supabase = await createServerSideClient();
+  const { data: result, error } = await supabase.storage
+    .from(process.env.NEXT_PUBLIC_SUPABASE_UPLOAD_BUCKET_ID!)
+    .list(directory);
+
+  if (error || !result) {
+    throw new Error(error?.message ?? 'Failed to get the list of images.');
+  }
+
+  return result.map((file) => file.name);
+}

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { deleteData } from '^/src/shared/supabase/database';
+import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
 
@@ -33,5 +34,8 @@ export async function deleteGalleryAction(_: null, formData: FormData) {
   });
 
   revalidatePath('/gallery', 'layout');
+
+  removeUnusedImages(`gallery/${galleryId}`, []);
+
   redirect(`/gallery`);
 }

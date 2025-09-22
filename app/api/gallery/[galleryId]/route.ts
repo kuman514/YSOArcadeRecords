@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { GalleryPostDBInput } from '^/src/entities/types/post';
 import { updateData } from '^/src/shared/supabase/database';
+import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
 import { revalidatePath } from 'next/cache';
@@ -108,6 +109,17 @@ export async function PUT(
     });
 
     revalidatePath('/gallery', 'layout');
+
+    const imagePath = `gallery/${galleryId}`;
+    const usedImages = [originalImageUrl!]
+      .concat(
+        thumbnailUrl || presentThumbnailUrl
+          ? [thumbnailUrl! ?? presentThumbnailUrl!]
+          : []
+      )
+      .map((image) => image.split('/').pop()!);
+    removeUnusedImages(imagePath, usedImages);
+
     return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch (error) {
     return NextResponse.json(

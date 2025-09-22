@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { ReviewPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
+import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { revalidatePath } from 'next/cache';
 
@@ -175,6 +176,13 @@ export async function POST(request: Request) {
 
     revalidatePath('/', 'page');
     revalidatePath('/reviews', 'layout');
+
+    const imagePath = `reviews/${reviewId}`;
+    const usedImages = originalImageUrls
+      .concat([thumbnailUrl!])
+      .map((image) => image.split('/').pop()!);
+    removeUnusedImages(imagePath, usedImages);
+
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch (error) {
     return NextResponse.json(

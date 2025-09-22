@@ -3,7 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+
 import { deleteReviewPost } from './data';
 
 export async function deleteReviewAction(_: null, formData: FormData) {
@@ -19,9 +21,12 @@ export async function deleteReviewAction(_: null, formData: FormData) {
     return null;
   }
 
-  await deleteReviewPost(reviewId!);
+  await deleteReviewPost(reviewId);
 
   revalidatePath('/', 'page');
   revalidatePath('/reviews', 'layout');
+
+  removeUnusedImages(`reviews/${reviewId}`, []);
+
   redirect(`/reviews`);
 }

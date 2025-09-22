@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { ArcadeRecordPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
+import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
@@ -200,6 +201,13 @@ export async function POST(request: Request) {
 
     revalidatePath('/', 'page');
     revalidatePath('/records', 'layout');
+
+    const imagePath = `${arcadeId}/${arcadeRecordId}`;
+    const usedImages = originalImageUrls
+      .concat([thumbnailUrl!])
+      .map((image) => image.split('/').pop()!);
+    removeUnusedImages(imagePath, usedImages);
+
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch (error) {
     return NextResponse.json(

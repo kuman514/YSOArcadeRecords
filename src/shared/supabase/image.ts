@@ -42,3 +42,49 @@ export async function saveImage(
 
   return publicUrl;
 }
+
+export async function deleteImage(savedFilePath: string) {
+  const supabase = await createServerSideClient();
+  const { data: result, error } = await supabase.storage
+    .from(process.env.NEXT_PUBLIC_SUPABASE_UPLOAD_BUCKET_ID!)
+    .remove([savedFilePath]);
+
+  if (error || !result) {
+    throw new Error(error?.message ?? 'Failed to remove image.');
+  }
+}
+
+export async function getImageList(directory: string) {
+  const supabase = await createServerSideClient();
+  const { data: result, error } = await supabase.storage
+    .from(process.env.NEXT_PUBLIC_SUPABASE_UPLOAD_BUCKET_ID!)
+    .list(directory);
+
+  if (error || !result) {
+    throw new Error(error?.message ?? 'Failed to get the list of images.');
+  }
+
+  return result.map((file) => file.name);
+}
+
+export async function removeUnusedImages(
+  directory: string,
+  usedImages: string[]
+) {
+  try {
+    const imageList = await getImageList(directory);
+    const unusedImages = imageList.filter(
+      (image) => !usedImages.includes(image)
+    );
+    unusedImages.forEach(async (image) => {
+      try {
+        deleteImage(`${directory}/${image}`);
+      } catch (error) {
+        console.error(error);
+      }
+      console.log(`${directory}/${image} deleted.`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}

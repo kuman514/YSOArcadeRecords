@@ -5,7 +5,7 @@ export default function SidebarOpenChecker() {
     <input
       type="checkbox"
       id="sidebar-open-checker"
-      className="hidden [&_+_#sidebar-overlay]:hidden checked:[&_+_#sidebar-overlay]:block"
+      className="hidden [&+#sidebar-overlay]:hidden checked:[&+#sidebar-overlay]:block"
       onChange={(event) => {
         console.log(event.currentTarget.checked);
         document.body.style.overflowY = event.currentTarget.checked

@@ -86,7 +86,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
         <Sidebar />
         <Modal />
 
-        <ToastContainer />
+        <ToastContainer toastClassName={gyeonggiCheonnyeonJemok.className} />
       </body>
     </html>
   );

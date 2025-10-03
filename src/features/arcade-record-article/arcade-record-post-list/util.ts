@@ -2,6 +2,7 @@ import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
+import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 
 export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
   id,
@@ -55,17 +56,26 @@ export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
 
 export function convertArcadeRecordPostToPostListItem({
   title,
-  note,
   achievedAt,
   tags,
   youTubeId,
   arcade,
   arcadeRecordId,
   thumbnailUrl,
+  evaluation,
+  stage,
+  rank,
+  score,
+  elapsedTime,
 }: ArcadeRecordPost) {
+  const evaluations = [evaluation, score, elapsedTime]
+    .filter((evaluationValue) => evaluationValue && evaluationValue.length > 0)
+    .map((evaluationValue) => parseEvaluation(evaluationValue).value)
+    .join(', ');
+
   return {
     title: title,
-    memo: note ?? '',
+    memo: `${arcade.label} - ${stage} / ${evaluations}${rank && ` / ${rank}`}`,
     dateToDisplay: achievedAt,
     tags: tags,
     isHaveYouTube: Boolean(youTubeId),

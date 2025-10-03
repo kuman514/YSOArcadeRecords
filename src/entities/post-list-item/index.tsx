@@ -62,11 +62,11 @@ export default function PostListItem({
           />
         </div>
 
-        <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-between z-1 px-4 py-3 gap-2 bg-linear-180 from-transparent from-55% to-[rgba(0,0,0,0.9)] to-97%">
+        <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-between z-1 px-4 py-3 gap-2 bg-linear-180 from-transparent from-55% to-[rgba(0,0,0,0.9)] to-97% text-sm">
           {renderDate}
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-0.5">
-              <span className="text-xl text-white font-bold drop-shadow-[0_0_12px_rgba(32,32,32,1)] sm:text-2xl">
+              <span className="text-xl text-white font-bold drop-shadow-[0_0_12px_rgba(32,32,32,1)]">
                 {title}
               </span>
               {renderMemo}

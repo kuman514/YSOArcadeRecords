@@ -5,44 +5,23 @@ import { ConditionType, SelectRange } from '^/src/shared/supabase/types';
 
 import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
 
-/**
- * @todo
- * Unify `getArcadeRecordPostList` and `getArcadeRecordPostListWithArcadeId`.
- */
-
-export async function getArcadeRecordPostList(range?: SelectRange) {
+export async function getArcadeRecordPostList(
+  range?: SelectRange,
+  arcadeId?: ArcadeInfo['arcadeId']
+) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select:
       'arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
     from: 'records',
-    where: [],
-    order: [
-      {
-        column: 'achieved_at',
-        isAscending: false,
-      },
-    ],
-    range,
-  });
-
-  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost);
-}
-
-export async function getArcadeRecordPostListWithArcadeId(
-  arcadeId: ArcadeInfo['arcadeId'],
-  range?: SelectRange
-) {
-  const result = await selectData<ArcadeRecordPostDBColumn[]>({
-    select:
-      'arcade_record_id, title, note, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
-    from: 'records',
-    where: [
-      {
-        type: ConditionType.EQUAL,
-        column: 'arcade_id',
-        value: arcadeId,
-      },
-    ],
+    where: arcadeId
+      ? [
+          {
+            type: ConditionType.EQUAL,
+            column: 'arcade_id',
+            value: arcadeId,
+          },
+        ]
+      : [],
     order: [
       {
         column: 'achieved_at',

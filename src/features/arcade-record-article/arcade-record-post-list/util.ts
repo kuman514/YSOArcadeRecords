@@ -75,7 +75,9 @@ export function convertArcadeRecordPostToPostListItem({
 
   return {
     title: title,
-    memo: `${arcade.label} - ${stage} / ${evaluations}${rank && ` / ${rank}`}`,
+    memo: `${arcade.label} - ${stage} / ${evaluations}${
+      rank ? ` / ${rank}` : ''
+    }`,
     dateToDisplay: achievedAt,
     tags: tags,
     isHaveYouTube: Boolean(youTubeId),

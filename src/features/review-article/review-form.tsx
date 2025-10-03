@@ -97,7 +97,9 @@ export default function ReviewForm({ post }: Props) {
 
   useEffect(() => {
     if (isSuccess) {
-      toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.');
+      toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.', {
+        type: 'success',
+      });
       route.replace(`/reviews/${reviewId}`);
     }
   }, [post, isSuccess, reviewId, route]);

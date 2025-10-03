@@ -12,7 +12,7 @@ export async function getExtendedArcadeRecordPostList(
 ) {
   const result = await selectDataClientSide<ArcadeRecordPostDBColumn[]>({
     select:
-      'arcade_record_id, title, note, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
+      'arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
     from: 'records',
     where: arcadeId
       ? [

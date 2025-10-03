@@ -11,7 +11,7 @@ export default function Sidebar() {
         id="sidebar-overlay"
         className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"
       >
-        <aside className="w-full h-full bg-primary text-white max-w-[40rem] grid grid-rows-[4rem_1fr_4rem]">
+        <aside className="w-full h-full bg-primary text-white max-w-160 grid grid-rows-[4rem_1fr_4rem]">
           <label
             htmlFor="sidebar-open-checker"
             className="w-16 h-16 p-4 cursor-pointer"

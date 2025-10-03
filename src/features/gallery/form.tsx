@@ -57,7 +57,12 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
   useEffect(() => {
     if (isSuccess) {
       toast(
-        post ? '갤러리 사진이 수정되었습니다.' : '갤러리 사진이 등록되었습니다.'
+        post
+          ? '갤러리 사진이 수정되었습니다.'
+          : '갤러리 사진이 등록되었습니다.',
+        {
+          type: 'success',
+        }
       );
       route.replace(`/gallery/${galleryId}`);
     }

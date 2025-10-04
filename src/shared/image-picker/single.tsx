@@ -3,6 +3,9 @@
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
+import { toast } from 'react-toastify';
+import { MAXIMUM_IMAGE_SIZE } from './constants';
+
 interface Props {
   name: string;
   currentFile: File | null;
@@ -36,6 +39,13 @@ export default function SingleImagePicker({
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) {
+      return;
+    }
+    if (file.size > MAXIMUM_IMAGE_SIZE) {
+      toast(
+        '이미지의 용량이 너무 큽니다. 더 작은 용량의 이미지를 선택해주세요.',
+        { type: 'error' }
+      );
       return;
     }
     onSelectFile(file);

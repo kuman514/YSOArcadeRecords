@@ -1,7 +1,9 @@
 'use client';
 
 import { ChangeEvent, useRef } from 'react';
+import { toast } from 'react-toastify';
 
+import { MAXIMUM_IMAGE_SIZE } from './constants';
 import ImageList from './image-list';
 import { ImageListElementValue } from './types';
 
@@ -27,13 +29,25 @@ export default function MultipleImagePicker({
     if (!files) {
       return;
     }
+
+    const allowedFiles = Array.from(files).filter(
+      (file) => file.size <= MAXIMUM_IMAGE_SIZE
+    );
     const timestamp = new Date().getTime();
-    const newImages: ImageListElementValue[] = Array.from(files).map(
+    const newImages: ImageListElementValue[] = allowedFiles.map(
       (file, index): ImageListElementValue => ({
         tmpId: `${timestamp}-${index}`,
         localFile: file,
       })
     );
+
+    if (newImages.length !== files.length) {
+      toast(
+        '일부 이미지의 용량이 너무 커서 등록되지 못했습니다. 더 작은 용량의 이미지를 선택해주세요.',
+        { type: 'error' }
+      );
+    }
+
     onChangeImages(images.concat(newImages));
   }
 

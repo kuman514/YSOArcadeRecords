@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
 import ArrowSquareRightSvgRepoComSvg from '^/public/icons/arrow-square-right-svgrepo-com.svg';
@@ -17,26 +17,49 @@ export default function ImageViewer() {
     return state.imageUrls;
   });
 
+  const goToPrev = useCallback(() => {
+    setCurrentShowIndex(
+      (currentShowIndex + imageUrls.length - 1) % imageUrls.length
+    );
+  }, [currentShowIndex, imageUrls]);
+
+  const goToNext = useCallback(() => {
+    setCurrentShowIndex((currentShowIndex + 1) % imageUrls.length);
+  }, [currentShowIndex, imageUrls]);
+
+  useEffect(() => {
+    function handleOnKeyDown(event: KeyboardEvent) {
+      switch (event.key) {
+        case 'ArrowLeft':
+          goToPrev();
+          break;
+        case 'ArrowRight':
+          goToNext();
+          break;
+      }
+    }
+
+    document.addEventListener('keydown', handleOnKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleOnKeyDown);
+    };
+  }, [goToPrev, goToNext]);
+
   const renderPageController =
     imageUrls.length > 1 ? (
       <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
         <button
           type="button"
           className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg cursor-pointer"
-          onClick={() => {
-            setCurrentShowIndex(
-              (currentShowIndex + imageUrls.length - 1) % imageUrls.length
-            );
-          }}
+          onClick={goToPrev}
         >
           <ArrowSquareLeftSvgRepoComSvg width="100%" height="100%" />
         </button>
         <button
           type="button"
           className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg cursor-pointer"
-          onClick={() => {
-            setCurrentShowIndex((currentShowIndex + 1) % imageUrls.length);
-          }}
+          onClick={goToNext}
         >
           <ArrowSquareRightSvgRepoComSvg width="100%" height="100%" />
         </button>

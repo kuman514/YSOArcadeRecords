@@ -21,6 +21,33 @@ export default function Modal() {
     };
   }, [type]);
 
+  useEffect(() => {
+    /**
+     * @desc
+     * Essential type like LOADING_BLOCK should not be handle on press Escape key.
+     */
+    switch (type) {
+      case ModalType.LOADING_BLOCK:
+        return;
+    }
+
+    function handleOnKeyDown(event: KeyboardEvent) {
+      switch (event.key) {
+        case 'Escape':
+          setModal({
+            type: ModalType.OFF,
+          });
+          break;
+      }
+    }
+
+    document.addEventListener('keydown', handleOnKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleOnKeyDown);
+    };
+  }, [type, setModal]);
+
   const renderModalContent = (() => {
     switch (type) {
       case ModalType.IMAGE_VIEWER:

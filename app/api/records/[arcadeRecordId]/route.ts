@@ -213,7 +213,7 @@ export async function PUT(
     revalidatePath('/', 'page');
     revalidatePath('/records', 'layout');
 
-    const imagePath = `${arcadeId}/${arcadeRecordId}`;
+    const imagePath = `records/${arcadeRecordId}`;
     const usedImages = originalImageUrls
       .concat(
         thumbnailUrl || presentThumbnailUrl

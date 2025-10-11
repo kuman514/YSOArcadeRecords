@@ -166,7 +166,7 @@ export default function RecordForm({
     setIsLoading(true);
     setErrorMessage(null);
 
-    const path = `${arcadeId}/${arcadeRecordId}`;
+    const path = `records/${arcadeRecordId}`;
     const timestamp = new Date().toISOString();
 
     const thumbnailUrl = localThumbnail

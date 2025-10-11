@@ -202,7 +202,7 @@ export async function POST(request: Request) {
     revalidatePath('/', 'page');
     revalidatePath('/records', 'layout');
 
-    const imagePath = `${arcadeId}/${arcadeRecordId}`;
+    const imagePath = `records/${arcadeRecordId}`;
     const usedImages = originalImageUrls
       .concat([thumbnailUrl!])
       .map((image) => image.split('/').pop()!);

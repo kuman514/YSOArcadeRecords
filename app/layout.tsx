@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Link from 'next/link';
+import { ToastContainer } from 'react-toastify';
 
 import Contact from '^/src/features/contact';
 import Sidebar from '^/src/features/sidebar';
@@ -10,7 +11,6 @@ import NavLink from '^/src/shared/ui/nav-link';
 import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 import Modal from '^/src/widgets/modal';
-import { ToastContainer } from 'react-toastify';
 
 import './globals.css';
 
@@ -46,7 +46,7 @@ interface Props {
 
 export default function RootLayout({ children }: Readonly<Props>) {
   return (
-    <html lang="en">
+    <html lang="ko-kr">
       <body
         className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >

@@ -1,8 +1,9 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { createServerSideClient } from '^/src/shared/supabase/server';
-import { getGallery, getGalleryTheme } from '^/src/features/gallery/data';
+import { getGalleryTheme } from '^/src/features/gallery-theme/data';
+import { getGallery } from '^/src/features/gallery/data';
 import GalleryForm from '^/src/features/gallery/form';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{

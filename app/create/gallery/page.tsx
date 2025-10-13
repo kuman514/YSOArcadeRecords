@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { getGalleryTheme } from '^/src/features/gallery/data';
+import { getGalleryTheme } from '^/src/features/gallery-theme/data';
 import GalleryForm from '^/src/features/gallery/form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 

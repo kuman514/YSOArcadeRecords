@@ -2,7 +2,11 @@ import {
   ArcadeInfo,
   ArcadeInfoDBColumn,
 } from '^/src/entities/types/arcade-info';
-import { selectData } from '^/src/shared/supabase/database';
+import {
+  deleteData,
+  insertData,
+  selectData,
+} from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
 import { convertArcadeInfoDBColumnToArcadeInfo } from './util';
@@ -31,4 +35,27 @@ export async function getArcadeInfo(arcadeId: ArcadeInfo['arcadeId']) {
   });
 
   return result.map(convertArcadeInfoDBColumnToArcadeInfo)[0];
+}
+
+export async function createArcadeInfo(newArcadeInfo: ArcadeInfo) {
+  await insertData<ArcadeInfoDBColumn>({
+    insertInto: 'arcade_info',
+    value: {
+      arcade_id: newArcadeInfo.arcadeId,
+      arcade_title: newArcadeInfo.label,
+    },
+  });
+}
+
+export async function deleteArcadeInfo(arcadeId: ArcadeInfo['arcadeId']) {
+  await deleteData({
+    deleteFrom: 'arcade_info',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_id',
+        value: arcadeId,
+      },
+    ],
+  });
 }

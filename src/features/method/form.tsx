@@ -132,7 +132,7 @@ function MethodFormContent() {
             type="button"
             className="w-full p-4 bg-yellow-500 hover:bg-yellow-300 text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
           >
-            취소
+            비우기
           </button>
         </div>
       </form>

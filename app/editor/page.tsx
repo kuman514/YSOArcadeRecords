@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import ArcadeInfoForm from '^/src/features/arcade-info/form';
+import GalleryThemeForm from '^/src/features/gallery-theme/form';
 import MethodForm from '^/src/features/method/form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
@@ -17,6 +18,7 @@ export default async function EditorPage() {
       <h1 className="text-4xl font-bold">아케이드 정보 편집기</h1>
       <ArcadeInfoForm />
       <MethodForm />
+      <GalleryThemeForm />
     </main>
   );
 }

@@ -1,6 +1,15 @@
-import { GalleryThemeDBColumn } from '^/src/entities/types/gallery-theme';
-import { selectData } from '^/src/shared/supabase/database';
+import {
+  GalleryTheme,
+  GalleryThemeDBColumn,
+} from '^/src/entities/types/gallery-theme';
+import {
+  deleteData,
+  insertData,
+  selectData,
+  updateData,
+} from '^/src/shared/supabase/database';
 
+import { ConditionType } from '^/src/shared/supabase/types';
 import { convertGalleryThemeDBColumnToGalleryTheme } from './util';
 
 export async function getGalleryThemeList() {
@@ -11,4 +20,49 @@ export async function getGalleryThemeList() {
   });
 
   return result.map(convertGalleryThemeDBColumnToGalleryTheme);
+}
+
+export async function createGalleryTheme(newGalleryTheme: GalleryTheme) {
+  await insertData<GalleryThemeDBColumn>({
+    insertInto: 'gallery_theme',
+    value: {
+      gallery_theme_id: newGalleryTheme.galleryThemeId,
+      gallery_theme_title: newGalleryTheme.galleryThemeTitle,
+    },
+  });
+}
+
+export async function modifyGalleryTheme(
+  galleryThemeId: GalleryTheme['galleryThemeId'],
+  newGalleryTheme: GalleryTheme
+) {
+  await updateData<GalleryThemeDBColumn>({
+    update: 'gallery_theme',
+    set: {
+      gallery_theme_id: newGalleryTheme.galleryThemeId,
+      gallery_theme_title: newGalleryTheme.galleryThemeTitle,
+    },
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'gallery_theme_id',
+        value: galleryThemeId,
+      },
+    ],
+  });
+}
+
+export async function deleteGalleryTheme(
+  galleryThemeId: GalleryTheme['galleryThemeId']
+) {
+  await deleteData({
+    deleteFrom: 'gallery_theme',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'gallery_theme_id',
+        value: galleryThemeId,
+      },
+    ],
+  });
 }

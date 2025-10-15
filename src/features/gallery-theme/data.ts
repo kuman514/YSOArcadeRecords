@@ -6,7 +6,6 @@ import {
   deleteData,
   insertData,
   selectData,
-  updateData,
 } from '^/src/shared/supabase/database';
 
 import { ConditionType } from '^/src/shared/supabase/types';
@@ -29,26 +28,6 @@ export async function createGalleryTheme(newGalleryTheme: GalleryTheme) {
       gallery_theme_id: newGalleryTheme.galleryThemeId,
       gallery_theme_title: newGalleryTheme.galleryThemeTitle,
     },
-  });
-}
-
-export async function modifyGalleryTheme(
-  galleryThemeId: GalleryTheme['galleryThemeId'],
-  newGalleryTheme: GalleryTheme
-) {
-  await updateData<GalleryThemeDBColumn>({
-    update: 'gallery_theme',
-    set: {
-      gallery_theme_id: newGalleryTheme.galleryThemeId,
-      gallery_theme_title: newGalleryTheme.galleryThemeTitle,
-    },
-    where: [
-      {
-        type: ConditionType.EQUAL,
-        column: 'gallery_theme_id',
-        value: galleryThemeId,
-      },
-    ],
   });
 }
 

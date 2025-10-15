@@ -3,7 +3,6 @@ import {
   deleteData,
   insertData,
   selectData,
-  updateData,
 } from '^/src/shared/supabase/database';
 import { ConditionType } from '^/src/shared/supabase/types';
 
@@ -26,26 +25,6 @@ export async function createMethod(newMethod: Method) {
       method_id: newMethod.methodId,
       method_name: newMethod.label,
     },
-  });
-}
-
-export async function modifyMethod(
-  methodId: Method['methodId'],
-  newMethod: Method
-) {
-  await updateData<MethodDBColumn>({
-    update: 'methods',
-    set: {
-      method_id: newMethod.methodId,
-      method_name: newMethod.label,
-    },
-    where: [
-      {
-        type: ConditionType.EQUAL,
-        column: 'method_id',
-        value: methodId,
-      },
-    ],
   });
 }
 

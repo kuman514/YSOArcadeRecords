@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { getGalleryTheme } from '^/src/features/gallery-theme/data';
+import { getGalleryThemeList } from '^/src/features/gallery-theme/data';
 import GalleryForm from '^/src/features/gallery/form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
@@ -12,7 +12,7 @@ export default async function CreateGalleryPage() {
     redirect('/');
   }
 
-  const galleryThemeList = await getGalleryTheme();
+  const galleryThemeList = await getGalleryThemeList();
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">

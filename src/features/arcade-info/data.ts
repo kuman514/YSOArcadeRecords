@@ -4,6 +4,7 @@ import {
 } from '^/src/entities/types/arcade-info';
 import {
   deleteData,
+  insertData,
   selectData,
   updateData,
 } from '^/src/shared/supabase/database';
@@ -35,6 +36,16 @@ export async function getArcadeInfo(arcadeId: ArcadeInfo['arcadeId']) {
   });
 
   return result.map(convertArcadeInfoDBColumnToArcadeInfo)[0];
+}
+
+export async function createArcadeInfo(newArcadeInfo: ArcadeInfo) {
+  await insertData<ArcadeInfoDBColumn>({
+    insertInto: 'arcade_info',
+    value: {
+      arcade_id: newArcadeInfo.arcadeId,
+      arcade_title: newArcadeInfo.label,
+    },
+  });
 }
 
 export async function modifyArcadeInfo(

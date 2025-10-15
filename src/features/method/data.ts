@@ -1,6 +1,7 @@
 import { Method, MethodDBColumn } from '^/src/entities/types/method';
 import {
   deleteData,
+  insertData,
   selectData,
   updateData,
 } from '^/src/shared/supabase/database';
@@ -18,12 +19,22 @@ export async function getMethodList() {
   return result.map(convertMethodDBColumnToMethod);
 }
 
+export async function createMethod(newMethod: Method) {
+  await insertData<MethodDBColumn>({
+    insertInto: 'methods',
+    value: {
+      method_id: newMethod.methodId,
+      method_name: newMethod.label,
+    },
+  });
+}
+
 export async function modifyMethod(
   methodId: Method['methodId'],
   newMethod: Method
 ) {
   await updateData<MethodDBColumn>({
-    update: 'arcade_info',
+    update: 'methods',
     set: {
       method_id: newMethod.methodId,
       method_name: newMethod.label,

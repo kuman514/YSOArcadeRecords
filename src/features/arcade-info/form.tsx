@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-query';
 import { useActionState, useEffect, useRef, useState } from 'react';
 
-import { InfoEditorActionState } from '^/src/entities/types/info-editor';
+import { InfoEditorActionState } from '^/src/entities/info-editor/types';
 import FormInput from '^/src/shared/ui/form-input';
 
 import { toast } from 'react-toastify';

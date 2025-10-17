@@ -10,7 +10,7 @@ import {
 import { useActionState, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { InfoEditorActionState } from '^/src/entities/types/info-editor';
+import { InfoEditorActionState } from '^/src/entities/info-editor/types';
 import FormInput from '^/src/shared/ui/form-input';
 
 import { createMethodAction } from './create-method-action';

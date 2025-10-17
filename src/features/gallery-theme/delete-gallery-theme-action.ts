@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
-import { InfoEditorActionState } from '^/src/entities/types/info-editor';
+import { InfoEditorActionState } from '^/src/entities/info-editor/types';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 import { deleteGalleryTheme } from './data';

@@ -11,6 +11,7 @@ export default async function AuthLink() {
 
   const renderLinkArea = isSignedIn ? (
     <>
+      <Link href="/editor">정보편집</Link>
       <Link href="/create/records">새기록</Link>
       <Link href="/create/reviews">새리뷰</Link>
       <Link href="/create/gallery">새갤러리</Link>
@@ -21,7 +22,7 @@ export default async function AuthLink() {
   );
 
   return (
-    <div className="w-full h-full flex flex-row justify-center sm:justify-end items-center text-white gap-4 text-sm">
+    <div className="w-full h-full flex flex-row justify-center sm:justify-end items-center text-white gap-2 text-sm">
       {renderLinkArea}
     </div>
   );

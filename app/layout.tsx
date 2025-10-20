@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ToastContainer } from 'react-toastify';
 
 import Contact from '^/src/features/contact';
+import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
 import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
@@ -44,7 +45,37 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: Readonly<Props>) {
+export default async function RootLayout({ children }: Readonly<Props>) {
+  const health = await getHealth();
+
+  if (health.status === 'closed') {
+    return (
+      <html lang="ko-kr">
+        <body
+          className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col justify-center items-center overflow-x-hidden text-center gap-8`}
+        >
+          <h1 className="w-full text-4xl font-bold text-center px-8">
+            YSOArcadeRecords에 접속할 수 없습니다.
+          </h1>
+          {health.maintenanceMessage && (
+            <p className="w-full max-w-4xl text-center px-8">
+              {health.maintenanceMessage}
+            </p>
+          )}
+          <p className="flex flex-col justify-center items-center px-8">
+            <Link
+              target="_blank"
+              href="https://open.kakao.com/me/kuman514"
+              className="text-xl hover:text-hovering"
+            >
+              카카오톡 kuman514 오픈채팅방으로 문의하기
+            </Link>
+          </p>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="ko-kr">
       <body

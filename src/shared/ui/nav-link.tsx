@@ -17,7 +17,7 @@ export default function NavLink({ href, children }: Props) {
     : 'text-white';
 
   return (
-    <Link href={href} className={`md:text-2xl ${className}`}>
+    <Link href={href} className={className}>
       {children}
     </Link>
   );

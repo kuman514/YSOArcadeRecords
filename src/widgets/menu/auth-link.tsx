@@ -3,6 +3,8 @@ import Link from 'next/link';
 import SignOutForm from '^/src/features/auth/sign-out-form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
+import AuthLinkArea from './link-area';
+
 export default async function AuthLink() {
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
@@ -21,9 +23,5 @@ export default async function AuthLink() {
     <Link href="/signin">관리자 로그인</Link>
   );
 
-  return (
-    <div className="w-full h-full flex flex-row justify-center sm:justify-end items-center text-white gap-2 text-sm">
-      {renderLinkArea}
-    </div>
-  );
+  return <AuthLinkArea>{renderLinkArea}</AuthLinkArea>;
 }

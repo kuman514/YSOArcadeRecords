@@ -84,7 +84,7 @@ export default async function RootLayout({ children }: Readonly<Props>) {
           <SidebarCaller />
           <div className="w-full flex flex-col">
             <div className="w-full h-12 flex flex-row items-center justify-between">
-              <Link href="/" className="text-white md:text-2xl">
+              <Link href="/" className="text-white">
                 {IS_PRODUCTION ? 'YSOArcadeRecords' : 'YSOArcadeRecords'}
               </Link>
 

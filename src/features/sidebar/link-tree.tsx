@@ -51,19 +51,24 @@ export default function SidebarLinkTree() {
         className="flex flex-col justify-start items-center gap-4"
         onClick={(event) => {
           if (
-            event.target instanceof HTMLAnchorElement &&
-            event.target.nodeName === 'A'
+            !(event.target instanceof HTMLAnchorElement) ||
+            event.target.nodeName !== 'A'
           ) {
-            const sidebarOpenChecker = document.querySelector(
-              'input#sidebar-open-checker'
-            );
-            if (
-              sidebarOpenChecker instanceof HTMLInputElement &&
-              sidebarOpenChecker.checked
-            ) {
-              sidebarOpenChecker.click();
-            }
+            return;
           }
+
+          const sidebarOpenChecker = document.querySelector(
+            'input#sidebar-open-checker'
+          );
+
+          if (
+            !(sidebarOpenChecker instanceof HTMLInputElement) ||
+            !sidebarOpenChecker.checked
+          ) {
+            return;
+          }
+
+          sidebarOpenChecker.click();
         }}
       >
         {totalLinkTrees.map((linkTree, index) => (

@@ -9,7 +9,6 @@ import Sidebar from '^/src/features/sidebar';
 import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import NavLink from '^/src/shared/ui/nav-link';
-import AlternativeHeader from '^/src/widgets/menu/alternative-header';
 import AuthLink from '^/src/widgets/menu/auth-link';
 import Modal from '^/src/widgets/modal';
 
@@ -81,27 +80,24 @@ export default async function RootLayout({ children }: Readonly<Props>) {
       <body
         className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
-        <header
-          className={`w-full h-32 flex flex-row items-end pl-6 pr-6 sm:pl-8 sm:pr-12 pb-4 bg-primary`}
-        >
+        <header className="sticky top-0 left-0 w-full h-16 flex flex-row items-center pl-2 pr-6 gap-2 bg-primary z-50">
           <SidebarCaller />
           <div className="w-full flex flex-col">
-            <AuthLink />
-            <div className="w-full h-12 flex flex-col items-center justify-end sm:flex-row sm:items-center sm:justify-between">
+            <div className="w-full h-12 flex flex-row items-center justify-between">
               <Link href="/" className="text-white md:text-2xl">
-                {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'}
+                {IS_PRODUCTION ? 'YSOArcadeRecords' : 'YSOArcadeRecords'}
               </Link>
 
               <nav>
-                <ul className="flex flex-row gap-6">
+                <ul className="flex flex-row gap-2 sm:gap-6">
                   <li>
-                    <NavLink href="/records">Records</NavLink>
+                    <NavLink href="/records">기록</NavLink>
                   </li>
                   <li>
-                    <NavLink href="/reviews">Reviews</NavLink>
+                    <NavLink href="/reviews">리뷰</NavLink>
                   </li>
                   <li>
-                    <NavLink href="/gallery">Gallery</NavLink>
+                    <NavLink href="/gallery">갤러리</NavLink>
                   </li>
                 </ul>
               </nav>
@@ -111,7 +107,6 @@ export default async function RootLayout({ children }: Readonly<Props>) {
 
         {children}
 
-        <AlternativeHeader />
         <Contact />
 
         <Sidebar />

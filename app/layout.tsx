@@ -13,6 +13,7 @@ import AuthLink from '^/src/widgets/menu/auth-link';
 import Modal from '^/src/widgets/modal';
 
 import './globals.css';
+import Header from '^/src/widgets/menu/header';
 
 const gyeonggiCheonnyeonJemok = localFont({
   src: [
@@ -80,38 +81,11 @@ export default async function RootLayout({ children }: Readonly<Props>) {
       <body
         className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
-        <header className="sticky top-0 left-0 w-full h-16 flex flex-row items-center pl-2 pr-6 gap-2 bg-primary z-50">
-          <SidebarCaller />
-          <div className="w-full flex flex-col">
-            <div className="w-full h-12 flex flex-row items-center justify-between">
-              <Link href="/" className="text-white">
-                {IS_PRODUCTION ? 'YSOArcadeRecords' : 'YSOArcadeRecords'}
-              </Link>
-
-              <nav>
-                <ul className="flex flex-row gap-2 sm:gap-6">
-                  <li>
-                    <NavLink href="/records">기록</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/reviews">리뷰</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/gallery">갤러리</NavLink>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
-
+        <Header />
         {children}
-
         <Contact />
-
         <Sidebar />
         <Modal />
-
         <ToastContainer toastClassName={gyeonggiCheonnyeonJemok.className} />
       </body>
     </html>

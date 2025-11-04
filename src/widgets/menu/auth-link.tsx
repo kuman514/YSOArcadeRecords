@@ -22,7 +22,7 @@ export default async function AuthLink() {
   );
 
   return (
-    <div className="w-full h-full flex flex-row justify-center sm:justify-end items-center text-white gap-2 text-sm">
+    <div className="w-full h-full flex flex-row justify-end items-center text-white pr-8 gap-2 text-sm">
       {renderLinkArea}
     </div>
   );

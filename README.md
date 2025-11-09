@@ -158,6 +158,15 @@
     - 근거: https://vercel.com/docs/errors/FUNCTION_PAYLOAD_TOO_LARGE#troubleshoot
   - 이에 따라, 이미지와 데이터를 하나의 payload에 함께 올리는 것이 아닌, 이미지를 개별로 따로 올리고 그 다음에 본 데이터를 제출하는 전략을 취하는 것이 좋겠다.
     - 현재 이미지 개별 업로드와 아케이드 기록 추가/수정은 Route Handler를 사용하고 있다.
+- 원본 SVG 파일에 viewBox가 명시되어 있음에도 제외되는 문제.
+  - 왜 이런 현상이 발생하는가?
+    - @svgr/webpack은 기본적으로 SVGO(SVG 최적화기)를 활성화하는데, 이 때 SVGO가 viewBox를 불필요한 속성으로 판단하여 제거해버리기 때문이다.
+    - SVGO가 viewBox를 불필요하다고 생각하는 경우는 어떤 건가?
+      - 원본 SVG에 width와 height 속성값이 명시되어 있고 해당 값들이 viewBox에 나온 값과 일치하면, SVGO는 viewBox를 불필요한 정보라고 판단하여 제거해버린다.
+  - 해결 방법은?
+    - 물론 next.config.ts -> webpack -> @svgr/webpack 관련된 항목 중 svgoConfig 설정으로 해결할 수도 있다. 그러나...
+    - 여기서는 문제가 되는 원본 SVG의 width와 height를 viewBox와 불일치시킴으로써 해결하는 방법을 사용했다.
+    - SVGO는 width와 height 속성값이 없거나 viewBox에 나온 값과 불일치할 경우 viewBox가 필요하다고 판단하기 때문에, 이 특성을 활용하여 해당 문제를 우회할 수 있기 때문이다.
 
 ## 버그 목록
 - ~~기록에 태그가 없을 때 태그 영역에 검은 사각형 모양 점이 나타나는 현상~~ `v1.0.1에 배포됨`

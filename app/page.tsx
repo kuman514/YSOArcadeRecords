@@ -1,59 +1,24 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
-import HomeBackgroundJpg from '^/public/background/home-background.jpg';
-import LogoPng from '^/public/logo/logo.png';
 import Skeleton from '^/src/shared/skeleton';
 import UnorderedList from '^/src/shared/unordered-list';
 import RecentArcadeRecordPostsWidget from '^/src/widgets/recent-post-widget/arcade-records';
 import RecentReviewPostsWidget from '^/src/widgets/recent-post-widget/reviews';
-import { Suspense } from 'react';
+import YsoArcadeRecordsSvg from '^/public/logo/yso-arcade-records.svg';
+import ByKuman514Svg from '^/public/logo/by-kuman514.svg';
 
 export default function HomePage() {
   return (
     <main className="w-full h-full flex flex-col items-center justify-center pb-32 gap-24">
-      <div className="w-full h-80 relative">
-        <Image
-          src={HomeBackgroundJpg}
-          alt="YSOArcadeRecords home background"
-          fill
-          className="object-cover"
-          priority
-          sizes="93.75rem"
-        />
-        <div className="w-full h-full flex justify-center items-center absolute left-0 top-0 bg-[rgba(0,0,0,0.4)] px-4">
-          <Image
-            src={LogoPng}
-            alt="YSOArcadeRecords logo"
-            priority
-            sizes="44.5rem"
-          />
-        </div>
+      <div className="w-full max-w-5xl h-32 sm:h-50 pt-20 sm:pt-25 flex flex-col items-center justify-center gap-4 fill-black dark:fill-white">
+        <YsoArcadeRecordsSvg width="80%" />
+        <ByKuman514Svg width={`${(80 * 11) / 18}%`} />
       </div>
 
       <h1 className="w-full text-4xl font-bold text-center px-4 sm:px-8">
         YSOArcadeRecords에 오신 것을 환영합니다!
       </h1>
-
-      <nav className="w-full flex justify-center align-center px-4 sm:px-8">
-        <ul className="flex flex-row gap-x-6 gap-y-2">
-          <li>
-            <Link href="/records" className="text-3xl hover:text-hovering">
-              기록
-            </Link>
-          </li>
-          <li>
-            <Link href="/reviews" className="text-3xl hover:text-hovering">
-              리뷰
-            </Link>
-          </li>
-          <li>
-            <Link href="/gallery" className="text-3xl hover:text-hovering">
-              갤러리
-            </Link>
-          </li>
-        </ul>
-      </nav>
 
       <section className="w-full max-w-4xl px-4 sm:px-8">
         <h2 className="text-2xl font-bold mb-4">이 사이트의 목적</h2>

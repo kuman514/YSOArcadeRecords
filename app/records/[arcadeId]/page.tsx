@@ -1,7 +1,6 @@
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
-import EmptyPng from '^/public/status/empty.png';
+import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
@@ -40,18 +39,13 @@ export default async function RecordListByTypeIdPage({ params }: Props) {
       {postListItems.length > 0 ? (
         <ArcadeRecordPostList arcadeRecordPostListItems={postListItems} />
       ) : (
-        <div className="w-full flex flex-col items-center">
-          <div className="w-full h-40 relative">
-            <Image
-              src={EmptyPng}
-              fill
-              alt="관련 데이터를 찾을 수 없음"
-              className="object-contain"
-              priority
-              sizes="37.5rem"
-            />
+        <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
+          <div className="w-full flex flex-col items-center pt-12">
+            <EmptySvg width={`${(100 * 5) / 9}%`} />
           </div>
-          <span className="text-2xl font-bold">기록이 없습니다.</span>
+          <span className="text-2xl font-bold text-center">
+            기록이 없습니다.
+          </span>
         </div>
       )}
     </main>

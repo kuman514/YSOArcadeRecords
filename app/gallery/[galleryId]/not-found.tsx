@@ -5,7 +5,7 @@ import NotFoundSvg from '^/public/status/not-found.svg';
 
 export default function GalleryNotFoundPage() {
   return (
-    <main className="w-full h-full max-w-3xl flex flex-col items-center px-4 sm:px-8 py-32 gap-8">
+    <main className="w-full h-full max-w-3xl flex flex-col items-center px-4 sm:px-8 py-32 gap-8 text-white">
       <div className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0)] z-50 touch-none flex flex-col justify-center items-center text-center sm:text-4xl gap-8 sm:gap-12">
         <div className="w-full max-w-sm sm:max-w-lg px-4">
           <NotFoundSvg width="100%" />

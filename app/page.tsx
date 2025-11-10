@@ -11,9 +11,13 @@ import ByKuman514Svg from '^/public/logo/by-kuman514.svg';
 export default function HomePage() {
   return (
     <main className="w-full h-full flex flex-col items-center justify-center pb-32 gap-24">
-      <div className="w-full max-w-5xl h-32 sm:h-50 pt-20 sm:pt-25 flex flex-col items-center justify-center gap-4 fill-black dark:fill-white">
-        <YsoArcadeRecordsSvg width="80%" />
-        <ByKuman514Svg width={`${(80 * 11) / 18}%`} />
+      <div className="w-4/5 max-w-5xl h-32 sm:h-50 pt-20 sm:pt-25 flex flex-col items-center justify-center gap-2 sm:gap-4">
+        <div className="w-full flex flex-col items-center justify-center">
+          <YsoArcadeRecordsSvg width="100%" />
+        </div>
+        <div className="w-11/24 flex flex-col items-center justify-center">
+          <ByKuman514Svg width="100%" />
+        </div>
       </div>
 
       <h1 className="w-full text-4xl font-bold text-center px-4 sm:px-8">

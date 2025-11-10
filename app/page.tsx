@@ -107,7 +107,7 @@ export default function HomePage() {
             <header className="mb-4 w-full flex flex-row justify-between items-center">
               <h3 className="text-xl font-bold">최근 기록</h3>
               <Link href="/records" className="hover:text-hovering">
-                모두 보기 {'>'}
+                모든 기록 보기 {'>'}
               </Link>
             </header>
             <Suspense
@@ -127,7 +127,7 @@ export default function HomePage() {
             <header className="mb-4 w-full flex flex-row justify-between items-center">
               <h3 className="text-xl font-bold">최근 리뷰</h3>
               <Link href="/reviews" className="hover:text-hovering">
-                모두 보기 {'>'}
+                모든 리뷰 보기 {'>'}
               </Link>
             </header>
             <Suspense

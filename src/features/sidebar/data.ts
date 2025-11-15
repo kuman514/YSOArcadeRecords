@@ -3,7 +3,6 @@ import { selectDataClientSide } from '^/src/shared/supabase/database-client';
 import {
   ArcadeRecordTypeCount,
   ArcadeRecordTypeCountDBColumn,
-  PostLength,
   PostLengthDBColumn,
 } from './types';
 
@@ -46,11 +45,7 @@ export async function getReviewCount() {
     ],
   });
 
-  return result.map(
-    (rawResult): PostLength => ({
-      length: rawResult.length,
-    })
-  );
+  return result[0].length;
 }
 
 export async function getGalleryCount() {
@@ -66,9 +61,5 @@ export async function getGalleryCount() {
     ],
   });
 
-  return result.map(
-    (rawResult): PostLength => ({
-      length: rawResult.length,
-    })
-  );
+  return result[0].length;
 }

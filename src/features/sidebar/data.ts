@@ -1,6 +1,10 @@
 import { selectDataClientSide } from '^/src/shared/supabase/database-client';
 
-import { ArcadeRecordTypeCount, ArcadeRecordTypeCountDBColumn } from './types';
+import {
+  ArcadeRecordTypeCount,
+  ArcadeRecordTypeCountDBColumn,
+  PostLengthDBColumn,
+} from './types';
 
 export async function getArcadeRecordTypeCount() {
   const result = await selectDataClientSide<ArcadeRecordTypeCountDBColumn[]>({
@@ -26,4 +30,36 @@ export async function getArcadeRecordTypeCount() {
       length: rawResult.length,
     })
   );
+}
+
+export async function getReviewCount() {
+  const result = await selectDataClientSide<PostLengthDBColumn[]>({
+    select: '*',
+    from: 'review_counts',
+    where: [],
+    order: [
+      {
+        column: 'length',
+        isAscending: false,
+      },
+    ],
+  });
+
+  return result[0].length;
+}
+
+export async function getGalleryCount() {
+  const result = await selectDataClientSide<PostLengthDBColumn[]>({
+    select: '*',
+    from: 'gallery_counts',
+    where: [],
+    order: [
+      {
+        column: 'length',
+        isAscending: false,
+      },
+    ],
+  });
+
+  return result[0].length;
 }

@@ -5,7 +5,11 @@ import { useEffect, useState } from 'react';
 import LinkTree from '^/src/shared/ui/link-tree';
 import { LinkTreeNode } from '^/src/shared/ui/types';
 
-import { getArcadeRecordTypeCount } from './data';
+import {
+  getArcadeRecordTypeCount,
+  getGalleryCount,
+  getReviewCount,
+} from './data';
 
 export default function SidebarLinkTree() {
   const [arcadeRecordTypeCount, setArcadeRecordTypeCount] =
@@ -13,6 +17,9 @@ export default function SidebarLinkTree() {
       href: '/records',
       label: '아케이드 게임 기록',
     });
+
+  const [reviewCount, setReviewCount] = useState<number | null>(null);
+  const [galleryCount, setGalleryCount] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -29,6 +36,18 @@ export default function SidebarLinkTree() {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      setReviewCount(await getReviewCount());
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      setGalleryCount(await getGalleryCount());
+    })();
+  }, []);
+
   const totalLinkTrees: LinkTreeNode[] = [
     {
       href: '/',
@@ -37,11 +56,15 @@ export default function SidebarLinkTree() {
     arcadeRecordTypeCount,
     {
       href: '/reviews',
-      label: '아케이드 관련 리뷰',
+      label: `아케이드 관련 리뷰${
+        reviewCount !== null ? ` (${reviewCount})` : ''
+      }`,
     },
     {
       href: '/gallery',
-      label: '아케이드 관련 갤러리',
+      label: `아케이드 관련 갤러리${
+        galleryCount !== null ? ` (${galleryCount})` : ''
+      }`,
     },
   ];
 

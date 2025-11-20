@@ -69,9 +69,39 @@ export default function ImageListElement({
           className="absolute right-0 top-0 w-1/2 h-full"
         />
       </div>
-      <button className="cursor-pointer" type="button" onClick={onClickDelete}>
-        X
-      </button>
+      <div className="flex flex-col gap-4 justify-center items-center">
+        <button
+          className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
+          type="button"
+          onClick={() => {
+            /**
+             * @todo
+             * Implement moving forward
+             */
+          }}
+        >
+          ⬅️
+        </button>
+        <button
+          className="cursor-pointer"
+          type="button"
+          onClick={onClickDelete}
+        >
+          ❌
+        </button>
+        <button
+          className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
+          type="button"
+          onClick={() => {
+            /**
+             * @todo
+             * Implement moving backward
+             */
+          }}
+        >
+          ➡️
+        </button>
+      </div>
     </div>
   );
 }

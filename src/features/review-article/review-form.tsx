@@ -53,7 +53,7 @@ export default function ReviewForm({ post }: Props) {
 
   const [details, setDetails] = useState<MultipleFormValue<string>>(
     post?.details?.map((detail, index) => ({
-      id: index,
+      tmpId: `${new Date().getTime()}-${index}`,
       value: detail,
     })) ?? []
   );
@@ -112,14 +112,14 @@ export default function ReviewForm({ post }: Props) {
     }
   }, [errorMessage]);
 
-  function handleOnChangeMultipleTextFormInput(
+  function handleOnInputMultipleTextFormInput(
     values: MultipleFormValue<string>,
     setValues: (newValues: MultipleFormValue<string>) => void
   ) {
     return (index: number, newValue: string) => {
       setValues(
         values.with(index, {
-          id: values[index].id,
+          tmpId: values[index].tmpId,
           value: newValue,
         })
       );
@@ -134,7 +134,7 @@ export default function ReviewForm({ post }: Props) {
       setValues(
         values.concat([
           {
-            id: (values[values.length - 1]?.id ?? 0) + 1,
+            tmpId: `${new Date().getTime()}-0`,
             value: '',
           },
         ])
@@ -149,6 +149,19 @@ export default function ReviewForm({ post }: Props) {
     return (index: number) => {
       const newValues = Array.from(values);
       newValues.splice(index, 1);
+      setValues(newValues);
+    };
+  }
+
+  function handleOnSwapMultipleTextFormInput(
+    values: MultipleFormValue<string>,
+    setValues: (newValues: MultipleFormValue<string>) => void
+  ) {
+    return (index: number, targetIndex: number) => {
+      const newValues = Array.from(values);
+      const tmp = newValues[targetIndex];
+      newValues[targetIndex] = newValues[index];
+      newValues[index] = tmp;
       setValues(newValues);
     };
   }
@@ -430,9 +443,10 @@ export default function ReviewForm({ post }: Props) {
         values={details}
         mainLabel="상세"
         appendButtonLabel="새 상세"
-        onChange={handleOnChangeMultipleTextFormInput(details, setDetails)}
+        onInput={handleOnInputMultipleTextFormInput(details, setDetails)}
         onAppend={handleOnAppendMultipleTextFormInput(details, setDetails)}
         onDelete={handleOnDeleteMultipleTextFormInput(details, setDetails)}
+        onSwap={handleOnSwapMultipleTextFormInput(details, setDetails)}
       />
 
       <p className="w-full flex flex-col gap-2">

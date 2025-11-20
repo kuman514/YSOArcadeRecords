@@ -112,7 +112,7 @@ export default function ReviewForm({ post }: Props) {
     }
   }, [errorMessage]);
 
-  function handleOnChangeMultipleTextFormInput(
+  function handleOnInputMultipleTextFormInput(
     values: MultipleFormValue<string>,
     setValues: (newValues: MultipleFormValue<string>) => void
   ) {
@@ -443,7 +443,7 @@ export default function ReviewForm({ post }: Props) {
         values={details}
         mainLabel="상세"
         appendButtonLabel="새 상세"
-        onChange={handleOnChangeMultipleTextFormInput(details, setDetails)}
+        onInput={handleOnInputMultipleTextFormInput(details, setDetails)}
         onAppend={handleOnAppendMultipleTextFormInput(details, setDetails)}
         onDelete={handleOnDeleteMultipleTextFormInput(details, setDetails)}
         onSwap={handleOnSwapMultipleTextFormInput(details, setDetails)}

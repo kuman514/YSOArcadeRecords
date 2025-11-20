@@ -6,7 +6,7 @@ interface Props {
   values: MultipleFormValue<string>;
   mainLabel: string;
   appendButtonLabel: string;
-  onChange: (index: number, newValue: string) => void;
+  onInput: (index: number, newValue: string) => void;
   onSwap: (index: number, targetIndex: number) => void;
   onAppend: () => void;
   onDelete: (index: number) => void;
@@ -17,7 +17,7 @@ export default function MultipleTextFormInput({
   values,
   mainLabel,
   appendButtonLabel,
-  onChange,
+  onInput,
   onSwap,
   onAppend,
   onDelete,
@@ -33,7 +33,7 @@ export default function MultipleTextFormInput({
             name={name}
             value={value.value}
             onChange={(event) => {
-              onChange(index, event.currentTarget.value);
+              onInput(index, event.currentTarget.value);
             }}
           />
           <span className="flex flex-col gap-4 justify-center items-center">

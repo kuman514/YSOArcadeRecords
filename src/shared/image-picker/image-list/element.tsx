@@ -7,11 +7,13 @@ import { ImageListElementValue } from '../types';
 
 interface Props {
   elementInfo: ImageListElementValue;
+  position: 'first' | 'middle' | 'last';
   onClickDelete: () => void;
 }
 
 export default function ImageListElement({
   elementInfo,
+  position,
   onClickDelete,
 }: Props) {
   if (!elementInfo.localFile && !elementInfo.sourceUrl) {
@@ -71,14 +73,10 @@ export default function ImageListElement({
       </div>
       <div className="flex flex-col gap-4 justify-center items-center">
         <button
+          id={`image-list-element_${elementInfo.tmpId}_click-left`}
+          disabled={position === 'first'}
           className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
           type="button"
-          onClick={() => {
-            /**
-             * @todo
-             * Implement moving forward
-             */
-          }}
         >
           ⬅️
         </button>
@@ -90,14 +88,10 @@ export default function ImageListElement({
           ❌
         </button>
         <button
+          id={`image-list-element_${elementInfo.tmpId}_click-right`}
+          disabled={position === 'last'}
           className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
           type="button"
-          onClick={() => {
-            /**
-             * @todo
-             * Implement moving backward
-             */
-          }}
         >
           ➡️
         </button>

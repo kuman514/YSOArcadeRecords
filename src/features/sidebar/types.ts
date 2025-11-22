@@ -14,3 +14,9 @@ export interface ArcadeRecordTypeCount {
   label: ArcadeInfo['label'];
   length: ArcadeRecordTypeCountDBColumn['length'];
 }
+
+export interface PostLengthDBColumn {
+  length: number;
+}
+
+export type PostLength = PostLengthDBColumn;

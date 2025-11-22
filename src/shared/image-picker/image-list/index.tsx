@@ -2,8 +2,8 @@
 
 import { useRef } from 'react';
 
-import ImageListElement from './element';
 import { ImageListElementValue } from '../types';
+import ImageListElement from './element';
 
 interface Props {
   images: ImageListElementValue[];
@@ -23,6 +23,14 @@ export default function ImageList({ images, onChangeImages }: Props) {
       newImages.splice(index, 1);
     }
 
+    onChangeImages(newImages);
+  }
+
+  function handleOnSwap(index: number, targetIndex: number) {
+    const newImages = Array.from(images);
+    const tmp = newImages[targetIndex];
+    newImages[targetIndex] = newImages[index];
+    newImages[index] = tmp;
     onChangeImages(newImages);
   }
 
@@ -73,10 +81,38 @@ export default function ImageList({ images, onChangeImages }: Props) {
 
         handleOnChange(draggedItemIndex, finalTargetIndex);
       }}
+      onClick={(event) => {
+        event.preventDefault();
+
+        if (!(event.target instanceof HTMLButtonElement)) {
+          return;
+        }
+
+        const [, id, direction] = event.target.id.split('_');
+        const index = images.findIndex((image) => id === image.tmpId);
+
+        if (
+          index === -1 ||
+          (direction !== 'click-left' && direction !== 'click-right')
+        ) {
+          return;
+        }
+
+        const targetIndex = direction === 'click-right' ? index + 1 : index - 1;
+
+        handleOnSwap(index, targetIndex);
+      }}
     >
       {images.map((image, index) => (
         <ImageListElement
           key={image.tmpId}
+          position={
+            index === 0
+              ? 'first'
+              : index === images.length - 1
+              ? 'last'
+              : 'middle'
+          }
           elementInfo={image}
           onClickDelete={() => {
             handleOnClickDelete(index);

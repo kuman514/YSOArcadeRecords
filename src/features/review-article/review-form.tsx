@@ -112,59 +112,99 @@ export default function ReviewForm({ post }: Props) {
     }
   }, [errorMessage]);
 
-  function handleOnInputMultipleTextFormInput(
-    values: MultipleFormValue<string>,
-    setValues: (newValues: MultipleFormValue<string>) => void
-  ) {
-    return (index: number, newValue: string) => {
-      setValues(
-        values.with(index, {
-          tmpId: values[index].tmpId,
-          value: newValue,
-        })
-      );
-    };
+  function handleOnInputDetail(index: number, newValue: string) {
+    setDetails(
+      details.with(index, {
+        tmpId: details[index].tmpId,
+        value: newValue,
+      })
+    );
   }
 
-  function handleOnAppendMultipleTextFormInput(
-    values: MultipleFormValue<string>,
-    setValues: (newValues: MultipleFormValue<string>) => void
-  ) {
-    return () => {
-      setValues(
-        values.concat([
-          {
-            tmpId: `${new Date().getTime()}-0`,
-            value: '',
-          },
-        ])
-      );
-    };
+  function handleOnAppendDetail() {
+    setDetails(
+      details.concat([
+        {
+          tmpId: `${new Date().getTime()}-0`,
+          value: '',
+        },
+      ])
+    );
   }
 
-  function handleOnDeleteMultipleTextFormInput(
-    values: MultipleFormValue<string>,
-    setValues: (newValues: MultipleFormValue<string>) => void
-  ) {
-    return (index: number) => {
-      const newValues = Array.from(values);
-      newValues.splice(index, 1);
-      setValues(newValues);
-    };
+  function handleOnDeleteDetail(index: number) {
+    const newDetails = Array.from(details);
+    newDetails.splice(index, 1);
+    setDetails(newDetails);
   }
 
-  function handleOnSwapMultipleTextFormInput(
-    values: MultipleFormValue<string>,
-    setValues: (newValues: MultipleFormValue<string>) => void
-  ) {
-    return (index: number, targetIndex: number) => {
-      const newValues = Array.from(values);
-      const tmp = newValues[targetIndex];
-      newValues[targetIndex] = newValues[index];
-      newValues[index] = tmp;
-      setValues(newValues);
-    };
+  function handleOnSwapDetails(index: number, targetIndex: number) {
+    const newDetails = Array.from(details);
+    const tmp = newDetails[targetIndex];
+    newDetails[targetIndex] = newDetails[index];
+    newDetails[index] = tmp;
+    setDetails(newDetails);
   }
+
+  /**
+   * @legacy
+   * These functions were designed to produce unified handlers while there is more than one types of multiple text form inputs.
+   * Therefore, if the form requires more types of multiple text form inputs again, revive and apply this commentarized functions below.
+
+    function handleOnInputMultipleTextFormInput(
+      values: MultipleFormValue<string>,
+      setValues: (newValues: MultipleFormValue<string>) => void
+    ) {
+      return (index: number, newValue: string) => {
+        setValues(
+          values.with(index, {
+            tmpId: values[index].tmpId,
+            value: newValue,
+          })
+        );
+      };
+    }
+
+    function handleOnAppendMultipleTextFormInput(
+      values: MultipleFormValue<string>,
+      setValues: (newValues: MultipleFormValue<string>) => void
+    ) {
+      return () => {
+        setValues(
+          values.concat([
+            {
+              tmpId: `${new Date().getTime()}-0`,
+              value: '',
+            },
+          ])
+        );
+      };
+    }
+
+    function handleOnDeleteMultipleTextFormInput(
+      values: MultipleFormValue<string>,
+      setValues: (newValues: MultipleFormValue<string>) => void
+    ) {
+      return (index: number) => {
+        const newValues = Array.from(values);
+        newValues.splice(index, 1);
+        setValues(newValues);
+      };
+    }
+
+    function handleOnSwapMultipleTextFormInput(
+      values: MultipleFormValue<string>,
+      setValues: (newValues: MultipleFormValue<string>) => void
+    ) {
+      return (index: number, targetIndex: number) => {
+        const newValues = Array.from(values);
+        const tmp = newValues[targetIndex];
+        newValues[targetIndex] = newValues[index];
+        newValues[index] = tmp;
+        setValues(newValues);
+      };
+    }
+  */
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -443,10 +483,10 @@ export default function ReviewForm({ post }: Props) {
         values={details}
         mainLabel="상세"
         appendButtonLabel="새 상세"
-        onInput={handleOnInputMultipleTextFormInput(details, setDetails)}
-        onAppend={handleOnAppendMultipleTextFormInput(details, setDetails)}
-        onDelete={handleOnDeleteMultipleTextFormInput(details, setDetails)}
-        onSwap={handleOnSwapMultipleTextFormInput(details, setDetails)}
+        onInput={handleOnInputDetail}
+        onAppend={handleOnAppendDetail}
+        onDelete={handleOnDeleteDetail}
+        onSwap={handleOnSwapDetails}
       />
 
       <p className="w-full flex flex-col gap-2">

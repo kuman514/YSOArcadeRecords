@@ -112,7 +112,7 @@ export default function ReviewForm({ post }: Props) {
     }
   }, [errorMessage]);
 
-  function handleOnInputDetails(index: number, newValue: string) {
+  function handleOnInputDetail(index: number, newValue: string) {
     setDetails(
       details.with(index, {
         tmpId: details[index].tmpId,
@@ -133,7 +133,9 @@ export default function ReviewForm({ post }: Props) {
   }
 
   function handleOnDeleteDetail(index: number) {
-    setDetails(Array.from(details).splice(index, 1));
+    const newDetails = Array.from(details);
+    newDetails.splice(index, 1);
+    setDetails(newDetails);
   }
 
   function handleOnSwapDetails(index: number, targetIndex: number) {
@@ -481,7 +483,7 @@ export default function ReviewForm({ post }: Props) {
         values={details}
         mainLabel="상세"
         appendButtonLabel="새 상세"
-        onInput={handleOnInputDetails}
+        onInput={handleOnInputDetail}
         onAppend={handleOnAppendDetail}
         onDelete={handleOnDeleteDetail}
         onSwap={handleOnSwapDetails}

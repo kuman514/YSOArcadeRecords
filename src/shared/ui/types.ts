@@ -5,7 +5,7 @@ export interface LinkTreeNode {
 }
 
 export interface MultipleFormValueElement<T> {
-  id: number;
+  tmpId: string;
   value: T;
 }
 

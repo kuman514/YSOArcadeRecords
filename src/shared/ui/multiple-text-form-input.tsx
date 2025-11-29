@@ -6,7 +6,8 @@ interface Props {
   values: MultipleFormValue<string>;
   mainLabel: string;
   appendButtonLabel: string;
-  onChange: (index: number, newValue: string) => void;
+  onInput: (index: number, newValue: string) => void;
+  onSwap: (index: number, targetIndex: number) => void;
   onAppend: () => void;
   onDelete: (index: number) => void;
 }
@@ -16,7 +17,8 @@ export default function MultipleTextFormInput({
   values,
   mainLabel,
   appendButtonLabel,
-  onChange,
+  onInput,
+  onSwap,
   onAppend,
   onDelete,
 }: Props) {
@@ -24,25 +26,47 @@ export default function MultipleTextFormInput({
     <p className="w-full flex flex-col gap-2">
       <label htmlFor={name}>{mainLabel}</label>
       {values.map((value, index) => (
-        <span key={value.id} className="flex flex-row gap-2">
+        <span key={value.tmpId} className="flex flex-row gap-2">
           <FormTextArea
             type="text"
             id={name}
             name={name}
             value={value.value}
             onChange={(event) => {
-              onChange(index, event.currentTarget.value);
+              onInput(index, event.currentTarget.value);
             }}
           />
-          <button
-            type="button"
-            onClick={() => {
-              onDelete(index);
-            }}
-            className="cursor-pointer"
-          >
-            X
-          </button>
+          <span className="flex flex-col gap-4 justify-center items-center">
+            <button
+              type="button"
+              onClick={() => {
+                onSwap(index, Math.max(index - 1, 0));
+              }}
+              disabled={index === 0}
+              className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
+            >
+              ⬆️
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onDelete(index);
+              }}
+              className="cursor-pointer"
+            >
+              ❌
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onSwap(index, Math.min(index + 1, values.length - 1));
+              }}
+              disabled={index === values.length - 1}
+              className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
+            >
+              ⬇️
+            </button>
+          </span>
         </span>
       ))}
       <button

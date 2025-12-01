@@ -81,6 +81,13 @@ export default function ImageViewer() {
     </div>
   );
 
+  const renderGadgets = isShowGadget ? (
+    <>
+      {renderPageController}
+      {renderCurrentPage}
+    </>
+  ) : null;
+
   return (
     <>
       <ImageZoomController
@@ -91,12 +98,7 @@ export default function ImageViewer() {
           setIsShowGadget(!isShowGadget);
         }}
       />
-      {isShowGadget ? (
-        <>
-          {renderPageController}
-          {renderCurrentPage}
-        </>
-      ) : null}
+      {renderGadgets}
     </>
   );
 }

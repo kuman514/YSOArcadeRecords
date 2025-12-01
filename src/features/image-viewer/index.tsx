@@ -9,6 +9,11 @@ import { useModalStore } from '^/src/shared/modal/store';
 import { ModalType } from '^/src/shared/modal/types';
 
 export default function ImageViewer() {
+  const [isShowGadget, setIsShowGadget] = useState<boolean>(true);
+  const [imageAreaKey, setImageAreaKey] = useState<number>(
+    new Date().getTime()
+  );
+
   const [currentShowIndex, setCurrentShowIndex] = useState<number>(0);
   const imageUrls = useModalStore((state) => {
     if (state.type !== ModalType.IMAGE_VIEWER) {
@@ -21,10 +26,12 @@ export default function ImageViewer() {
     setCurrentShowIndex(
       (currentShowIndex + imageUrls.length - 1) % imageUrls.length
     );
+    setImageAreaKey(new Date().getTime());
   }, [currentShowIndex, imageUrls]);
 
   const goToNext = useCallback(() => {
     setCurrentShowIndex((currentShowIndex + 1) % imageUrls.length);
+    setImageAreaKey(new Date().getTime());
   }, [currentShowIndex, imageUrls]);
 
   useEffect(() => {
@@ -77,12 +84,19 @@ export default function ImageViewer() {
   return (
     <>
       <ImageZoomController
-        key={new Date().getTime()}
+        key={imageAreaKey}
         imageUrl={imageUrls[currentShowIndex]}
         alt="아케이드 기록 관련 사진"
+        onClickImageArea={() => {
+          setIsShowGadget(!isShowGadget);
+        }}
       />
-      {renderPageController}
-      {renderCurrentPage}
+      {isShowGadget ? (
+        <>
+          {renderPageController}
+          {renderCurrentPage}
+        </>
+      ) : null}
     </>
   );
 }

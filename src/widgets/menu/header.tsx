@@ -11,7 +11,7 @@ export default function Header() {
       <div className="w-full flex flex-col">
         <div className="w-full h-12 flex flex-row items-center justify-between">
           <Link href="/" className="text-white">
-            {IS_PRODUCTION ? 'YSOArcadeRecords' : 'YSOArcadeRecords'}
+            {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
           </Link>
 
           <nav>

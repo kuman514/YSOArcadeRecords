@@ -6,9 +6,16 @@ import { useEffect, useState } from 'react';
 interface Props {
   imageUrl: string;
   alt: string;
+  onClickImageArea: () => void;
 }
 
-export default function ImageZoomController({ imageUrl, alt }: Props) {
+export default function ImageZoomController({
+  imageUrl,
+  alt,
+  onClickImageArea,
+}: Props) {
+  const [isMouseTouchMoved, setIsMouseTouchMoved] = useState<boolean>(false);
+
   const [recentTouchDist, setRecentTouchDist] = useState<number>(-1);
   const [position, setPosition] = useState<number[]>([0, 0]);
   const [scale, setScale] = useState<number>(1);
@@ -40,6 +47,10 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
         event.stopPropagation();
         event.nativeEvent.stopPropagation();
         event.nativeEvent.stopImmediatePropagation();
+        if (!isMouseTouchMoved) {
+          onClickImageArea();
+        }
+        setIsMouseTouchMoved(false);
       }}
       onWheel={(event) => {
         const newScale = scale - event.deltaY * 0.001;
@@ -50,6 +61,9 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
         if (event.buttons !== 1) {
           return;
         }
+        if (event.movementX !== 0 || event.movementY !== 0) {
+          setIsMouseTouchMoved(true);
+        }
         moveImage(event.movementX, event.movementY);
       }}
       onTouchStart={(touchStartEvent) => {
@@ -57,16 +71,19 @@ export default function ImageZoomController({ imageUrl, alt }: Props) {
           if (touchMoveEvent.cancelable) {
             touchMoveEvent.preventDefault();
           }
-
           const deltaX =
             touchMoveEvent.touches[0].pageX - touchStartEvent.touches[0].pageX;
           const deltaY =
             touchMoveEvent.touches[0].pageY - touchStartEvent.touches[0].pageY;
+          if (deltaX !== 0 || deltaY !== 0) {
+            setIsMouseTouchMoved(true);
+          }
           moveImage(deltaX, deltaY);
         }
 
         function handleOnTouchEnd() {
           document.removeEventListener('touchmove', handleOnTouchMove);
+          setIsMouseTouchMoved(false);
         }
 
         document.addEventListener('touchmove', handleOnTouchMove);

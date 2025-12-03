@@ -298,3 +298,7 @@
   - 모바일 환경에서도 이미지 순서나 리뷰 상세 내용 순서를 쉽게 바꿀 수 있도록, 버튼식 이동 기능 추가
 - `v1.4.5` (2025년 12월 2일)
   - 아케이드 기록/리뷰/갤러리 포스트의 이미지 뷰어에서 이미지 영역을 드래그 없이 터치할 때, 닫기 버튼을 제외한 모든 가젯을 볼/숨길 수 있게 하여, 이미지 가시성을 향상시킴
+- `v1.4.6` (2025년 12월 4일)
+  - <핫픽스> React 서버 컴포넌트 관련 긴급 보안 패치
+    - React 공지: https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components
+    - CVE 기록: https://www.cve.org/CVERecord?id=CVE-2025-55182

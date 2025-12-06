@@ -7,12 +7,12 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
+import MultipleImagePicker from '^/src/entities/image-picker/multiple';
+import SingleImagePicker from '^/src/entities/image-picker/single';
+import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
-import MultipleImagePicker from '^/src/shared/image-picker/multiple';
-import SingleImagePicker from '^/src/shared/image-picker/single';
-import { ImageListElementValue } from '^/src/shared/image-picker/types';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,

@@ -7,9 +7,9 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 
+import SingleImagePicker from '^/src/entities/image-picker/single';
 import { GalleryTheme } from '^/src/entities/types/gallery-theme';
 import { GalleryPost } from '^/src/entities/types/post';
-import SingleImagePicker from '^/src/shared/image-picker/single';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,

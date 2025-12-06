@@ -2,6 +2,10 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/shallow';
+
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 import { ImageListElementValue } from '../types';
 
@@ -19,6 +23,8 @@ export default function ImageListElement({
   if (!elementInfo.localFile && !elementInfo.sourceUrl) {
     throw new Error('Each image should have either local file or source URL.');
   }
+
+  const setModal = useModalStore(useShallow((state) => state.setModal));
 
   const [imageUrl, setImageUrl] = useState<string | null>(
     elementInfo.sourceUrl ?? null
@@ -50,7 +56,18 @@ export default function ImageListElement({
       className="flex flex-row gap-2"
       draggable
     >
-      <div className="w-40 h-40 relative">
+      <div
+        className="w-40 h-40 relative cursor-pointer"
+        onClick={() => {
+          if (!imageUrl) {
+            return;
+          }
+          setModal({
+            type: ModalType.IMAGE_VIEWER,
+            imageUrls: [imageUrl],
+          });
+        }}
+      >
         {imageUrl ? (
           <Image
             src={imageUrl}

@@ -2,8 +2,12 @@
 
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-
 import { toast } from 'react-toastify';
+import { useShallow } from 'zustand/shallow';
+
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
+
 import { MAXIMUM_IMAGE_SIZE } from './constants';
 
 interface Props {
@@ -19,6 +23,8 @@ export default function SingleImagePicker({
 }: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const setModal = useModalStore(useShallow((state) => state.setModal));
 
   useEffect(() => {
     if (!currentFile) {
@@ -55,7 +61,19 @@ export default function SingleImagePicker({
     <div className="flex flex-col gap-2">
       <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
         {imageUrl ? (
-          <Image src={imageUrl} alt="유저 선택 이미지" fill unoptimized />
+          <Image
+            className="cursor-pointer"
+            onClick={() => {
+              setModal({
+                type: ModalType.IMAGE_VIEWER,
+                imageUrls: [imageUrl],
+              });
+            }}
+            src={imageUrl}
+            alt="유저 선택 이미지"
+            fill
+            unoptimized
+          />
         ) : (
           <span>이미지 없음</span>
         )}

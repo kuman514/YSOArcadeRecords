@@ -1,6 +1,6 @@
+import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { GalleryPost } from '^/src/entities/types/post';
 
-import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import GalleryElement from './element';
 import ExtendedGallery from './extended';
 

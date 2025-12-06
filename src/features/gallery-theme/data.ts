@@ -7,8 +7,8 @@ import {
   insertData,
   selectData,
 } from '^/src/shared/supabase/database';
-
 import { ConditionType } from '^/src/shared/supabase/types';
+
 import { convertGalleryThemeDBColumnToGalleryTheme } from './util';
 
 export async function getGalleryThemeList() {

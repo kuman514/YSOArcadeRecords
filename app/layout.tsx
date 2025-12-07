@@ -6,14 +6,11 @@ import { ToastContainer } from 'react-toastify';
 import Contact from '^/src/features/contact';
 import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
-import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
-import NavLink from '^/src/shared/ui/nav-link';
-import AuthLink from '^/src/widgets/menu/auth-link';
 import Modal from '^/src/widgets/modal';
 
-import './globals.css';
 import Header from '^/src/widgets/menu/header';
+import './globals.css';
 
 const gyeonggiCheonnyeonJemok = localFont({
   src: [

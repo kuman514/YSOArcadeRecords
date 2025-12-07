@@ -1,10 +1,10 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 import { ReviewPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
 import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
-import { revalidatePath } from 'next/cache';
 
 export async function POST(request: Request) {
   const supabase = await createServerSideClient();

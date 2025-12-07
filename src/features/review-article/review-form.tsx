@@ -9,10 +9,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
+import MultipleImagePicker from '^/src/entities/image-picker/multiple';
+import SingleImagePicker from '^/src/entities/image-picker/single';
+import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { ReviewPost } from '^/src/entities/types/post';
-import MultipleImagePicker from '^/src/shared/image-picker/multiple';
-import SingleImagePicker from '^/src/shared/image-picker/single';
-import { ImageListElementValue } from '^/src/shared/image-picker/types';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
   FailedRouteHandlerCallResponse,

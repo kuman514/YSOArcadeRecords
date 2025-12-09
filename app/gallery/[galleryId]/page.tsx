@@ -1,15 +1,35 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import { getGallery } from '^/src/features/gallery/data';
 import GalleryPostViewer from '^/src/features/gallery/viewer';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
     galleryId: string;
   }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { galleryId } = await params;
+  const galleryPost = await getGallery(galleryId);
+
+  if (!galleryPost) {
+    return {
+      title: `페이지를 찾을 수 없음 :: ${APP_NAME}`,
+    };
+  }
+
+  return {
+    title: `${galleryPost.theme.galleryThemeTitle} :: ${galleryPost.title} :: ${APP_NAME}`,
+    openGraph: {
+      images: [galleryPost.thumbnailUrl],
+    },
+  };
 }
 
 export default async function GalleryPostPage({ params }: Props) {

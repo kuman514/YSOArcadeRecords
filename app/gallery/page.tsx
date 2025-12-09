@@ -1,7 +1,15 @@
+import { Metadata } from 'next';
+
 import EmptySvg from '^/public/status/empty.svg';
 import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import GalleryPostList from '^/src/features/gallery';
 import { getGalleryList } from '^/src/features/gallery/data';
+import { APP_NAME } from '^/src/shared/lib/is-production';
+
+export const metadata: Metadata = {
+  title: `갤러리 :: ${APP_NAME}`,
+  description: 'YSO(kuman514)의 아케이드 사진 모음집',
+};
 
 export default async function GalleryPage() {
   const data = await getGalleryList({

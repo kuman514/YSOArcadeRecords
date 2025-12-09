@@ -1,15 +1,39 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ReviewArticle from '^/src/features/review-article';
 import { getReviewPost } from '^/src/features/review-article/data';
 import DeleteReviewForm from '^/src/features/review-article/delete-form';
+import { convertReviewPostToPostListItem } from '^/src/features/review-article/review-post-list/util';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
     reviewId: string;
   }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { reviewId } = await params;
+  const article = await getReviewPost(reviewId);
+
+  if (!article) {
+    return {
+      title: `페이지를 찾을 수 없음 :: ${APP_NAME}`,
+    };
+  }
+
+  const convertedArticle = convertReviewPostToPostListItem(article);
+
+  return {
+    title: `${convertedArticle.title} :: ${APP_NAME}`,
+    description: convertedArticle.memo,
+    openGraph: {
+      images: [convertedArticle.thumbnailUrl],
+    },
+  };
 }
 
 export default async function ReviewArticlePage({ params }: Props) {

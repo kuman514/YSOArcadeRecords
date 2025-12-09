@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import EmptySvg from '^/public/status/empty.svg';
@@ -7,11 +8,28 @@ import { getArcadeInfo } from '^/src/features/arcade-info/data';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 
 interface Props {
   params: Promise<{
     arcadeId: string;
   }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { arcadeId } = await params;
+  const arcadeInfo = await getArcadeInfo(arcadeId);
+
+  if (!arcadeInfo) {
+    return {
+      title: `페이지를 찾을 수 없음 :: ${APP_NAME}`,
+    };
+  }
+
+  return {
+    title: `${arcadeInfo.label} 기록 목록 :: ${APP_NAME}`,
+    description: `${arcadeInfo.label}에 관한 아케이드 기록 모음집`,
+  };
 }
 
 export default async function RecordListByTypeIdPage({ params }: Props) {

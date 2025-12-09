@@ -1,9 +1,11 @@
+import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 
 import { getArcadeInfoList } from '^/src/features/arcade-info/data';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { getMethodList } from '^/src/features/method/data';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -12,6 +14,11 @@ interface Props {
     arcadeRecordId: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: `아케이드 기록 편집하기 :: ${APP_NAME}`,
+  description: '아케이드 기록 포스트를 편집하는 곳',
+};
 
 export default async function ModifyRecordPage({ params }: Props) {
   const supabase = await createServerSideClient();

@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import Contact from '^/src/features/contact';
 import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import Modal from '^/src/widgets/modal';
 
 import Header from '^/src/widgets/menu/header';
@@ -33,7 +33,7 @@ const gyeonggiCheonnyeonJemok = localFont({
 });
 
 export const metadata: Metadata = {
-  title: IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords',
+  title: APP_NAME,
   description: 'YSO(kuman514)의 다양한 아케이드 게임 경험 공유',
 };
 

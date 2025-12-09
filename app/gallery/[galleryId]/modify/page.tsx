@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getGalleryThemeList } from '^/src/features/gallery-theme/data';
 import { getGallery } from '^/src/features/gallery/data';
 import GalleryForm from '^/src/features/gallery/form';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -14,9 +14,7 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: `갤러리 편집하기 :: ${
-    IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
-  }`,
+  title: `갤러리 편집하기 :: ${APP_NAME}`,
   description: '갤러리 포스트를 편집하는 곳',
 };
 

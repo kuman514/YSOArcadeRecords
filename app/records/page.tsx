@@ -6,12 +6,10 @@ import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 
 export const metadata: Metadata = {
-  title: `모든 아케이드 기록 목록 :: ${
-    IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
-  }`,
+  title: `모든 아케이드 기록 목록 :: ${APP_NAME}`,
   description: 'YSO(kuman514)의 모든 부문의 아케이드 기록에 대한 목록',
 };
 

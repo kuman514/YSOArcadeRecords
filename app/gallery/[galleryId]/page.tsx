@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import { getGallery } from '^/src/features/gallery/data';
 import GalleryPostViewer from '^/src/features/gallery/viewer';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -20,16 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!galleryPost) {
     return {
-      title: `페이지를 찾을 수 없음 :: ${
-        IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
-      }`,
+      title: `페이지를 찾을 수 없음 :: ${APP_NAME}`,
     };
   }
 
   return {
-    title: `${galleryPost.theme.galleryThemeTitle} 사진 :: ${
-      IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
-    }`,
+    title: `${galleryPost.theme.galleryThemeTitle} 사진 :: ${APP_NAME}`,
     description: galleryPost.title,
     openGraph: {
       images: [galleryPost.thumbnailUrl],

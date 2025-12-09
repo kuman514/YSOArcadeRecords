@@ -4,12 +4,10 @@ import EmptySvg from '^/public/status/empty.svg';
 import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import GalleryPostList from '^/src/features/gallery';
 import { getGalleryList } from '^/src/features/gallery/data';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 
 export const metadata: Metadata = {
-  title: `갤러리 :: ${
-    IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
-  }`,
+  title: `갤러리 :: ${APP_NAME}`,
   description: 'YSO(kuman514)의 아케이드 사진 모음집',
 };
 

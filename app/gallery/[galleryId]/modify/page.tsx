@@ -1,8 +1,10 @@
+import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 
 import { getGalleryThemeList } from '^/src/features/gallery-theme/data';
 import { getGallery } from '^/src/features/gallery/data';
 import GalleryForm from '^/src/features/gallery/form';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -10,6 +12,13 @@ interface Props {
     galleryId: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: `갤러리 편집하기 :: ${
+    IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
+  }`,
+  description: '갤러리 포스트를 편집하는 곳',
+};
 
 export default async function ModifyGalleryPage({ params }: Props) {
   const supabase = await createServerSideClient();

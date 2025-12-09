@@ -34,8 +34,7 @@ const gyeonggiCheonnyeonJemok = localFont({
 
 export const metadata: Metadata = {
   title: IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords',
-  // prettier-ignore
-  description: 'YSO(kuman514)\'s arcade records',
+  description: 'YSO(kuman514)의 다양한 아케이드 게임 경험 공유',
 };
 
 interface Props {

@@ -1,9 +1,19 @@
+import { Metadata } from 'next';
+
 import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ReviewPostList from '^/src/features/review-article/review-post-list';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 import { convertReviewPostToPostListItem } from '^/src/features/review-article/review-post-list/util';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+
+export const metadata: Metadata = {
+  title: `리뷰 목록 :: ${
+    IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
+  }`,
+  description: 'YSO(kuman514)의 리뷰 목록',
+};
 
 export default async function ReviewListPage() {
   const data = await getReviewPostList({

@@ -1,7 +1,16 @@
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import SignInForm from '^/src/features/auth/sign-in-form';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+
+export const metadata: Metadata = {
+  title: `로그인 :: ${
+    IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
+  }`,
+  description: '관리자 로그인',
+};
 
 export default async function SignInPage() {
   const supabase = await createServerSideClient();

@@ -1,9 +1,12 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ArcadeRecordArticle from '^/src/features/arcade-record-article';
+import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import DeleteArcadeRecordForm from '^/src/features/arcade-record-article/delete-form';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
@@ -11,6 +14,31 @@ interface Props {
     arcadeId: string;
     arcadeRecordId: string;
   }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { arcadeId, arcadeRecordId } = await params;
+  const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
+
+  if (!article) {
+    return {
+      title: `페이지를 찾을 수 없음 :: ${
+        IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
+      }`,
+    };
+  }
+
+  const convertedArticle = convertArcadeRecordPostToPostListItem(article);
+
+  return {
+    title: `${convertedArticle.title} :: ${
+      IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOArcadeRecords'
+    }`,
+    description: `${convertedArticle.memo} :: ${article.comment}`,
+    openGraph: {
+      images: [convertedArticle.thumbnailUrl],
+    },
+  };
 }
 
 export default async function RecordArticlePage({ params }: Props) {

@@ -1,9 +1,16 @@
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { getArcadeInfoList } from '^/src/features/arcade-info/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { getMethodList } from '^/src/features/method/data';
+import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+
+export const metadata: Metadata = {
+  title: `새로운 아케이드 기록 작성 :: ${APP_NAME}`,
+  description: '새로운 아케이드 기록을 작성하는 곳',
+};
 
 export default async function CreateRecordPage() {
   const supabase = await createServerSideClient();

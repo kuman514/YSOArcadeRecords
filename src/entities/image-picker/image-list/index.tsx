@@ -107,7 +107,9 @@ export default function ImageList({ images, onChangeImages }: Props) {
         <ImageListElement
           key={image.tmpId}
           position={
-            index === 0
+            images.length <= 1
+              ? 'unique'
+              : index === 0
               ? 'first'
               : index === images.length - 1
               ? 'last'

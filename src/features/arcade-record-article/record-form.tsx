@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
 import SingleImagePicker from '^/src/entities/image-picker/single';
@@ -45,7 +45,7 @@ export default function RecordForm({
   useLoadingBlockModal(isLoading);
 
   const arcadeRecordId = useRef<string>(
-    post?.arcadeRecordId ?? uuidv4()
+    post?.arcadeRecordId ?? uuidv7()
   ).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 
 import SingleImagePicker from '^/src/entities/image-picker/single';
 import { GalleryTheme } from '^/src/entities/types/gallery-theme';
@@ -33,7 +33,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
 
   useLoadingBlockModal(isLoading);
 
-  const galleryId = useRef<string>(post?.galleryId ?? uuidv4()).current;
+  const galleryId = useRef<string>(post?.galleryId ?? uuidv7()).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [galleryThemeId, setGalleryThemeId] = useState<string>(

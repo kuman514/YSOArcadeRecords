@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
@@ -36,7 +36,7 @@ export default function ReviewForm({ post }: Props) {
 
   useLoadingBlockModal(isLoading);
 
-  const reviewId = useRef<string>(post?.reviewId ?? uuidv4()).current;
+  const reviewId = useRef<string>(post?.reviewId ?? uuidv7()).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [tags, setTags] = useState<string>(post?.tags.join(',') ?? '');

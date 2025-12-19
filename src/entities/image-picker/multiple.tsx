@@ -62,6 +62,7 @@ export default function MultipleImagePicker({
       </div>
       <input
         ref={imageInputRef}
+        value={[]}
         className="hidden"
         type="file"
         id={name}

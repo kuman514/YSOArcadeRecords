@@ -307,3 +307,21 @@
   - 아케이드 기록/리뷰/갤러리 폼의 썸네일/원본 이미지 업로더의 각 이미지 클릭 시, 이미지를 확대시켜 더욱 자세히 볼 수 있게 만드는 뷰어가 실행되도록 만듦
 - `v1.4.8` (2025년 12월 10일)
   - 링크를 통한 공유 시 프리뷰를 위해 메타데이터 생성 기능 추가
+- `v1.4.9` (2025년 12월 12일)
+  - <핫픽스> 추가적인 React 서버 컴포넌트 관련 긴급 보안 패치
+    - React 공지: https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components
+    - CVE 기록
+      - DOS 공격: https://www.cve.org/CVERecord?id=CVE-2025-55184
+      - 하드코딩 정보 유출: https://www.cve.org/CVERecord?id=CVE-2025-55183
+    - 취약점 요약
+      - 원격 제어 악성 코드를 실행할 수 있다는 취약점 패치(2025년 12월 4일) 후, 후속 조사로 추가적인 취약점이 발견됨
+        - 악성 HTTP 요청이 React 서버 컴포넌트의 역직렬화 과정에서 무한 루프를 발생시켜 서비스 장애를 일으키는 취약점
+        - 악성 HTTP 요청이 서버 함수 내 소스 코드를 반환시켜 하드코딩된 비밀 정보를 유출시키는 취약점
+- `v1.4.10` (2025년 12월 12일)
+  - <핫픽스> 추가적인 React 서버 컴포넌트 관련 긴급 보안 패치
+    - React 공지: https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components
+    - CVE 기록 (DOS 공격): https://www.cve.org/CVERecord?id=CVE-2025-67779
+    - 취약점 요약: 악성 HTTP 요청이 React 서버 컴포넌트의 역직렬화 과정에서 무한 루프를 발생시켜 서비스 장애를 일으키는 취약점이 특정 상황에서 여전히 발생함
+      - 즉, CVE-2025-55184 취약점이 해결되지 못한 상황에 대한 패치임
+- `v1.4.11` (2025년 12월 19일)
+  - 추후 새로 등록되는 아케이드 기록/리뷰/갤러리 포스트의 ID가 UUID v7을 사용하도록 변경 (기존: UUID v4)

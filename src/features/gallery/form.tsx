@@ -17,7 +17,7 @@ import {
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
-import FormInput from '^/src/shared/ui/form-input';
+import FormTextArea from '^/src/shared/ui/form-textarea';
 
 interface Props {
   post?: GalleryPost;
@@ -252,7 +252,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     >
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">사진 제목</label>
-        <FormInput
+        <FormTextArea
           type="text"
           id="title"
           name="title"

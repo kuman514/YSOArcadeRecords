@@ -97,6 +97,7 @@ export interface GalleryPostDBInput {
   title: GalleryPost['title'];
   thumbnail_url: GalleryPost['thumbnailUrl'];
   image_url: GalleryPost['imageUrl'];
+  image_urls: GalleryPost['imageUrls'];
   gallery_theme_id: GalleryTheme['galleryThemeId'];
   created_at: string;
   modified_at: string;

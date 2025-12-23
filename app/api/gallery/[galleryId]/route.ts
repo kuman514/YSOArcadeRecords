@@ -32,10 +32,8 @@ export async function PUT(
   const galleryThemeId = formData.get('galleryThemeId')?.toString();
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
-  const presentImageUrl = formData.get('presentImageUrl')?.toString();
-
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
-  const originalImageUrl = formData.get('originalImageUrl')?.toString();
+  const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
   if (!galleryId) {
     {
@@ -71,10 +69,7 @@ export async function PUT(
       );
     }
   }
-  if (
-    (!thumbnailUrl && !presentThumbnailUrl) ||
-    (!originalImageUrl && !presentImageUrl)
-  ) {
+  if (!thumbnailUrl && !presentThumbnailUrl) {
     {
       return NextResponse.json(
         {
@@ -84,6 +79,16 @@ export async function PUT(
         { status: 400 }
       );
     }
+  }
+
+  if (originalImageUrls.length === 0) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '원본 이미지를 첨부해주세요.',
+      },
+      { status: 400 }
+    );
   }
 
   const modifiedDate = new Date().toISOString();
@@ -96,7 +101,8 @@ export async function PUT(
         gallery_id: galleryId,
         gallery_theme_id: galleryThemeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
-        image_url: originalImageUrl ?? presentImageUrl,
+        image_url: '',
+        image_urls: originalImageUrls,
         modified_at: modifiedDate,
       },
       where: [
@@ -111,7 +117,7 @@ export async function PUT(
     revalidatePath('/gallery', 'layout');
 
     const imagePath = `gallery/${galleryId}`;
-    const usedImages = [originalImageUrl!]
+    const usedImages = originalImageUrls
       .concat(
         thumbnailUrl || presentThumbnailUrl
           ? [thumbnailUrl! ?? presentThumbnailUrl!]

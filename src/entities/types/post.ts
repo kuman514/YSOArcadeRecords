@@ -73,11 +73,35 @@ export interface ReviewPostDBInput {
   created_by: ReviewPost['createdBy'];
   release_date: string;
   details: ReviewPost['details'];
+  /**
+   * @legacy
+   * Left for compatibility with `details`, which is added later.
+   */
   key_features: ReviewPost['details'];
+  /**
+   * @legacy
+   * Left for compatibility with `details`, which is added later.
+   */
   expectations: ReviewPost['details'];
+  /**
+   * @legacy
+   * Left for compatibility with `details`, which is added later.
+   */
   first_impressions: ReviewPost['details'];
+  /**
+   * @legacy
+   * Left for compatibility with `details`, which is added later.
+   */
   positives: ReviewPost['details'];
+  /**
+   * @legacy
+   * Left for compatibility with `details`, which is added later.
+   */
   negatives: ReviewPost['details'];
+  /**
+   * @legacy
+   * Left for compatibility with `details`, which is added later.
+   */
   conclusions: ReviewPost['details'];
   review_score: ReviewPost['reviewScore'];
   youtube_id?: ReviewPost['youTubeId'];
@@ -96,7 +120,12 @@ export interface GalleryPostDBInput {
   gallery_id: GalleryPost['galleryId'];
   title: GalleryPost['title'];
   thumbnail_url: GalleryPost['thumbnailUrl'];
+  /**
+   * @legacy
+   * Left for compatibility with `image_urls`, which is added later.
+   */
   image_url: GalleryPost['imageUrl'];
+  image_urls: GalleryPost['imageUrls'];
   gallery_theme_id: GalleryTheme['galleryThemeId'];
   created_at: string;
   modified_at: string;

@@ -27,7 +27,7 @@ export async function POST(request: Request) {
   const galleryThemeId = formData.get('galleryThemeId')?.toString();
 
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
-  const originalImageUrl = formData.get('originalImageUrl')?.toString();
+  const originalImageUrls = formData.getAll('originalImageUrls') as string[];
 
   if (!galleryId) {
     {
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       );
     }
   }
-  if (!thumbnailUrl || !originalImageUrl) {
+  if (!thumbnailUrl) {
     {
       return NextResponse.json(
         {
@@ -74,18 +74,27 @@ export async function POST(request: Request) {
       );
     }
   }
+  if (originalImageUrls.length === 0) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '원본 이미지를 첨부해주세요.',
+      },
+      { status: 400 }
+    );
+  }
 
   const createdDate = new Date().toISOString();
 
   try {
-    await insertData<Omit<GalleryPostDBInput, 'id'>>({
+    await insertData<Omit<GalleryPostDBInput, 'id' | 'image_url'>>({
       insertInto: 'gallery',
       value: {
         title,
         gallery_id: galleryId,
         gallery_theme_id: galleryThemeId,
         thumbnail_url: thumbnailUrl,
-        image_url: originalImageUrl,
+        image_urls: originalImageUrls,
         created_at: createdDate,
         modified_at: createdDate,
       },
@@ -94,9 +103,9 @@ export async function POST(request: Request) {
     revalidatePath('/gallery', 'layout');
 
     const imagePath = `gallery/${galleryId}`;
-    const usedImages = [originalImageUrl!, thumbnailUrl!].map(
-      (image) => image.split('/').pop()!
-    );
+    const usedImages = originalImageUrls
+      .concat([thumbnailUrl!])
+      .map((image) => image.split('/').pop()!);
     removeUnusedImages(imagePath, usedImages);
 
     return NextResponse.json({ result: 'success' }, { status: 201 });

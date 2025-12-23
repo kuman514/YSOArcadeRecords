@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import ArrowSquareLeftSvgRepoComSvg from '^/public/icons/arrow-square-left-svgrepo-com.svg';
+import ArrowSquareRightSvgRepoComSvg from '^/public/icons/arrow-square-right-svgrepo-com.svg';
 import { GalleryPost } from '^/src/entities/types/post';
 import ImageZoomController from '^/src/shared/image-zoom-controller';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
@@ -20,6 +22,69 @@ export default function GalleryPostViewer({
   isAuthenticated,
 }: Props) {
   const [isShowGadget, setIsShowGadget] = useState<boolean>(true);
+  const [imageAreaKey, setImageAreaKey] = useState<number>(
+    new Date().getTime()
+  );
+  const [currentImageShowIndex, setCurrentImageShowIndex] = useState<number>(0);
+
+  const imageUrls = useMemo(
+    () =>
+      (galleryPost.imageUrl ? [galleryPost.imageUrl] : []).concat(
+        galleryPost.imageUrls ?? []
+      ),
+    [galleryPost.imageUrl, galleryPost.imageUrls]
+  );
+
+  const goToPrev = useCallback(() => {
+    setCurrentImageShowIndex(
+      (currentImageShowIndex + imageUrls.length - 1) % imageUrls.length
+    );
+    setImageAreaKey(new Date().getTime());
+  }, [currentImageShowIndex, imageUrls]);
+
+  const goToNext = useCallback(() => {
+    setCurrentImageShowIndex((currentImageShowIndex + 1) % imageUrls.length);
+    setImageAreaKey(new Date().getTime());
+  }, [currentImageShowIndex, imageUrls]);
+
+  useEffect(() => {
+    function handleOnKeyDown(event: KeyboardEvent) {
+      switch (event.key) {
+        case 'ArrowLeft':
+          goToPrev();
+          break;
+        case 'ArrowRight':
+          goToNext();
+          break;
+      }
+    }
+
+    document.addEventListener('keydown', handleOnKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleOnKeyDown);
+    };
+  }, [goToPrev, goToNext]);
+
+  const renderPageController =
+    imageUrls.length > 1 ? (
+      <div className="absolute left-0 top-0 w-full h-full flex flex-row justify-between items-center pointer-events-none">
+        <button
+          type="button"
+          className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg cursor-pointer"
+          onClick={goToPrev}
+        >
+          <ArrowSquareLeftSvgRepoComSvg width="100%" height="100%" />
+        </button>
+        <button
+          type="button"
+          className="w-20 h-20 pointer-events-auto text-white drop-shadow-lg cursor-pointer"
+          onClick={goToNext}
+        >
+          <ArrowSquareRightSvgRepoComSvg width="100%" height="100%" />
+        </button>
+      </div>
+    ) : null;
 
   const renderModifyButton = isAuthenticated ? (
     <div className="w-full flex flex-row justify-end gap-2 pointer-events-auto">
@@ -33,6 +98,14 @@ export default function GalleryPostViewer({
     </div>
   ) : null;
 
+  const renderCurrentPage = (
+    <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-end items-center pointer-events-none pb-6">
+      <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
+        {currentImageShowIndex + 1} / {imageUrls.length}
+      </div>
+    </div>
+  );
+
   const renderGadgets = isShowGadget ? (
     <>
       <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-between items-center pointer-events-none py-6">
@@ -44,6 +117,7 @@ export default function GalleryPostViewer({
             {galleryPost.title}
           </div>
           {renderModifyButton}
+          {renderCurrentPage}
         </div>
       </div>
       <div className="fixed flex flex-row gap-2 right-0 top-0 p-2 m-2">
@@ -53,13 +127,15 @@ export default function GalleryPostViewer({
         />
         <CopyLinkButton additionalClassName="fill-white stroke-white border-white" />
       </div>
+      {renderPageController}
     </>
   ) : null;
 
   return (
     <>
       <ImageZoomController
-        imageUrl={galleryPost.imageUrl}
+        key={imageAreaKey}
+        imageUrl={imageUrls[currentImageShowIndex]}
         alt={galleryPost.title}
         onClickImageArea={() => {
           setIsShowGadget(!isShowGadget);

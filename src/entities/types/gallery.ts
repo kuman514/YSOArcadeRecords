@@ -1,9 +1,14 @@
 import { HavingGalleryTheme } from './gallery-theme';
-import { HavingSingleImage, HavingThumbnail } from './post-compositions';
+import {
+  HavingImages,
+  HavingSingleImage,
+  HavingThumbnail,
+} from './post-compositions';
 
 export interface Gallery
   extends HavingGalleryTheme,
     HavingThumbnail,
-    HavingSingleImage {
+    HavingSingleImage,
+    HavingImages {
   galleryId: string;
 }

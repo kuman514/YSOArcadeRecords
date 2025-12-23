@@ -99,10 +99,8 @@ export default function GalleryPostViewer({
   ) : null;
 
   const renderCurrentPage = (
-    <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-end items-center pointer-events-none pb-6">
-      <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
-        {currentImageShowIndex + 1} / {imageUrls.length}
-      </div>
+    <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
+      {currentImageShowIndex + 1} / {imageUrls.length}
     </div>
   );
 
@@ -116,8 +114,8 @@ export default function GalleryPostViewer({
           <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
             {galleryPost.title}
           </div>
-          {renderModifyButton}
           {renderCurrentPage}
+          {renderModifyButton}
         </div>
       </div>
       <div className="fixed flex flex-row gap-2 right-0 top-0 p-2 m-2">

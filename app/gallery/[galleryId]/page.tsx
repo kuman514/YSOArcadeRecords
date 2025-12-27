@@ -25,7 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${galleryPost.theme.galleryThemeTitle} :: ${galleryPost.title} :: ${APP_NAME}`,
+    title: `${galleryPost.theme.galleryThemeTitle}에 관한 사진 :: ${APP_NAME}`,
+    description: galleryPost.title,
     openGraph: {
       images: [galleryPost.thumbnailUrl],
     },

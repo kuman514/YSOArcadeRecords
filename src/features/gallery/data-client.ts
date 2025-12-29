@@ -6,12 +6,13 @@ import { convertGalleryDBColumnToGalleryPost } from './util';
 
 export async function getExtendedGalleryList(page: number) {
   const result = await selectDataClientSide<GalleryPostDBColumn[]>({
-    select: '*, gallery_theme (*)',
+    select:
+      'id, gallery_id, title, thumbnail_url, image_url, gallery_theme_id, image_urls, created_at, modified_at, gallery_theme (*)',
     from: 'gallery',
     where: [],
     order: [
       {
-        column: 'created_at',
+        column: 'id',
         isAscending: false,
       },
     ],

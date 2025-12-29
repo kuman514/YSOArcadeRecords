@@ -11,7 +11,7 @@ export async function getArcadeRecordPostList(
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select:
-      'arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
+      'id, arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
     from: 'records',
     where: arcadeId
       ? [
@@ -25,6 +25,10 @@ export async function getArcadeRecordPostList(
     order: [
       {
         column: 'achieved_at',
+        isAscending: false,
+      },
+      {
+        column: 'id',
         isAscending: false,
       },
     ],

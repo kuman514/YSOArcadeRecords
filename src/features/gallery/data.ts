@@ -7,12 +7,13 @@ import { convertGalleryDBColumnToGalleryPost } from './util';
 
 export async function getGalleryList(range?: SelectRange) {
   const result = await selectData<GalleryPostDBColumn[]>({
-    select: '*, gallery_theme (*)',
+    select:
+      'id, gallery_id, title, thumbnail_url, image_url, gallery_theme_id, image_urls, created_at, modified_at, gallery_theme (*)',
     from: 'gallery',
     where: [],
     order: [
       {
-        column: 'created_at',
+        column: 'id',
         isAscending: false,
       },
     ],
@@ -24,7 +25,8 @@ export async function getGalleryList(range?: SelectRange) {
 
 export async function getGallery(galleryId: Gallery['galleryId']) {
   const result = await selectData<GalleryPostDBColumn[]>({
-    select: '*, gallery_theme (*)',
+    select:
+      'id, gallery_id, title, thumbnail_url, image_url, gallery_theme_id, image_urls, created_at, modified_at, gallery_theme (*)',
     from: 'gallery',
     where: [
       {

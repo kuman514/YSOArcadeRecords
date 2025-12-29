@@ -6,12 +6,13 @@ import { convertReviewPostDBColumnToReviewPost } from './util';
 
 export async function getReviewPostList(range?: SelectRange) {
   const result = await selectData<ReviewPostDBColumn[]>({
-    select: '*',
+    select:
+      'id, review_id, title, tags, subject_name, subject_type, created_by, release_date, details, key_features, expectations, first_impressions, positives, negatives, conclusions, review_score, youtube_id, thumbnail_url, image_urls, created_at, modified_at',
     from: 'reviews',
     where: [],
     order: [
       {
-        column: 'created_at',
+        column: 'id',
         isAscending: false,
       },
     ],

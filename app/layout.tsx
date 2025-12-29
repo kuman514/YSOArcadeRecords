@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import Contact from '^/src/features/contact';
 import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME, IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import Modal from '^/src/widgets/modal';
 
 import Header from '^/src/widgets/menu/header';
@@ -42,34 +42,35 @@ interface Props {
 }
 
 export default async function RootLayout({ children }: Readonly<Props>) {
-  const health = await getHealth();
-
-  if (health.status === 'closed') {
-    return (
-      <html lang="ko-kr">
-        <body
-          className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col justify-center items-center overflow-x-hidden text-center gap-8`}
-        >
-          <h1 className="w-full text-4xl font-bold text-center px-8">
-            YSOArcadeRecords에 접속할 수 없습니다.
-          </h1>
-          {health.maintenanceMessage && (
-            <p className="w-full max-w-4xl text-center px-8">
-              {health.maintenanceMessage}
+  if (IS_PRODUCTION) {
+    const health = await getHealth();
+    if (health.status === 'closed') {
+      return (
+        <html lang="ko-kr">
+          <body
+            className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col justify-center items-center overflow-x-hidden text-center gap-8`}
+          >
+            <h1 className="w-full text-4xl font-bold text-center px-8">
+              YSOArcadeRecords에 접속할 수 없습니다.
+            </h1>
+            {health.maintenanceMessage && (
+              <p className="w-full max-w-4xl text-center px-8">
+                {health.maintenanceMessage}
+              </p>
+            )}
+            <p className="flex flex-col justify-center items-center px-8">
+              <Link
+                target="_blank"
+                href="https://open.kakao.com/me/kuman514"
+                className="text-xl hover:text-hovering"
+              >
+                카카오톡 kuman514 오픈채팅방으로 문의하기
+              </Link>
             </p>
-          )}
-          <p className="flex flex-col justify-center items-center px-8">
-            <Link
-              target="_blank"
-              href="https://open.kakao.com/me/kuman514"
-              className="text-xl hover:text-hovering"
-            >
-              카카오톡 kuman514 오픈채팅방으로 문의하기
-            </Link>
-          </p>
-        </body>
-      </html>
-    );
+          </body>
+        </html>
+      );
+    }
   }
 
   return (

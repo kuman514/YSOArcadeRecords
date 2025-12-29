@@ -2,8 +2,15 @@ import axios from 'axios';
 
 import { HEALTH_API_ENDPOINT } from '^/src/entities/health/constants';
 import { GetHealthApiResponse } from '^/src/entities/health/types';
+import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 
 export async function getHealth(): Promise<GetHealthApiResponse> {
+  if (!IS_PRODUCTION) {
+    return {
+      status: 'open',
+    };
+  }
+
   try {
     const response = await axios.get<GetHealthApiResponse>(
       HEALTH_API_ENDPOINT,

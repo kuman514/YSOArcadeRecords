@@ -28,7 +28,7 @@ export default {
         },
         '.retro-rounded': {
           'border-style': 'solid',
-          'border-width': '4px',
+          'border-width': '2px',
           'border-color': 'var(--foreground)',
           'border-image-slice': '2',
           'border-image-width': '1',

@@ -59,7 +59,7 @@ export default function SingleImagePicker({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
+      <div className="w-40 h-40 retro-rounded-2 relative flex justify-center items-center overflow-hidden">
         {imageUrl ? (
           <Image
             className="cursor-pointer"

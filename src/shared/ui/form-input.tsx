@@ -5,7 +5,7 @@ interface Props
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  type: 'text' | 'password' | 'email' | 'phone';
+  type: 'text' | 'password' | 'email' | 'phone' | 'date';
 }
 
 export default function FormInput(props: Props) {

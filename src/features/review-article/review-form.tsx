@@ -438,8 +438,7 @@ export default function ReviewForm({ post }: Props) {
 
       <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="releaseDate">출시일자</label>
-        <input
-          className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
+        <FormInput
           type="date"
           id="releaseDate"
           name="releaseDate"

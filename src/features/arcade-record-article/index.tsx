@@ -8,6 +8,8 @@ import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
+import Link from 'next/link';
+import Container from '^/src/shared/ui/container';
 
 interface Props {
   post: ArcadeRecordPost;
@@ -43,17 +45,19 @@ export default function ArcadeRecordArticle({ post }: Props) {
         switch (legacyEvaluationObject.evaluationCriterion) {
           case EvaluationCriterion.SCORE:
             return (
-              <li>
-                <span className="font-bold">점수</span>:{' '}
-                {legacyEvaluationObject.value}
-              </li>
+              <Container className="w-full" title="점수" titleAlignment="left">
+                <strong className="block w-full font-bold text-2xl text-center">
+                  {legacyEvaluationObject.value}
+                </strong>
+              </Container>
             );
           case EvaluationCriterion.TIME:
             return (
-              <li>
-                <span className="font-bold">시간</span>:{' '}
-                {legacyEvaluationObject.value}
-              </li>
+              <Container className="w-full" title="시간" titleAlignment="left">
+                <strong className="block w-full font-bold text-2xl text-center">
+                  {legacyEvaluationObject.value}
+                </strong>
+              </Container>
             );
           default:
             return null;
@@ -67,10 +71,11 @@ export default function ArcadeRecordArticle({ post }: Props) {
       legacyEvaluationObject.evaluationCriterion ===
         EvaluationCriterion.TIME) &&
     post.score ? (
-      <li>
-        <span className="font-bold">점수</span>:{' '}
-        {parseEvaluation(post.score).value}
-      </li>
+      <Container className="w-full" title="점수">
+        <strong className="block w-full font-bold text-2xl text-center">
+          {parseEvaluation(post.score).value}
+        </strong>
+      </Container>
     ) : null;
 
   const renderElapsedTime =
@@ -79,10 +84,11 @@ export default function ArcadeRecordArticle({ post }: Props) {
       legacyEvaluationObject.evaluationCriterion ===
         EvaluationCriterion.SCORE) &&
     post.elapsedTime ? (
-      <li>
-        <span className="font-bold">시간</span>:{' '}
-        {parseEvaluation(post.elapsedTime).value}
-      </li>
+      <Container className="w-full" title="시간">
+        <strong className="block w-full font-bold text-2xl text-center">
+          {parseEvaluation(post.elapsedTime).value}
+        </strong>
+      </Container>
     ) : null;
 
   const renderRank = post.rank ? (
@@ -109,9 +115,8 @@ export default function ArcadeRecordArticle({ post }: Props) {
     );
 
   const renderYouTube = post.youTubeId ? (
-    <section className="w-full flex flex-col gap-2">
-      <h2 className="text-2xl font-bold">YouTube 영상</h2>
-      <div className="w-full h-60 sm:h-80">
+    <Container className="w-full" title="YouTube 영상">
+      <div className="w-full aspect-video">
         <iframe
           width="100%"
           height="100%"
@@ -124,55 +129,62 @@ export default function ArcadeRecordArticle({ post }: Props) {
           }}
         />
       </div>
-    </section>
+    </Container>
   ) : null;
 
   return (
     <>
       <h1 className="text-4xl font-bold">{post.title}</h1>
+      <section>
+        <span>
+          <Link
+            href={`/records/${post.arcade.arcadeId}`}
+            className="hover:text-hovering cursor-pointer"
+          >
+            {post.arcade.label}
+          </Link>{' '}
+          {'>'} {parseDateToString(post.achievedAt)}
+        </span>
+      </section>
       <div className="w-full flex flex-col">
         {renderCreatedAt}
         {renderModifiedAt}
       </div>
-      <section className="w-full flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="w-full flex flex-row justify-end gap-2">
+        <ShareToTwitterButton postTitle={post.title} />
+        <CopyLinkButton />
+      </div>
+      <section className="w-full flex flex-col gap-8 justify-center items-center">
         <ArcadeRecordThumbnail
           thumbnailUrl={post.thumbnailUrl}
           originalImageUrls={post.imageUrls}
         />
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-bold">요약</h2>
-          <UnorderedList>
-            <li>
-              <span className="font-bold">달성일자</span>:{' '}
-              {parseDateToString(post.achievedAt)}
-            </li>
-            <li>
-              <span className="font-bold">장소 및 수단</span>:{' '}
-              {post.method.label}
-            </li>
-            {renderEvaluation}
-            {renderScore}
-            {renderElapsedTime}
-            <li>
-              <span className="font-bold">최종 스테이지</span>: {post.stage}
-            </li>
-            {renderRank}
-            {renderNote}
-          </UnorderedList>
-          <div className="flex flex-row gap-2">
-            <ShareToTwitterButton postTitle={post.title} />
-            <CopyLinkButton />
-          </div>
-        </div>
+        <Container className="w-full" title="최종 스테이지">
+          <strong className="block w-full font-bold text-2xl text-center">
+            {post.stage}
+          </strong>
+        </Container>
+        <section className="w-full flex flex-col sm:flex-row gap-8 justify-center items-center">
+          {renderEvaluation}
+          {renderScore}
+          {renderElapsedTime}
+        </section>
       </section>
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">태그</h2>
-        {renderTagContents}
-      </section>
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">코멘터리</h2>
+      <Container className="w-full" title="그 외 정보">
+        <UnorderedList>
+          <li>
+            <span className="font-bold">장소 및 수단</span>: {post.method.label}
+          </li>
+          {renderRank}
+          {renderNote}
+        </UnorderedList>
+      </Container>
+      <Container className="w-full" title="코멘터리">
         <p className="first-letter:ml-2">{post.comment}</p>
-      </section>
+      </Container>
+      <Container className="w-full" title="태그">
+        {renderTagContents}
+      </Container>
       {renderYouTube}
     </>
   );

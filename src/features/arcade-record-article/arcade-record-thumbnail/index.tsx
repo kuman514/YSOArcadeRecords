@@ -15,8 +15,8 @@ export default function ArcadeRecordThumbnail({
     originalImageUrls.length > 1 ? `${originalImageUrls.length}개 ` : null;
 
   return (
-    <figure className="flex flex-col justify-center items-center gap-2">
-      <div className="relative w-full sm:w-80 h-80 bg-black">
+    <figure className="w-full flex flex-col justify-center items-center gap-2">
+      <div className="relative w-full h-80 bg-black">
         <Image
           src={thumbnailUrl}
           alt="아케이드 기록 썸네일"

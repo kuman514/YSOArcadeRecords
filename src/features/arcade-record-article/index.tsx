@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
@@ -6,10 +8,9 @@ import UnorderedList from '^/src/shared/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import Container from '^/src/shared/ui/container';
 
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
-import Link from 'next/link';
-import Container from '^/src/shared/ui/container';
 
 interface Props {
   post: ArcadeRecordPost;

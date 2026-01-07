@@ -6,9 +6,9 @@ import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
 import { parseDateToString } from '^/src/shared/util/parse-date';
 import Container from '^/src/shared/ui/container';
+import UnorderedList from '^/src/shared/unordered-list';
 
 import ReviewThumbnail from './review-thumbnail';
-import UnorderedList from '^/src/shared/unordered-list';
 
 interface Props {
   post: ReviewPost;

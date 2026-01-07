@@ -24,6 +24,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import Button from '^/src/shared/ui/button';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -575,13 +576,9 @@ export default function RecordForm({
         {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>
 
-      <button
-        type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-        disabled={!isSubmittable}
-      >
+      <Button type="submit" disabled={!isSubmittable}>
         {post ? '수정하기' : '등록하기'}
-      </button>
+      </Button>
     </form>
   );
 }

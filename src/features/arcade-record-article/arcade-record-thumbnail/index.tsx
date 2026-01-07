@@ -7,6 +7,11 @@ interface Props {
   originalImageUrls: string[];
 }
 
+/**
+ * @todo
+ * Unify with `ReviewThumbnail`.
+ */
+
 export default function ArcadeRecordThumbnail({
   thumbnailUrl,
   originalImageUrls,

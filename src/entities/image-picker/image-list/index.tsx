@@ -42,7 +42,7 @@ export default function ImageList({ images, onChangeImages }: Props) {
 
   return (
     <div
-      className="w-full min-h-40 border border-primary rounded-sm flex justify-center items-center flex-wrap gap-4"
+      className="w-full rounded-sm flex justify-center items-center flex-wrap gap-4"
       onDragStart={(event) => {
         if (!(event.target instanceof HTMLDivElement)) {
           return;

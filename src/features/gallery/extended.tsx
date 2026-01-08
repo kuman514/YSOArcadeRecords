@@ -9,6 +9,8 @@ import {
 } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import Button from '^/src/shared/ui/button';
+
 import { getExtendedGalleryList } from './data-client';
 import GalleryElement from './element';
 
@@ -54,16 +56,15 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
   return (
     <>
       {renderData}
-      <button
+      <Button
         type="button"
-        className="w-full mt-4 p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
         onClick={() => {
           fetchNextPage();
         }}
         disabled={isNextPageButtonDisabled}
       >
         {nextPageLabel}
-      </button>
+      </Button>
     </>
   );
 }

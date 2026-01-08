@@ -6,18 +6,10 @@ type Props = DetailedHTMLProps<
 >;
 
 export default function FormDropdown(props: Props) {
-  {
-    /**
-     * @todo
-     * Complete either of 2 tasks below
-     * - Style selection exactly like other form inputs
-     * - Implement dropdown on your own
-     */
-  }
   return (
     <select
       {...props}
-      className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
+      className="w-full retro-rounded-2 px-4 py-2 [&>option]:text-black"
     />
   );
 }

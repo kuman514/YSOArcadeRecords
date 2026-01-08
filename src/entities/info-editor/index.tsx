@@ -2,6 +2,7 @@ import { useActionState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import FormInput from '^/src/shared/ui/form-input';
+import Button from '^/src/shared/ui/button';
 
 import { InfoEditorActionState } from './types';
 
@@ -74,15 +75,6 @@ export default function InfoEditor({
     }
   }, [isDeleteLoading, deleteState.errorMessage]);
 
-  function reset() {
-    if (itemIdRef.current) {
-      itemIdRef.current.value = '';
-    }
-    if (itemTitleRef.current) {
-      itemTitleRef.current.value = '';
-    }
-  }
-
   const renderitemList =
     items?.map((item) => (
       <tr key={item.itemId}>
@@ -102,7 +94,7 @@ export default function InfoEditor({
   return (
     <section className="w-full flex flex-col gap-2">
       <h2 className="text-2xl font-bold">{editorLabel}</h2>
-      <table className="w-full h-48 border border-primary overflow-y-auto block border-separate border-spacing-x-2">
+      <table className="w-full h-48 retro-rounded-2 overflow-y-auto block border-separate border-spacing-x-2">
         <thead className="w-full sticky top-0 left-0 bg-background">
           <tr>
             <th></th>
@@ -131,21 +123,9 @@ export default function InfoEditor({
           />
         </div>
         <div className="w-full flex flex-row-reverse md:flex-row gap-2">
-          <button
-            disabled={isCreateLoading}
-            type="submit"
-            className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-          >
+          <Button disabled={isCreateLoading} type="submit">
             등록
-          </button>
-          <button
-            disabled={isCreateLoading}
-            onClick={reset}
-            type="button"
-            className="w-full p-4 bg-yellow-500 hover:bg-yellow-300 text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-          >
-            지우기
-          </button>
+          </Button>
         </div>
       </form>
     </section>

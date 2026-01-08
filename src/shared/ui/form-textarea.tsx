@@ -10,9 +10,6 @@ interface Props
 
 export default function FormTextArea(props: Props) {
   return (
-    <textarea
-      {...props}
-      className="w-full h-40 px-4 py-2 border border-primary rounded-sm bg-white text-black"
-    />
+    <textarea {...props} className="w-full retro-rounded-2 h-40 px-4 py-2" />
   );
 }

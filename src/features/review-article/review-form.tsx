@@ -438,8 +438,7 @@ export default function ReviewForm({ post }: Props) {
 
       <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="releaseDate">출시일자</label>
-        <input
-          className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
+        <FormInput
           type="date"
           id="releaseDate"
           name="releaseDate"
@@ -518,7 +517,7 @@ export default function ReviewForm({ post }: Props) {
       {post?.thumbnailUrl && (
         <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
+          <div className="w-40 h-40 retro-rounded-2 relative flex justify-center items-center overflow-hidden">
             <Image
               src={post.thumbnailUrl}
               alt="기존 썸네일 이미지"

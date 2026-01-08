@@ -26,7 +26,7 @@ export default function DeleteGalleryForm({ galleryId }: Props) {
     >
       <input type="hidden" id="galleryId" name="galleryId" value={galleryId} />
       <button
-        className="px-4 py-2 bg-red-500 hover:bg-red-300 disabled:bg-gray-300 text-white rounded-sm cursor-pointer disabled:cursor-auto"
+        className="px-4 py-2 bg-red-500 hover:bg-red-300 disabled:bg-gray-300 text-white cursor-pointer disabled:cursor-auto retro-rounded-2-darkonly"
         type="submit"
         disabled={isLoading}
       >

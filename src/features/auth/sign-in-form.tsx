@@ -7,6 +7,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import { checkIsEmailValid } from '^/src/shared/lib/email';
 import { checkIsPasswordValid } from '^/src/shared/lib/password';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+import Button from '^/src/shared/ui/button';
 
 import { AuthActionState } from './action-state';
 import { signInAction } from './sign-in-action';
@@ -57,13 +58,9 @@ export default function SignInForm() {
       </p>
       {formState.errors?.email && <p>{formState.errors.email}</p>}
       {formState.errors?.password && <p>{formState.errors.password}</p>}
-      <button
-        type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-        disabled={!isSubmittable}
-      >
+      <Button type="submit" disabled={!isSubmittable}>
         로그인
-      </button>
+      </Button>
     </form>
   );
 }

@@ -89,7 +89,7 @@ export default function GalleryPostViewer({
   const renderModifyButton = isAuthenticated ? (
     <div className="w-full flex flex-row justify-end gap-2 pointer-events-auto">
       <Link
-        className="px-4 py-2 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
+        className="px-4 py-2 bg-primary hover:bg-hovering text-white cursor-pointer retro-rounded-2-darkonly"
         href={`/gallery/${galleryPost.galleryId}/modify`}
       >
         수정하기
@@ -99,7 +99,7 @@ export default function GalleryPostViewer({
   ) : null;
 
   const renderCurrentPage = (
-    <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
+    <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] retro-rounded-2-darkonly">
       {currentImageShowIndex + 1} / {imageUrls.length}
     </div>
   );
@@ -107,11 +107,11 @@ export default function GalleryPostViewer({
   const renderGadgets = isShowGadget ? (
     <>
       <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-between items-center pointer-events-none py-6">
-        <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] mt-12 sm:mt-0 rounded-lg">
+        <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] mt-12 sm:mt-0 retro-rounded-2-darkonly">
           주제: {galleryPost.theme.galleryThemeTitle}
         </div>
         <div className="w-full flex px-4 flex-col gap-2 justify-center items-center">
-          <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
+          <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] retro-rounded-2-darkonly">
             {galleryPost.title}
           </div>
           {renderCurrentPage}

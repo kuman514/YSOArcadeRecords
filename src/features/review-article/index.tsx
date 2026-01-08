@@ -41,9 +41,8 @@ export default function ReviewArticle({ post }: Props) {
     );
 
   const renderYouTube = post.youTubeId ? (
-    <section className="w-full flex flex-col gap-2">
-      <h2 className="text-2xl font-bold">YouTube 영상</h2>
-      <div className="w-full h-60 sm:h-80">
+    <Container className="w-full" title="YouTube 영상">
+      <div className="w-full aspect-video">
         <iframe
           width="100%"
           height="100%"
@@ -56,7 +55,7 @@ export default function ReviewArticle({ post }: Props) {
           }}
         />
       </div>
-    </section>
+    </Container>
   ) : null;
 
   return (

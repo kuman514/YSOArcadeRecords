@@ -16,7 +16,7 @@ export async function getHealth(): Promise<GetHealthApiResponse> {
       HEALTH_API_ENDPOINT,
       {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY}`,
         },
       }
     );

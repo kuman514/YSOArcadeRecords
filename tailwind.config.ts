@@ -26,6 +26,16 @@ export default {
           '-o-user-drag': 'none',
           'user-drag': 'none',
         },
+        '.retro-rounded': {
+          'border-style': 'solid',
+          'border-width': '4px',
+          'border-color': 'var(--foreground)',
+          outline: 'none',
+          'border-image-slice': '2',
+          'border-image-width': '1',
+          'border-image-outset': '0',
+          'border-image-source': 'var(--retro-border-1-image-source)',
+        },
         '.retro-rounded-2': {
           'border-style': 'solid',
           'border-width': '4px',

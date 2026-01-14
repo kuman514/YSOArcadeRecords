@@ -50,7 +50,7 @@ export default function PostListItem({
   ) : null;
 
   return (
-    <li className="w-full h-80 rounded-2xl overflow-hidden hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110">
+    <li className="w-full h-80 retro-rounded overflow-hidden hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110">
       <Link href={href} className="w-full h-full relative flex">
         <div className="absolute left-0 top-0 w-full h-full z-0">
           <Image

@@ -61,7 +61,7 @@ export default function SingleImagePicker({
   return (
     <div className="w-40 flex flex-col gap-2">
       <div
-        className="w-40 h-40 retro-rounded-2 relative flex justify-center items-center overflow-hidden"
+        className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden"
         style={{
           borderRadius: 0,
         }}

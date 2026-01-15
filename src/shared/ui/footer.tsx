@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="w-full p-8">
+    <footer className="w-full px-8 sm:px-16 py-12 text-white bg-primary">
       <p>YSOArcadeRecords © 2023~2026 kuman514</p>
       <p>
         [

@@ -46,8 +46,12 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--primary-color);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+  background: var(--background);
 }
 
 ::-webkit-scrollbar {

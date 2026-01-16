@@ -6,8 +6,10 @@ interface Props {
 
 export default function Tag({ children }: Props) {
   return (
-    <span className="font-mono bg-gray-300 text-red-700 text-sm px-1 py-0.5 rounded-sm">
-      {children}
-    </span>
+    <div className="w-fit retro-rounded">
+      <div className="text-sm px-1 py-0.5 bg-gray-300 text-red-700">
+        {children}
+      </div>
+    </div>
   );
 }

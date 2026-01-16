@@ -20,6 +20,7 @@ import {
 } from '^/src/shared/route-handler-call/types';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormTextArea from '^/src/shared/ui/form-textarea';
+import Button from '^/src/shared/ui/button';
 
 interface Props {
   post?: GalleryPost;
@@ -300,7 +301,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       {post?.thumbnailUrl && (
         <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
+          <div className="w-40 h-40 retro-rounded-2 relative flex justify-center items-center overflow-hidden">
             <Image
               src={post.thumbnailUrl}
               alt="기존 썸네일 이미지"
@@ -339,13 +340,9 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
         {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>
 
-      <button
-        type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-        disabled={!isSubmittable}
-      >
+      <Button type="submit" disabled={!isSubmittable}>
         {post ? '수정하기' : '등록하기'}
-      </button>
+      </Button>
     </form>
   );
 }

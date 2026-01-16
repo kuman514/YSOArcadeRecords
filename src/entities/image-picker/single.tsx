@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/shallow';
 
 import { useModalStore } from '^/src/shared/modal/store';
 import { ModalType } from '^/src/shared/modal/types';
+import Button from '^/src/shared/ui/button';
 
 import { MAXIMUM_IMAGE_SIZE } from './constants';
 
@@ -58,8 +59,13 @@ export default function SingleImagePicker({
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="w-40 h-40 border border-primary rounded-sm relative flex justify-center items-center overflow-hidden">
+    <div className="w-40 flex flex-col gap-2">
+      <div
+        className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden"
+        style={{
+          borderRadius: 0,
+        }}
+      >
         {imageUrl ? (
           <Image
             className="cursor-pointer"
@@ -87,13 +93,9 @@ export default function SingleImagePicker({
         name={name}
         onChange={handleOnChange}
       />
-      <button
-        className="w-40 h-fit p-4 bg-primary hover:bg-hovering text-white rounded-sm cursor-pointer"
-        type="button"
-        onClick={handleOnClickLoad}
-      >
+      <Button type="button" onClick={handleOnClickLoad}>
         이미지 불러오기
-      </button>
+      </Button>
     </div>
   );
 }

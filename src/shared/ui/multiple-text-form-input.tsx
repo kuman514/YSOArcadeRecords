@@ -1,3 +1,4 @@
+import Button from './button';
 import FormTextArea from './form-textarea';
 import { MultipleFormValue } from './types';
 
@@ -69,13 +70,13 @@ export default function MultipleTextFormInput({
           </span>
         </span>
       ))}
-      <button
+      <Button
         type="button"
         className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer"
         onClick={onAppend}
       >
         {appendButtonLabel}
-      </button>
+      </Button>
     </p>
   );
 }

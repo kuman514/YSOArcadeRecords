@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import YouTubeMarkSvg from '^/public/icons/youtube-mark.svg';
+import Tag from '^/src/shared/tag';
 
 import { PostListItemProps } from './props';
 
@@ -20,9 +21,11 @@ export default function PostListItem({
     const date = dateToDisplay.getDate();
 
     return (
-      <span className="w-fit text-xs text-white px-3 py-1.5 rounded-2xl bg-[rgba(32,32,32,0.6)]">
-        {year}년 {month + 1}월 {date}일
-      </span>
+      <div className="w-fit retro-rounded">
+        <div className="text-xs px-4 py-1.5 bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(32,32,32,0.6)]">
+          {year}년 {month + 1}월 {date}일
+        </div>
+      </div>
     );
   })();
 
@@ -33,12 +36,7 @@ export default function PostListItem({
     tags.length > 0 ? (
       <div className="flex flex-row flex-wrap gap-1">
         {tags.map((tag, index) => (
-          <span
-            key={`post-tag-${index}`}
-            className="text-xs text-white px-1.5 py-1 rounded-sm bg-[rgba(32,32,32,0.6)]"
-          >
-            {tag}
-          </span>
+          <Tag key={`post-tag-${index}`}>{tag}</Tag>
         ))}
       </div>
     ) : null;
@@ -50,7 +48,7 @@ export default function PostListItem({
   ) : null;
 
   return (
-    <li className="w-full h-80 rounded-2xl overflow-hidden hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110">
+    <li className="w-full h-80 retro-rounded overflow-hidden hover:[&_.post-thumbnail]:scale-125 [&_.post-thumbnail]:transition-all hover:[&_.post-thumbnail]:brightness-110">
       <Link href={href} className="w-full h-full relative flex">
         <div className="absolute left-0 top-0 w-full h-full z-0">
           <Image

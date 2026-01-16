@@ -1,11 +1,12 @@
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import { ReviewPost } from '^/src/entities/types/post';
-import UnorderedReviewItemList from '^/src/entities/unordered-review-theme-list';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
 import { parseDateToString } from '^/src/shared/util/parse-date';
+import Container from '^/src/shared/ui/container';
+import UnorderedList from '^/src/shared/unordered-list';
 
 import ReviewThumbnail from './review-thumbnail';
 
@@ -40,9 +41,8 @@ export default function ReviewArticle({ post }: Props) {
     );
 
   const renderYouTube = post.youTubeId ? (
-    <section className="w-full flex flex-col gap-2">
-      <h2 className="text-2xl font-bold">YouTube 영상</h2>
-      <div className="w-full h-60 sm:h-80">
+    <Container className="w-full" title="YouTube 영상">
+      <div className="w-full aspect-video">
         <iframe
           width="100%"
           height="100%"
@@ -55,7 +55,7 @@ export default function ReviewArticle({ post }: Props) {
           }}
         />
       </div>
-    </section>
+    </Container>
   ) : null;
 
   return (
@@ -80,8 +80,7 @@ export default function ReviewArticle({ post }: Props) {
         />
       </section>
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">평점: {post.reviewScore} / 5점</h2>
+      <Container className="w-full" title="평점">
         <span className="w-full flex flex-row justify-center items-center stroke-black fill-black dark:stroke-white dark:fill-white">
           {[1, 2, 3, 4, 5].map((score) => (
             <div key={`${score}점`} className="w-1/6">
@@ -93,14 +92,22 @@ export default function ReviewArticle({ post }: Props) {
             </div>
           ))}
         </span>
-      </section>
+        <span className="text-2xl font-press-start-2p w-full flex flex-row justify-center items-center">
+          {post.reviewScore} / 5
+        </span>
+      </Container>
 
-      <UnorderedReviewItemList title="상세" items={post.details} />
+      <Container className="w-full" title="상세">
+        <UnorderedList>
+          {post.details.map((detail, index) => (
+            <li key={index}>{detail}</li>
+          ))}
+        </UnorderedList>
+      </Container>
 
-      <section className="w-full flex flex-col gap-2">
-        <h2 className="text-2xl font-bold">태그</h2>
+      <Container className="w-full" title="태그">
         {renderTagContents}
-      </section>
+      </Container>
       {renderYouTube}
     </>
   );

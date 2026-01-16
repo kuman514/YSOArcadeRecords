@@ -7,9 +7,10 @@ import Contact from '^/src/features/contact';
 import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
 import { APP_NAME } from '^/src/shared/lib/is-production';
+import Footer from '^/src/shared/ui/footer';
+import Header from '^/src/widgets/menu/header';
 import Modal from '^/src/widgets/modal';
 
-import Header from '^/src/widgets/menu/header';
 import './globals.css';
 
 const gyeonggiCheonnyeonJemok = localFont({
@@ -78,7 +79,10 @@ export default async function RootLayout({ children }: Readonly<Props>) {
         className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <Header />
-        {children}
+        <section className="w-full bg-background flex flex-col items-center">
+          {children}
+        </section>
+        <Footer />
         <Contact />
         <Sidebar />
         <Modal />

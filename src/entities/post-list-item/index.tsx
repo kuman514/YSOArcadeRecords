@@ -20,9 +20,11 @@ export default function PostListItem({
     const date = dateToDisplay.getDate();
 
     return (
-      <span className="w-fit text-xs text-white px-3 py-1.5 rounded-2xl bg-[rgba(32,32,32,0.6)]">
-        {year}년 {month + 1}월 {date}일
-      </span>
+      <div className="w-fit retro-rounded">
+        <div className="text-xs px-4 py-1.5 bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(32,32,32,0.6)]">
+          {year}년 {month + 1}월 {date}일
+        </div>
+      </div>
     );
   })();
 

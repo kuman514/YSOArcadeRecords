@@ -75,7 +75,7 @@ export default function ImageViewer() {
 
   const renderCurrentPage = (
     <div className="absolute left-0 top-0 w-full h-full flex flex-col justify-end items-center pointer-events-none pb-6">
-      <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] rounded-lg">
+      <div className="text-white px-4 py-2 bg-[rgba(32,32,32,0.6)] retro-rounded-2-darkonly">
         {currentShowIndex + 1} / {imageUrls.length}
       </div>
     </div>

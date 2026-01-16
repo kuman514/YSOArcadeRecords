@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
+import Button from '^/src/shared/ui/button';
 
 import { getExtendedArcadeRecordPostList } from './data-client';
 import { convertArcadeRecordPostToPostListItem } from './util';
@@ -70,16 +71,15 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
     <>
       {renderData}
       <li>
-        <button
+        <Button
           type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
           onClick={() => {
             fetchNextPage();
           }}
           disabled={isNextPageButtonDisabled}
         >
           {nextPageLabel}
-        </button>
+        </Button>
       </li>
     </>
   );

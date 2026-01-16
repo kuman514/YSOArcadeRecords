@@ -8,7 +8,7 @@ export function parseEvaluationByScore(evaluation: string) {
     );
   }
 
-  let parsedResult = '점';
+  let parsedResult = '';
   for (let i = 0; i < evaluation.length; i++) {
     const targetIndex = evaluation.length - 1 - i;
     parsedResult = `${evaluation[targetIndex]}${parsedResult}`;

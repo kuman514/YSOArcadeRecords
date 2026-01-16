@@ -5,14 +5,9 @@ interface Props
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  type: 'text' | 'password' | 'email' | 'phone';
+  type: 'text' | 'password' | 'email' | 'phone' | 'date';
 }
 
 export default function FormInput(props: Props) {
-  return (
-    <input
-      {...props}
-      className="w-full px-4 py-2 border border-primary rounded-sm bg-white text-black"
-    />
-  );
+  return <input {...props} className="w-full retro-rounded-2 px-4 py-2" />;
 }

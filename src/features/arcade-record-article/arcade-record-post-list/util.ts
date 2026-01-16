@@ -3,6 +3,7 @@ import {
   ArcadeRecordPostDBColumn,
 } from '^/src/entities/types/post';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { EvaluationCriterion } from '^/src/shared/util/types';
 
 export function convertArcadeRecordPostDBColumnToArcadeRecordPost({
   id,
@@ -70,7 +71,13 @@ export function convertArcadeRecordPostToPostListItem({
 }: ArcadeRecordPost) {
   const evaluations = [evaluation, score, elapsedTime]
     .filter((evaluationValue) => evaluationValue && evaluationValue.length > 0)
-    .map((evaluationValue) => parseEvaluation(evaluationValue).value)
+    .map((evaluationValue) => {
+      const parsed = parseEvaluation(evaluationValue);
+      if (parsed.evaluationCriterion === EvaluationCriterion.SCORE) {
+        return `${parsed.value}점`;
+      }
+      return parsed.value;
+    })
     .join(', ');
 
   return {

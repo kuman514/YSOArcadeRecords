@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
+import Button from '^/src/shared/ui/button';
 
 import { getExtendedReviewPostList } from './data-client';
 import { convertReviewPostToPostListItem } from './util';
@@ -60,7 +61,7 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
     <>
       {renderData}
       <li>
-        <button
+        <Button
           type="button"
           className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
           onClick={() => {
@@ -69,7 +70,7 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
           disabled={isNextPageButtonDisabled}
         >
           {nextPageLabel}
-        </button>
+        </Button>
       </li>
     </>
   );

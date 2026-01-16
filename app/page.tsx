@@ -8,6 +8,7 @@ import Skeleton from '^/src/shared/skeleton';
 import UnorderedList from '^/src/shared/unordered-list';
 import RecentArcadeRecordPostsWidget from '^/src/widgets/recent-post-widget/arcade-records';
 import RecentReviewPostsWidget from '^/src/widgets/recent-post-widget/reviews';
+import Container from '^/src/shared/ui/container';
 
 export default function HomePage() {
   return (
@@ -55,8 +56,11 @@ export default function HomePage() {
         </ul>
       </nav>
 
-      <section className="w-full max-w-4xl px-4 sm:px-8">
-        <h2 className="text-2xl font-bold mb-4">이 사이트의 목적</h2>
+      <Container
+        className="w-9/10 max-w-4xl"
+        title="이 사이트의 목적"
+        titleAlignment="left"
+      >
         <p className="text-xl first-letter:ms-4">
           이 사이트는 본인 YSO(kuman514)가 겪은 다양한 아케이드 게임 경험을
           공유하기 위해 만들어졌습니다.
@@ -67,10 +71,13 @@ export default function HomePage() {
           자세한 모습을 사진으로 열람할 수 있는 갤러리 등등, 다양한 아케이드
           게임에 관한 경험을 전달해드리고 있습니다.
         </p>
-      </section>
+      </Container>
 
-      <section className="w-full max-w-4xl px-4 sm:px-8">
-        <h2 className="text-2xl font-bold mb-4">개인 통산 최고 성과</h2>
+      <Container
+        className="w-9/10 max-w-4xl"
+        title="개인 통산 최고 성과"
+        titleAlignment="left"
+      >
         <UnorderedList>
           <li>
             <Link
@@ -98,16 +105,22 @@ export default function HomePage() {
             </Link>
           </li>
         </UnorderedList>
-      </section>
+      </Container>
 
-      <section className="w-full max-w-4xl px-4 sm:px-8">
-        <h2 className="text-2xl font-bold mb-4">최근 포스트</h2>
+      <Container
+        className="w-9/10 max-w-4xl"
+        title="최근 포스트"
+        titleAlignment="left"
+      >
         <section className="w-full flex flex-col md:flex-row justify-center items-center md:items-start gap-8">
           <article className="w-full md:w-40%">
             <header className="mb-4 w-full flex flex-row justify-between items-center">
               <h3 className="text-xl font-bold">최근 기록</h3>
-              <Link href="/records" className="hover:text-hovering">
-                모든 기록 보기 {'>'}
+              <Link
+                href="/records"
+                className="hover:text-hovering after:content-['_>']"
+              >
+                모든 기록 보기
               </Link>
             </header>
             <Suspense
@@ -126,8 +139,11 @@ export default function HomePage() {
           <article className="w-full md:w-40%">
             <header className="mb-4 w-full flex flex-row justify-between items-center">
               <h3 className="text-xl font-bold">최근 리뷰</h3>
-              <Link href="/reviews" className="hover:text-hovering">
-                모든 리뷰 보기 {'>'}
+              <Link
+                href="/reviews"
+                className="hover:text-hovering after:content-['_>']"
+              >
+                모든 리뷰 보기
               </Link>
             </header>
             <Suspense
@@ -144,7 +160,7 @@ export default function HomePage() {
             </Suspense>
           </article>
         </section>
-      </section>
+      </Container>
     </main>
   );
 }

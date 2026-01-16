@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import YouTubeMarkSvg from '^/public/icons/youtube-mark.svg';
+import Tag from '^/src/shared/tag';
 
 import { PostListItemProps } from './props';
 
@@ -35,12 +36,7 @@ export default function PostListItem({
     tags.length > 0 ? (
       <div className="flex flex-row flex-wrap gap-1">
         {tags.map((tag, index) => (
-          <span
-            key={`post-tag-${index}`}
-            className="text-xs text-white px-1.5 py-1 rounded-sm bg-[rgba(32,32,32,0.6)]"
-          >
-            {tag}
-          </span>
+          <Tag key={`post-tag-${index}`}>{tag}</Tag>
         ))}
       </div>
     ) : null;

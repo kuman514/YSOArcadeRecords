@@ -92,8 +92,8 @@ export default function ReviewArticle({ post }: Props) {
             </div>
           ))}
         </span>
-        <span className="text-2xl font-bold w-full flex flex-row justify-center items-center">
-          {post.reviewScore} / 5점
+        <span className="text-2xl font-press-start-2p w-full flex flex-row justify-center items-center">
+          {post.reviewScore} / 5
         </span>
       </Container>
 

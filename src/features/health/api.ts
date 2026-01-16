@@ -1,8 +1,6 @@
-import axios from 'axios';
-
-import { HEALTH_API_ENDPOINT } from '^/src/entities/health/constants';
 import { GetHealthApiResponse } from '^/src/entities/health/types';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function getHealth(): Promise<GetHealthApiResponse> {
   if (!IS_PRODUCTION) {
@@ -12,13 +10,9 @@ export async function getHealth(): Promise<GetHealthApiResponse> {
   }
 
   try {
-    const response = await axios.get<GetHealthApiResponse>(
-      HEALTH_API_ENDPOINT,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY}`,
-        },
-      }
+    const supabase = await createServerSideClient();
+    const response = await supabase.functions.invoke(
+      'yso-arcade-records-health'
     );
     return response.data;
   } catch {

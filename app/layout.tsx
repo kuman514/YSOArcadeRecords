@@ -13,24 +13,35 @@ import Modal from '^/src/widgets/modal';
 
 import './globals.css';
 
-const gyeonggiCheonnyeonJemok = localFont({
+const neoDgm = localFont({
   src: [
     {
-      path: './GyeonggiCheonnyeonJemok-Light.otf',
+      path: './neodgm.woff2',
       weight: '300',
       style: 'normal',
     },
     {
-      path: './GyeonggiCheonnyeonJemok-Medium.otf',
+      path: './neodgm.woff2',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './GyeonggiCheonnyeonJemok-Bold.otf',
+      path: './neodgm.woff2',
       weight: '700',
       style: 'normal',
     },
   ],
+});
+
+const pressStart2p = localFont({
+  src: [
+    {
+      path: './PressStart2P.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-press-start-2p',
 });
 
 export const metadata: Metadata = {
@@ -49,7 +60,7 @@ export default async function RootLayout({ children }: Readonly<Props>) {
     return (
       <html lang="ko-kr">
         <body
-          className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col justify-center items-center overflow-x-hidden text-center gap-8`}
+          className={`${neoDgm.className} antialiased w-screen min-h-dvh flex flex-col justify-center items-center overflow-x-hidden text-center gap-8`}
         >
           <h1 className="w-full text-4xl font-bold text-center px-8">
             YSOArcadeRecords에 접속할 수 없습니다.
@@ -76,7 +87,7 @@ export default async function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang="ko-kr">
       <body
-        className={`${gyeonggiCheonnyeonJemok.className} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
+        className={`${neoDgm.className} ${pressStart2p.variable} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <Header />
         <section className="w-full bg-background flex flex-col items-center">
@@ -86,7 +97,7 @@ export default async function RootLayout({ children }: Readonly<Props>) {
         <Contact />
         <Sidebar />
         <Modal />
-        <ToastContainer toastClassName={gyeonggiCheonnyeonJemok.className} />
+        <ToastContainer toastClassName={neoDgm.className} />
       </body>
     </html>
   );

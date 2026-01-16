@@ -14,6 +14,9 @@ export default {
         player2: 'var(--player2-color)',
         error: 'var(--error-color)',
       },
+      fontFamily: {
+        'press-start-2p': 'var(--font-press-start-2p)',
+      },
     },
   },
   plugins: [

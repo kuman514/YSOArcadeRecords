@@ -47,7 +47,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
           case EvaluationCriterion.SCORE:
             return (
               <Container className="w-full" title="점수" titleAlignment="left">
-                <strong className="block w-full font-bold text-2xl text-center">
+                <strong className="block w-full font-press-start-2p text-2xl text-center">
                   {legacyEvaluationObject.value}
                 </strong>
               </Container>
@@ -55,7 +55,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
           case EvaluationCriterion.TIME:
             return (
               <Container className="w-full" title="시간" titleAlignment="left">
-                <strong className="block w-full font-bold text-2xl text-center">
+                <strong className="block w-full font-press-start-2p text-2xl text-center">
                   {legacyEvaluationObject.value}
                 </strong>
               </Container>
@@ -73,7 +73,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
         EvaluationCriterion.TIME) &&
     post.score ? (
       <Container className="w-full" title="점수">
-        <strong className="block w-full font-bold text-2xl text-center">
+        <strong className="block w-full font-press-start-2p text-2xl text-center">
           {parseEvaluation(post.score).value}
         </strong>
       </Container>
@@ -86,7 +86,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
         EvaluationCriterion.SCORE) &&
     post.elapsedTime ? (
       <Container className="w-full" title="시간">
-        <strong className="block w-full font-bold text-2xl text-center">
+        <strong className="block w-full font-press-start-2p text-2xl text-center">
           {parseEvaluation(post.elapsedTime).value}
         </strong>
       </Container>
@@ -161,7 +161,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
           originalImageUrls={post.imageUrls}
         />
         <Container className="w-full" title="최종 스테이지">
-          <strong className="block w-full font-bold text-2xl text-center">
+          <strong className="block w-full font-press-start-2p text-2xl text-center">
             {post.stage}
           </strong>
         </Container>

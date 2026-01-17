@@ -10,6 +10,7 @@ import ImageZoomController from '^/src/shared/image-zoom-controller';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 
+import { ShareToBlueskyButton } from '^/src/shared/share/share-to-bluesky';
 import DeleteGalleryForm from './delete-form';
 
 interface Props {
@@ -120,6 +121,10 @@ export default function GalleryPostViewer({
       </div>
       <div className="fixed flex flex-row gap-2 right-0 top-0 p-2 m-2">
         <ShareToTwitterButton
+          postTitle={galleryPost.title}
+          additionalClassName="fill-white stroke-white border-white"
+        />
+        <ShareToBlueskyButton
           postTitle={galleryPost.title}
           additionalClassName="fill-white stroke-white border-white"
         />

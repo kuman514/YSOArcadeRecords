@@ -4,10 +4,11 @@ import { ReviewPost } from '^/src/entities/types/post';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
-import { parseDateToString } from '^/src/shared/util/parse-date';
 import Container from '^/src/shared/ui/container';
 import UnorderedList from '^/src/shared/unordered-list';
+import { parseDateToString } from '^/src/shared/util/parse-date';
 
+import { ShareToBlueskyButton } from '^/src/shared/share/share-to-bluesky';
 import ReviewThumbnail from './review-thumbnail';
 
 interface Props {
@@ -71,6 +72,7 @@ export default function ReviewArticle({ post }: Props) {
       </div>
       <div className="w-full flex flex-row gap-2 justify-end">
         <ShareToTwitterButton postTitle={post.title} />
+        <ShareToBlueskyButton postTitle={post.title} />
         <CopyLinkButton />
       </div>
       <section className="w-full flex justify-center items-center">

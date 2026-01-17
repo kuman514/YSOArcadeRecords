@@ -4,12 +4,13 @@ import { ArcadeRecordPost } from '^/src/entities/types/post';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
+import Container from '^/src/shared/ui/container';
 import UnorderedList from '^/src/shared/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
-import Container from '^/src/shared/ui/container';
 
+import { ShareToBlueskyButton } from '^/src/shared/share/share-to-bluesky';
 import ArcadeRecordThumbnail from './arcade-record-thumbnail';
 
 interface Props {
@@ -153,6 +154,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
       </div>
       <div className="w-full flex flex-row justify-end gap-2">
         <ShareToTwitterButton postTitle={post.title} />
+        <ShareToBlueskyButton postTitle={post.title} />
         <CopyLinkButton />
       </div>
       <section className="w-full flex flex-col gap-8 justify-center items-center">

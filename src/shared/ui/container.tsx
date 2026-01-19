@@ -30,7 +30,7 @@ export default function Container({
 
   const renderTitle = title ? (
     <h2
-      className={`px-4 -mt-4 mb-1 w-fit text-2xl font-bold bg-[var(--background)] ${alignmentClassName}`}
+      className={`px-4 -mt-4 mb-1 w-fit text-2xl font-bold bg-(--background) ${alignmentClassName}`}
     >
       {title}
     </h2>
@@ -39,7 +39,7 @@ export default function Container({
   return (
     <section
       {...props}
-      className={`retro-rounded-2 bg-[var(--background)] px-4 pb-4 ${paddingTopClassName} ${className}`}
+      className={`retro-rounded-2 bg-(--background) px-4 pb-4 ${paddingTopClassName} ${className}`}
     >
       {renderTitle}
       {children}

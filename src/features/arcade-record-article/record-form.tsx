@@ -149,7 +149,7 @@ export default function RecordForm({
       toast(post ? '기록이 수정되었습니다.' : '기록이 등록되었습니다.', {
         type: 'success',
       });
-      route.replace(`/records/${arcadeId}/${arcadeRecordId}`);
+      route.replace(`/records/${arcadeRecordId}`);
     }
   }, [post, isSuccess, arcadeId, route, arcadeRecordId]);
 

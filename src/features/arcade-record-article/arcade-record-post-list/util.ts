@@ -88,7 +88,7 @@ export function convertArcadeRecordPostToPostListItem({
     dateToDisplay: achievedAt,
     tags: tags,
     isHaveYouTube: Boolean(youTubeId),
-    href: `/records/${arcade.arcadeId}/${arcadeRecordId}`,
+    href: `/records/${arcadeRecordId}`,
     thumbnailUrl: thumbnailUrl,
   };
 }

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import ArcadeRecordArticle from '^/src/features/arcade-record-article';
 import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
-import { getArcadeRecordPostArticleById } from '^/src/features/arcade-record-article/data';
+import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import DeleteArcadeRecordForm from '^/src/features/arcade-record-article/delete-form';
 import { APP_NAME } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
@@ -17,7 +17,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { arcadeRecordId } = await params;
-  const article = await getArcadeRecordPostArticleById(arcadeRecordId);
+  const article = await getArcadeRecordPostArticle(arcadeRecordId);
 
   if (!article) {
     return {
@@ -41,7 +41,7 @@ export default async function RecordArticlePage({ params }: Props) {
   const { data, error } = await supabase.auth.getUser();
 
   const { arcadeRecordId } = await params;
-  const article = await getArcadeRecordPostArticleById(arcadeRecordId);
+  const article = await getArcadeRecordPostArticle(arcadeRecordId);
   if (!article) {
     notFound();
   }
@@ -60,4 +60,3 @@ export default async function RecordArticlePage({ params }: Props) {
     </main>
   );
 }
-

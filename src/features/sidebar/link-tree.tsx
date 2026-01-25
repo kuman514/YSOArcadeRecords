@@ -29,7 +29,7 @@ export default function SidebarLinkTree() {
         ...arcadeRecordTypeCount,
         label: `아케이드 게임 기록 (${total})`,
         children: data.map((item) => ({
-          href: `/records/${item.arcadeId}`,
+          href: `/records?arcadeId=${item.arcadeId}`,
           label: `${item.label} (${item.length})`,
         })),
       });

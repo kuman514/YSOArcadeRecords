@@ -11,14 +11,13 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
-    arcadeId: string;
     arcadeRecordId: string;
   }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { arcadeId, arcadeRecordId } = await params;
-  const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
+  const { arcadeRecordId } = await params;
+  const article = await getArcadeRecordPostArticle(arcadeRecordId);
 
   if (!article) {
     return {
@@ -41,17 +40,15 @@ export default async function RecordArticlePage({ params }: Props) {
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
 
-  const { arcadeId, arcadeRecordId } = await params;
-  const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
+  const { arcadeRecordId } = await params;
+  const article = await getArcadeRecordPostArticle(arcadeRecordId);
   if (!article) {
     notFound();
   }
 
   const renderModifyButton = !(error || !data?.user) ? (
     <div className="w-full flex flex-row justify-end items-center gap-4">
-      <Link href={`/records/${arcadeId}/${arcadeRecordId}/modify`}>
-        수정하기
-      </Link>
+      <Link href={`/records/${arcadeRecordId}/modify`}>수정하기</Link>
       <DeleteArcadeRecordForm arcadeRecordId={article.arcadeRecordId} />
     </div>
   ) : null;

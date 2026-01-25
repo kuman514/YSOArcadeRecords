@@ -140,7 +140,7 @@ export default function ArcadeRecordArticle({ post }: Props) {
       <section>
         <span>
           <Link
-            href={`/records/${post.arcade.arcadeId}`}
+            href={`/records?arcadeId=${post.arcade.arcadeId}`}
             className="hover:text-hovering cursor-pointer"
           >
             {post.arcade.label}

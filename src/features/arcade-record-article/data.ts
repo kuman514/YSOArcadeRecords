@@ -31,3 +31,21 @@ export async function getArcadeRecordPostArticle(
 
   return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost)[0];
 }
+
+export async function getArcadeRecordPostArticleById(
+  arcadeRecordId: ArcadeRecordPost['arcadeRecordId']
+) {
+  const result = await selectData<ArcadeRecordPostDBColumn[]>({
+    select: '*, arcade_info (*), methods (*)',
+    from: 'records',
+    where: [
+      {
+        type: ConditionType.EQUAL,
+        column: 'arcade_record_id',
+        value: arcadeRecordId,
+      },
+    ],
+  });
+
+  return result.map(convertArcadeRecordPostDBColumnToArcadeRecordPost)[0];
+}

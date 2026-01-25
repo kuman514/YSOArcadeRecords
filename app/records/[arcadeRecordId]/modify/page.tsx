@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 
 import { getArcadeInfoList } from '^/src/features/arcade-info/data';
-import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
+import { getArcadeRecordPostArticleById } from '^/src/features/arcade-record-article/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { getMethodList } from '^/src/features/method/data';
 import { APP_NAME } from '^/src/shared/lib/is-production';
@@ -10,7 +10,6 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {
   params: Promise<{
-    arcadeId: string;
     arcadeRecordId: string;
   }>;
 }
@@ -28,8 +27,8 @@ export default async function ModifyRecordPage({ params }: Props) {
     redirect('/');
   }
 
-  const { arcadeId, arcadeRecordId } = await params;
-  const article = await getArcadeRecordPostArticle(arcadeId, arcadeRecordId);
+  const { arcadeRecordId } = await params;
+  const article = await getArcadeRecordPostArticleById(arcadeRecordId);
   if (!article) {
     notFound();
   }
@@ -48,3 +47,4 @@ export default async function ModifyRecordPage({ params }: Props) {
     </main>
   );
 }
+

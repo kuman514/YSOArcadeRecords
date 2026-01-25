@@ -12,7 +12,7 @@ export async function getArcadeRecordPostArticle(
 ) {
   const result = await selectData<ArcadeRecordPostDBColumn[]>({
     select:
-      'id, arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
+      'id, arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, created_at, modified_at, comment, note, achieved_at, tags, youtube_id, thumbnail_url, image_urls, arcade_info (*), methods (*)',
     from: 'records',
     where: [
       {

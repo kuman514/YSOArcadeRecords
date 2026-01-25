@@ -7,7 +7,7 @@ import {
   QueryClientProvider,
   useInfiniteQuery,
 } from '@tanstack/react-query';
-import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
@@ -21,11 +21,8 @@ interface Props {
 }
 
 function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
-  const pathName = usePathname();
-  const paths = pathName?.split('/').filter((path) => path.length > 0) ?? [
-    'records',
-  ];
-  const arcadeId = paths[1];
+  const searchParams = useSearchParams();
+  const arcadeId = searchParams.get('arcadeId') ?? undefined;
 
   const {
     data: rawData,

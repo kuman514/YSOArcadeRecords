@@ -28,7 +28,7 @@ export default function LinkTree({ node }: Props) {
         setIsOpen(!isOpen);
       }}
     >
-      {isOpen ? '^' : 'v'}
+      {isOpen ? '∧' : '∨'}
     </button>
   ) : null;
 

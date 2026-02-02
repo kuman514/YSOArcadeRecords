@@ -48,56 +48,65 @@ export default function SidebarLinkTree() {
     })();
   }, []);
 
-  const totalLinkTrees: LinkTreeNode[] = [
-    {
-      href: '/',
-      label: 'YSOArcadeRecords',
-    },
-    arcadeRecordTypeCount,
-    {
-      href: '/reviews',
-      label: `아케이드 관련 리뷰${
-        reviewCount !== null ? ` (${reviewCount})` : ''
-      }`,
-    },
-    {
-      href: '/gallery',
-      label: `아케이드 관련 갤러리${
-        galleryCount !== null ? ` (${galleryCount})` : ''
-      }`,
-    },
+  const totalLinkTrees: LinkTreeNode[][] = [
+    [
+      {
+        href: '/',
+        label: 'YSOArcadeRecords',
+      },
+      arcadeRecordTypeCount,
+    ],
+    [
+      {
+        href: '/reviews',
+        label: `아케이드 관련 리뷰${
+          reviewCount !== null ? ` (${reviewCount})` : ''
+        }`,
+      },
+      {
+        href: '/gallery',
+        label: `아케이드 관련 갤러리${
+          galleryCount !== null ? ` (${galleryCount})` : ''
+        }`,
+      },
+    ],
   ];
 
   return (
-    <nav className="overflow-y-auto">
-      <ul
-        className="flex flex-col justify-start items-center gap-4"
-        onClick={(event) => {
-          if (
-            !(event.target instanceof HTMLAnchorElement) ||
-            event.target.nodeName !== 'A'
-          ) {
-            return;
-          }
+    <nav
+      className="overflow-y-auto flex flex-row flex-wrap justify-center items-start gap-y-4"
+      onClick={(event) => {
+        if (
+          !(event.target instanceof HTMLAnchorElement) ||
+          event.target.nodeName !== 'A'
+        ) {
+          return;
+        }
 
-          const sidebarOpenChecker = document.querySelector(
-            'input#sidebar-open-checker'
-          );
+        const sidebarOpenChecker = document.querySelector(
+          'input#sidebar-open-checker'
+        );
 
-          if (
-            !(sidebarOpenChecker instanceof HTMLInputElement) ||
-            !sidebarOpenChecker.checked
-          ) {
-            return;
-          }
+        if (
+          !(sidebarOpenChecker instanceof HTMLInputElement) ||
+          !sidebarOpenChecker.checked
+        ) {
+          return;
+        }
 
-          sidebarOpenChecker.click();
-        }}
-      >
-        {totalLinkTrees.map((linkTree, index) => (
-          <LinkTree key={`link-tree-${index}`} node={linkTree} />
-        ))}
-      </ul>
+        sidebarOpenChecker.click();
+      }}
+    >
+      {totalLinkTrees.map((linkTrees, i) => (
+        <ul
+          key={i}
+          className="w-full max-w-[18rem] flex flex-col justify-start items-center gap-4"
+        >
+          {linkTrees.map((linkTree, j) => (
+            <LinkTree key={`link-tree-${j}`} node={linkTree} />
+          ))}
+        </ul>
+      ))}
     </nav>
   );
 }

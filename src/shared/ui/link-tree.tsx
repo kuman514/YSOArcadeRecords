@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import DownArrowBackup2SvgRepoComSvg from '^/public/icons/down-arrow-backup-2-svgrepo-com.svg';
+import DownArrowBackup3SvgRepoComSvg from '^/public/icons/down-arrow-backup-3-svgrepo-com.svg';
+
 import { LinkTreeNode } from './types';
 
 interface Props {
@@ -23,12 +26,16 @@ export default function LinkTree({ node }: Props) {
 
   const renderOpenSubnodeButton = node.children ? (
     <button
-      className="cursor-pointer"
+      className="cursor-pointer fill-white"
       onClick={() => {
         setIsOpen(!isOpen);
       }}
     >
-      {isOpen ? '∧' : '∨'}
+      {isOpen ? (
+        <DownArrowBackup3SvgRepoComSvg width={12} height={12} />
+      ) : (
+        <DownArrowBackup2SvgRepoComSvg width={12} height={12} />
+      )}
     </button>
   ) : null;
 

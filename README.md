@@ -383,3 +383,8 @@
     - `/records/:arcadeId`로 조회하는 아케이드 기록 목록 페이지는 `/records?arcadeId=:arcadeId`로 모든/부문별 아케이드 기록 목록을 열람할 수 있도록 변경.
     - `/records/:arcadeId/:arcadeRecordId`로 조회하는 아케이드 기록 아티클 페이지는 `/records/:arcadeRecordId`로 열람할 수 있도록 변경.
     - 기존에 쓰인 `/records/:arcadeId/:arcadeRecordId`는 `/records/:arcadeRecordId`로 리다이렉팅.
+- `v1.5.4` (2026년 2월 6일)
+  - 서브 링크트리가 있는 링크트리를 접을 수 있게 만듦으로써 사이드바의 불필요한 스크롤링을 방지함
+  - Next.js 보안 패치
+    - https://github.com/advisories/GHSA-h25m-26qc-wcjf
+    - 취약점 요약: 특정한 HTTP 요청을 App Router 서버 함수의 엔드포인트를 보내, 역직렬화 시 과도한 CPU 사용 또는 메모리 부족 오류를 일으키거나 서버를 크래시시켜 서비스 장애를 발생시킬 수 있는 취약점

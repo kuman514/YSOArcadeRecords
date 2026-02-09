@@ -41,6 +41,7 @@ const pressStart2p = localFont({
       style: 'normal',
     },
   ],
+  fallback: ['neoDgm'],
   variable: '--font-press-start-2p',
 });
 

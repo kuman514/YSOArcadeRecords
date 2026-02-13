@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
@@ -44,15 +45,35 @@ export default async function RecordListPage({ searchParams }: Props) {
     notFound();
   }
 
-  const data = await getArcadeRecordPostList(
+  const queryClient = new QueryClient();
+  const queryKey = arcadeId ? ['arcade-records', arcadeId] : ['arcade-records'];
+
+  // 첫 번째 페이지(0페이지) 데이터 가져오기 - 다음 페이지 확인을 위해 +1개 더 가져옴
+  const firstPageData = await getArcadeRecordPostList(
     {
       from: 0,
-      to: ITEMS_PER_PAGE - 1,
+      to: ITEMS_PER_PAGE,
     },
     arcadeId
   );
 
-  const postListItems: PostListItemProps[] = data.map(
+  // 다음 페이지 존재 여부 확인
+  const isHaveNextPage = firstPageData.length > ITEMS_PER_PAGE;
+  const content = isHaveNextPage
+    ? firstPageData.slice(0, ITEMS_PER_PAGE)
+    : firstPageData;
+
+  // prefetchInfiniteQuery로 첫 페이지 prefetch
+  await queryClient.prefetchInfiniteQuery({
+    queryKey,
+    queryFn: async () => ({
+      content: content.map(convertArcadeRecordPostToPostListItem),
+      nextPage: isHaveNextPage ? 1 : null,
+    }),
+    initialPageParam: 0,
+  });
+
+  const postListItems: PostListItemProps[] = content.map(
     convertArcadeRecordPostToPostListItem
   );
 
@@ -62,7 +83,10 @@ export default async function RecordListPage({ searchParams }: Props) {
         {arcadeInfo?.label ?? '모든 아케이드'} 기록 목록
       </h1>
       {postListItems.length > 0 ? (
-        <ArcadeRecordPostList arcadeRecordPostListItems={postListItems} />
+        <ArcadeRecordPostList
+          arcadeRecordPostListItems={postListItems}
+          dehydratedState={dehydrate(queryClient)}
+        />
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
           <div className="w-full flex flex-col items-center pt-12">

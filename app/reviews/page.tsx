@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
@@ -14,12 +15,32 @@ export const metadata: Metadata = {
 };
 
 export default async function ReviewListPage() {
-  const data = await getReviewPostList({
+  const queryClient = new QueryClient();
+  const queryKey = ['reviews'];
+
+  // 첫 번째 페이지(0페이지) 데이터 가져오기 - 다음 페이지 확인을 위해 +1개 더 가져옴
+  const firstPageData = await getReviewPostList({
     from: 0,
-    to: ITEMS_PER_PAGE - 1,
+    to: ITEMS_PER_PAGE,
   });
 
-  const postListItems: PostListItemProps[] = data.map(
+  // 다음 페이지 존재 여부 확인
+  const isHaveNextPage = firstPageData.length > ITEMS_PER_PAGE;
+  const content = isHaveNextPage
+    ? firstPageData.slice(0, ITEMS_PER_PAGE)
+    : firstPageData;
+
+  // prefetchInfiniteQuery로 첫 페이지 prefetch
+  await queryClient.prefetchInfiniteQuery({
+    queryKey,
+    queryFn: async () => ({
+      content: content.map(convertReviewPostToPostListItem),
+      nextPage: isHaveNextPage ? 1 : null,
+    }),
+    initialPageParam: 0,
+  });
+
+  const postListItems: PostListItemProps[] = content.map(
     convertReviewPostToPostListItem
   );
 
@@ -27,7 +48,10 @@ export default async function ReviewListPage() {
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">리뷰 목록</h1>
       {postListItems.length > 0 ? (
-        <ReviewPostList reviewPostListItems={postListItems} />
+        <ReviewPostList
+          reviewPostListItems={postListItems}
+          dehydratedState={dehydrate(queryClient)}
+        />
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
           <div className="w-full flex flex-col items-center pt-12">

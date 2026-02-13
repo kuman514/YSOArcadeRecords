@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  dehydrate,
+  DehydratedState,
   HydrationBoundary,
   QueryClient,
   QueryClientProvider,
@@ -16,6 +16,7 @@ import GalleryElement from './element';
 
 interface Props {
   isEnabled: boolean;
+  dehydratedState?: DehydratedState;
 }
 
 function ExtendedGalleryContent({ isEnabled }: Props) {
@@ -27,9 +28,8 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
   } = useInfiniteQuery({
     queryKey: ['gallery'],
     queryFn: async ({ pageParam }) => await getExtendedGalleryList(pageParam),
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    enabled: isEnabled,
   });
 
   const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
@@ -69,12 +69,15 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
   );
 }
 
-export default function ExtendedGallery({ isEnabled }: Props) {
+export default function ExtendedGallery({
+  isEnabled,
+  dehydratedState,
+}: Props) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
+      <HydrationBoundary state={dehydratedState}>
         <ExtendedGalleryContent isEnabled={isEnabled} />
       </HydrationBoundary>
     </QueryClientProvider>

@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  dehydrate,
+  DehydratedState,
   HydrationBoundary,
   QueryClient,
   QueryClientProvider,
@@ -17,6 +17,7 @@ import { convertReviewPostToPostListItem } from './util';
 
 interface Props {
   isEnabled: boolean;
+  dehydratedState?: DehydratedState;
 }
 
 function ExtendedReviewPostListContent({ isEnabled }: Props) {
@@ -29,9 +30,8 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
     queryKey: ['reviews'],
     queryFn: async ({ pageParam }) =>
       await getExtendedReviewPostList(pageParam),
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    enabled: isEnabled,
   });
 
   const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
@@ -76,12 +76,15 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
   );
 }
 
-export default function ExtendedReviewPostList({ isEnabled }: Props) {
+export default function ExtendedReviewPostList({
+  isEnabled,
+  dehydratedState,
+}: Props) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
+      <HydrationBoundary state={dehydratedState}>
         <ExtendedReviewPostListContent isEnabled={isEnabled} />
       </HydrationBoundary>
     </QueryClientProvider>

@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  dehydrate,
+  DehydratedState,
   HydrationBoundary,
   QueryClient,
   QueryClientProvider,
@@ -18,6 +18,7 @@ import { convertArcadeRecordPostToPostListItem } from './util';
 
 interface Props {
   isEnabled: boolean;
+  dehydratedState?: DehydratedState;
 }
 
 function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
@@ -33,9 +34,8 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
     queryKey: arcadeId ? ['arcade-records', arcadeId] : ['arcade-records'],
     queryFn: async ({ pageParam }) =>
       await getExtendedArcadeRecordPostList(pageParam, arcadeId),
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    enabled: isEnabled,
   });
 
   const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
@@ -82,12 +82,15 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
   );
 }
 
-export default function ExtendedArcadeRecordPostList({ isEnabled }: Props) {
+export default function ExtendedArcadeRecordPostList({
+  isEnabled,
+  dehydratedState,
+}: Props) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
+      <HydrationBoundary state={dehydratedState}>
         <ExtendedArcadeRecordPostListContent isEnabled={isEnabled} />
       </HydrationBoundary>
     </QueryClientProvider>

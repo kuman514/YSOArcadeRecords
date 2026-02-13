@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-} from '@tanstack/react-query';
-import { useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import PostListItem from '^/src/entities/post-list-item';
 import Button from '^/src/shared/ui/button';
@@ -15,11 +8,7 @@ import Button from '^/src/shared/ui/button';
 import { getExtendedReviewPostList } from './data-client';
 import { convertReviewPostToPostListItem } from './util';
 
-interface Props {
-  isEnabled: boolean;
-}
-
-function ExtendedReviewPostListContent({ isEnabled }: Props) {
+export default function ReviewPostListContent() {
   const {
     data: rawData,
     isFetching,
@@ -29,15 +18,14 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
     queryKey: ['reviews'],
     queryFn: async ({ pageParam }) =>
       await getExtendedReviewPostList(pageParam),
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    enabled: isEnabled,
   });
 
-  const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
+  const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
   const nextPageLabel = (() => {
-    if (!isEnabled || !isHaveNextPage) {
+    if (!isHaveNextPage) {
       return '마지막 페이지';
     }
 
@@ -73,17 +61,5 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
         </Button>
       </li>
     </>
-  );
-}
-
-export default function ExtendedReviewPostList({ isEnabled }: Props) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ExtendedReviewPostListContent isEnabled={isEnabled} />
-      </HydrationBoundary>
-    </QueryClientProvider>
   );
 }

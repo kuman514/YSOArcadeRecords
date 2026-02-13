@@ -1,27 +1,29 @@
-import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import PostListItem from '^/src/entities/post-list-item';
-import { PostListItemProps } from '^/src/entities/post-list-item/props';
+'use client';
 
-import ExtendedArcadeRecordPostList from './extended';
+import {
+  DehydratedState,
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+import { useState } from 'react';
+
+import { ArcadeRecordPostListContent } from './list-content';
 
 interface Props {
-  arcadeRecordPostListItems: PostListItemProps[];
+  dehydratedState?: DehydratedState;
 }
 
-export default function ArcadeRecordPostList({
-  arcadeRecordPostListItems,
-}: Props) {
+export default function ArcadeRecordPostList({ dehydratedState }: Props) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <ul className="w-full flex flex-col gap-4">
-      {arcadeRecordPostListItems.map((arcadeRecordPostListItem, index) => (
-        <PostListItem
-          key={`arcade-record-post-list-item-${index}`}
-          {...arcadeRecordPostListItem}
-        />
-      ))}
-      <ExtendedArcadeRecordPostList
-        isEnabled={arcadeRecordPostListItems.length === ITEMS_PER_PAGE}
-      />
+      <QueryClientProvider client={queryClient}>
+        <HydrationBoundary state={dehydratedState}>
+          <ArcadeRecordPostListContent />
+        </HydrationBoundary>
+      </QueryClientProvider>
     </ul>
   );
 }

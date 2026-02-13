@@ -1,25 +1,29 @@
-import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import PostListItem from '^/src/entities/post-list-item';
-import { PostListItemProps } from '^/src/entities/post-list-item/props';
+'use client';
 
-import ExtendedReviewPostList from './extended';
+import {
+  DehydratedState,
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+import { useState } from 'react';
+
+import ReviewPostListContent from './list-content';
 
 interface Props {
-  reviewPostListItems: PostListItemProps[];
+  dehydratedState?: DehydratedState;
 }
 
-export default function ReviewPostList({ reviewPostListItems }: Props) {
+export default function ReviewPostList({ dehydratedState }: Props) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <ul className="w-full flex flex-col gap-4">
-      {reviewPostListItems.map((reviewPostListItem, index) => (
-        <PostListItem
-          key={`review-post-list-item-${index}`}
-          {...reviewPostListItem}
-        />
-      ))}
-      <ExtendedReviewPostList
-        isEnabled={reviewPostListItems.length === ITEMS_PER_PAGE}
-      />
+      <QueryClientProvider client={queryClient}>
+        <HydrationBoundary state={dehydratedState}>
+          <ReviewPostListContent />
+        </HydrationBoundary>
+      </QueryClientProvider>
     </ul>
   );
 }

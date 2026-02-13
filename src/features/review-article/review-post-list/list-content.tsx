@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  DehydratedState,
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-} from '@tanstack/react-query';
-import { useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import PostListItem from '^/src/entities/post-list-item';
 import Button from '^/src/shared/ui/button';
@@ -15,11 +8,7 @@ import Button from '^/src/shared/ui/button';
 import { getExtendedReviewPostList } from './data-client';
 import { convertReviewPostToPostListItem } from './util';
 
-interface Props {
-  dehydratedState?: DehydratedState;
-}
-
-function ExtendedReviewPostListContent() {
+export default function ReviewPostListContent() {
   const {
     data: rawData,
     isFetching,
@@ -72,17 +61,5 @@ function ExtendedReviewPostListContent() {
         </Button>
       </li>
     </>
-  );
-}
-
-export default function ExtendedReviewPostList({ dehydratedState }: Props) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydratedState}>
-        <ExtendedReviewPostListContent />
-      </HydrationBoundary>
-    </QueryClientProvider>
   );
 }

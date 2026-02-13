@@ -1,14 +1,7 @@
 'use client';
 
-import {
-  DehydratedState,
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-} from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
 import Button from '^/src/shared/ui/button';
@@ -16,11 +9,7 @@ import Button from '^/src/shared/ui/button';
 import { getExtendedArcadeRecordPostList } from './data-client';
 import { convertArcadeRecordPostToPostListItem } from './util';
 
-interface Props {
-  dehydratedState?: DehydratedState;
-}
-
-function ExtendedArcadeRecordPostListContent() {
+export function ArcadeRecordPostListContent() {
   const searchParams = useSearchParams();
   const arcadeId = searchParams.get('arcadeId') ?? undefined;
 
@@ -78,19 +67,5 @@ function ExtendedArcadeRecordPostListContent() {
         </Button>
       </li>
     </>
-  );
-}
-
-export default function ExtendedArcadeRecordPostList({
-  dehydratedState,
-}: Props) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydratedState}>
-        <ExtendedArcadeRecordPostListContent />
-      </HydrationBoundary>
-    </QueryClientProvider>
   );
 }

@@ -15,11 +15,10 @@ import { getExtendedGalleryList } from './data-client';
 import GalleryElement from './element';
 
 interface Props {
-  isEnabled: boolean;
   dehydratedState?: DehydratedState;
 }
 
-function ExtendedGalleryContent({ isEnabled }: Props) {
+function ExtendedGalleryContent() {
   const {
     data: rawData,
     isFetching,
@@ -32,10 +31,10 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
-  const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
+  const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
   const nextPageLabel = (() => {
-    if (!isEnabled || !isHaveNextPage) {
+    if (!isHaveNextPage) {
       return '마지막 페이지';
     }
 
@@ -69,16 +68,13 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
   );
 }
 
-export default function ExtendedGallery({
-  isEnabled,
-  dehydratedState,
-}: Props) {
+export default function ExtendedGallery({ dehydratedState }: Props) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>
-        <ExtendedGalleryContent isEnabled={isEnabled} />
+        <ExtendedGalleryContent />
       </HydrationBoundary>
     </QueryClientProvider>
   );

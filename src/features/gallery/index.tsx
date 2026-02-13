@@ -1,29 +1,15 @@
 import { DehydratedState } from '@tanstack/react-query';
 
-import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import { GalleryPost } from '^/src/entities/types/post';
-
-import GalleryElement from './element';
 import ExtendedGallery from './extended';
 
 interface Props {
-  galleryPosts: GalleryPost[];
   dehydratedState?: DehydratedState;
 }
 
-export default function GalleryPostList({
-  galleryPosts,
-  dehydratedState,
-}: Props) {
+export default function GalleryPostList({ dehydratedState }: Props) {
   return (
     <section className="w-full h-full flex flex-row flex-wrap gap-x-[calc(100%/44)] justify-start items-start">
-      {galleryPosts.map((galleryPost) => (
-        <GalleryElement key={galleryPost.galleryId} post={galleryPost} />
-      ))}
-      <ExtendedGallery
-        isEnabled={galleryPosts.length === GALLERY_PHOTOS_PER_PAGE}
-        dehydratedState={dehydratedState}
-      />
+      <ExtendedGallery dehydratedState={dehydratedState} />
     </section>
   );
 }

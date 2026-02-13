@@ -1,14 +1,12 @@
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
 import { APP_NAME } from '^/src/shared/lib/is-production';
 
 interface Props {
@@ -67,26 +65,19 @@ export default async function RecordListPage({ searchParams }: Props) {
   await queryClient.prefetchInfiniteQuery({
     queryKey,
     queryFn: async () => ({
-      content: content.map(convertArcadeRecordPostToPostListItem),
+      content,
       nextPage: isHaveNextPage ? 1 : null,
     }),
     initialPageParam: 0,
   });
-
-  const postListItems: PostListItemProps[] = content.map(
-    convertArcadeRecordPostToPostListItem
-  );
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">
         {arcadeInfo?.label ?? '모든 아케이드'} 기록 목록
       </h1>
-      {postListItems.length > 0 ? (
-        <ArcadeRecordPostList
-          arcadeRecordPostListItems={postListItems}
-          dehydratedState={dehydrate(queryClient)}
-        />
+      {content.length > 0 ? (
+        <ArcadeRecordPostList dehydratedState={dehydrate(queryClient)} />
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
           <div className="w-full flex flex-col items-center pt-12">

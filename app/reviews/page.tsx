@@ -1,12 +1,10 @@
-import { Metadata } from 'next';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { Metadata } from 'next';
 
 import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import ReviewPostList from '^/src/features/review-article/review-post-list';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
-import { convertReviewPostToPostListItem } from '^/src/features/review-article/review-post-list/util';
 import { APP_NAME } from '^/src/shared/lib/is-production';
 
 export const metadata: Metadata = {
@@ -34,24 +32,17 @@ export default async function ReviewListPage() {
   await queryClient.prefetchInfiniteQuery({
     queryKey,
     queryFn: async () => ({
-      content: content.map(convertReviewPostToPostListItem),
+      content,
       nextPage: isHaveNextPage ? 1 : null,
     }),
     initialPageParam: 0,
   });
 
-  const postListItems: PostListItemProps[] = content.map(
-    convertReviewPostToPostListItem
-  );
-
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">리뷰 목록</h1>
-      {postListItems.length > 0 ? (
-        <ReviewPostList
-          reviewPostListItems={postListItems}
-          dehydratedState={dehydrate(queryClient)}
-        />
+      {content.length > 0 ? (
+        <ReviewPostList dehydratedState={dehydrate(queryClient)} />
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
           <div className="w-full flex flex-col items-center pt-12">

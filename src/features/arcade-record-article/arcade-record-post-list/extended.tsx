@@ -17,11 +17,10 @@ import { getExtendedArcadeRecordPostList } from './data-client';
 import { convertArcadeRecordPostToPostListItem } from './util';
 
 interface Props {
-  isEnabled: boolean;
   dehydratedState?: DehydratedState;
 }
 
-function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
+function ExtendedArcadeRecordPostListContent() {
   const searchParams = useSearchParams();
   const arcadeId = searchParams.get('arcadeId') ?? undefined;
 
@@ -38,10 +37,10 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
-  const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
+  const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
   const nextPageLabel = (() => {
-    if (!isEnabled || !isHaveNextPage) {
+    if (!isHaveNextPage) {
       return '마지막 페이지';
     }
 
@@ -83,7 +82,6 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
 }
 
 export default function ExtendedArcadeRecordPostList({
-  isEnabled,
   dehydratedState,
 }: Props) {
   const [queryClient] = useState(() => new QueryClient());
@@ -91,7 +89,7 @@ export default function ExtendedArcadeRecordPostList({
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>
-        <ExtendedArcadeRecordPostListContent isEnabled={isEnabled} />
+        <ExtendedArcadeRecordPostListContent />
       </HydrationBoundary>
     </QueryClientProvider>
   );

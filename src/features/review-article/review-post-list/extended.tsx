@@ -16,11 +16,10 @@ import { getExtendedReviewPostList } from './data-client';
 import { convertReviewPostToPostListItem } from './util';
 
 interface Props {
-  isEnabled: boolean;
   dehydratedState?: DehydratedState;
 }
 
-function ExtendedReviewPostListContent({ isEnabled }: Props) {
+function ExtendedReviewPostListContent() {
   const {
     data: rawData,
     isFetching,
@@ -34,10 +33,10 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
-  const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
+  const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
   const nextPageLabel = (() => {
-    if (!isEnabled || !isHaveNextPage) {
+    if (!isHaveNextPage) {
       return '마지막 페이지';
     }
 
@@ -76,16 +75,13 @@ function ExtendedReviewPostListContent({ isEnabled }: Props) {
   );
 }
 
-export default function ExtendedReviewPostList({
-  isEnabled,
-  dehydratedState,
-}: Props) {
+export default function ExtendedReviewPostList({ dehydratedState }: Props) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>
-        <ExtendedReviewPostListContent isEnabled={isEnabled} />
+        <ExtendedReviewPostListContent />
       </HydrationBoundary>
     </QueryClientProvider>
   );

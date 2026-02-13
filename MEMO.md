@@ -1,5 +1,9 @@
 # 메모
 
+## 이 문서의 목적
+- 현재 겪고 있는 문제를 정리하여 요구사항을 정의하고 AI 에이전트에게 요청사항으로 전달하기 위함.
+- 사용량 제한 등등으로 인해 AI 에이전트 사용이 불가능한 경우에도, 정의한 문제를 본인의 태스크로 처리할 목적도 있음.
+
 ## 아케이드 기록 라우팅 개선 관련, Cursor Agent에게 요청할 내용
 - Next.js 16 App router를 사용 중이야.
 - `/records/{arcadeId}/{arcadeRecordId}`를 `/records/{arcadeRecordId}`로 옮겨줘.

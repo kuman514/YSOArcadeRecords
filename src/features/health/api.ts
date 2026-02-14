@@ -1,3 +1,9 @@
+import {
+  FunctionsFetchError,
+  FunctionsHttpError,
+  FunctionsRelayError,
+} from '@supabase/supabase-js';
+
 import { GetHealthApiResponse } from '^/src/entities/health/types';
 import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
@@ -14,6 +20,15 @@ export async function getHealth(): Promise<GetHealthApiResponse> {
     const response = await supabase.functions.invoke(
       'yso-arcade-records-health'
     );
+
+    if (
+      response.error instanceof FunctionsHttpError ||
+      response.error instanceof FunctionsRelayError ||
+      response.error instanceof FunctionsFetchError
+    ) {
+      throw new Error('Error in invoking Supabase edge functions.');
+    }
+
     return response.data;
   } catch {
     return {

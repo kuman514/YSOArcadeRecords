@@ -1,14 +1,7 @@
 'use client';
 
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-} from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
 import Button from '^/src/shared/ui/button';
@@ -16,11 +9,7 @@ import Button from '^/src/shared/ui/button';
 import { getExtendedArcadeRecordPostList } from './data-client';
 import { convertArcadeRecordPostToPostListItem } from './util';
 
-interface Props {
-  isEnabled: boolean;
-}
-
-function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
+export function ArcadeRecordPostListContent() {
   const searchParams = useSearchParams();
   const arcadeId = searchParams.get('arcadeId') ?? undefined;
 
@@ -33,15 +22,14 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
     queryKey: arcadeId ? ['arcade-records', arcadeId] : ['arcade-records'],
     queryFn: async ({ pageParam }) =>
       await getExtendedArcadeRecordPostList(pageParam, arcadeId),
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    enabled: isEnabled,
   });
 
-  const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
+  const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
   const nextPageLabel = (() => {
-    if (!isEnabled || !isHaveNextPage) {
+    if (!isHaveNextPage) {
       return '마지막 페이지';
     }
 
@@ -79,17 +67,5 @@ function ExtendedArcadeRecordPostListContent({ isEnabled }: Props) {
         </Button>
       </li>
     </>
-  );
-}
-
-export default function ExtendedArcadeRecordPostList({ isEnabled }: Props) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ExtendedArcadeRecordPostListContent isEnabled={isEnabled} />
-      </HydrationBoundary>
-    </QueryClientProvider>
   );
 }

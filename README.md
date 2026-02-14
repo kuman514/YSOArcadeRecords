@@ -393,3 +393,10 @@
 - `v1.5.5` (2026년 2월 10일)
   - 갤러리 목록 페이지에서 한 행에 갤러리 썸네일이 2개 있는 경우 왼쪽으로 정렬된게 아닌, 양 끝으로 벌어져 표시되던 문제 수정
   - 아케이드 기록 아티클에서 점수, 걸린 시간, 스테이지 등등에서 쓰인 Press Start 2P 폰트가 제대로 출력되지 않을 때 (특히 한글로 표시될 때) Neo둥근모를 보조 표시로 설정
+- `v1.5.6` (2026년 2월 14일)
+  - 아케이드 기록/리뷰/갤러리 목록 방문 시 초기에 두 페이지 로딩을 한 페이지만 로딩하는 것으로 변경함
+  - 헬스 체킹에서 발생하는 문제 중 Server-side exception이 표시되는 현상으로 가는 경우를 방지함
+  - Axios 보안 패치
+    - https://github.com/axios/axios/security/advisories/GHSA-43fc-jf86-j433
+    - https://nvd.nist.gov/vuln/detail/CVE-2026-25639
+    - 취약점 요약: `config`에 `__proto__`가 key인 object를 삽입함으로써 Axios가 `mergeConfig`하는 과정에 크래시를 발생시켜 서비스 장애를 일으킬 수 있는 취약점

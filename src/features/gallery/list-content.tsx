@@ -1,24 +1,13 @@
 'use client';
 
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-  useInfiniteQuery,
-} from '@tanstack/react-query';
-import { useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import Button from '^/src/shared/ui/button';
 
 import { getExtendedGalleryList } from './data-client';
 import GalleryElement from './element';
 
-interface Props {
-  isEnabled: boolean;
-}
-
-function ExtendedGalleryContent({ isEnabled }: Props) {
+export default function GalleryPostListContent() {
   const {
     data: rawData,
     isFetching,
@@ -27,15 +16,14 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
   } = useInfiniteQuery({
     queryKey: ['gallery'],
     queryFn: async ({ pageParam }) => await getExtendedGalleryList(pageParam),
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    enabled: isEnabled,
   });
 
-  const isNextPageButtonDisabled = !isEnabled || !isHaveNextPage || isFetching;
+  const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
   const nextPageLabel = (() => {
-    if (!isEnabled || !isHaveNextPage) {
+    if (!isHaveNextPage) {
       return '마지막 페이지';
     }
 
@@ -66,17 +54,5 @@ function ExtendedGalleryContent({ isEnabled }: Props) {
         {nextPageLabel}
       </Button>
     </>
-  );
-}
-
-export default function ExtendedGallery({ isEnabled }: Props) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ExtendedGalleryContent isEnabled={isEnabled} />
-      </HydrationBoundary>
-    </QueryClientProvider>
   );
 }

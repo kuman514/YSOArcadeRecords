@@ -400,3 +400,6 @@
     - https://github.com/axios/axios/security/advisories/GHSA-43fc-jf86-j433
     - https://nvd.nist.gov/vuln/detail/CVE-2026-25639
     - 취약점 요약: `config`에 `__proto__`가 key인 object를 삽입함으로써 Axios가 `mergeConfig`하는 과정에 크래시를 발생시켜 서비스 장애를 일으킬 수 있는 취약점
+- `v1.5.7` (일정 미정)
+  - 아케이드 기록/리뷰/갤러리 폼의 멀티 이미지 픽커 엘리먼트의 크기가 모바일 화면에서도 한 행에 두 개 이상 보일 수 있도록 크기를 줄임
+  - 아케이드 기록/리뷰/갤러리 폼의 기존 등록된 썸네일의 가장자리를 변경함

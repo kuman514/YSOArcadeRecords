@@ -396,3 +396,7 @@
 - `v1.5.6` (일정 미정)
   - 아케이드 기록/리뷰/갤러리 목록 방문 시 초기에 두 페이지 로딩을 한 페이지만 로딩하는 것으로 변경함
   - 헬스 체킹에서 발생하는 문제 중 Server-side exception이 표시되는 현상으로 가는 경우를 방지함
+  - Axios 보안 패치
+    - https://github.com/axios/axios/security/advisories/GHSA-43fc-jf86-j433
+    - https://nvd.nist.gov/vuln/detail/CVE-2026-25639
+    - 취약점 요약: `config`에 `__proto__`가 key인 object를 삽입함으로써 Axios가 `mergeConfig`하는 과정에 크래시를 발생시켜 서비스 장애를 일으킬 수 있는 취약점

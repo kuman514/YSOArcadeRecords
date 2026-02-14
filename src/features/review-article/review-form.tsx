@@ -517,7 +517,7 @@ export default function ReviewForm({ post }: Props) {
       {post?.thumbnailUrl && (
         <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 retro-rounded-2 relative flex justify-center items-center overflow-hidden">
+          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
             <Image
               src={post.thumbnailUrl}
               alt="기존 썸네일 이미지"

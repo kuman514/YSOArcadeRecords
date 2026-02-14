@@ -57,7 +57,7 @@ export default function ImageListElement({
       draggable
     >
       <div
-        className="w-40 h-40 relative cursor-pointer"
+        className="w-25 h-25 sm:w-40 sm:h-40 relative cursor-pointer"
         onClick={() => {
           if (!imageUrl) {
             return;

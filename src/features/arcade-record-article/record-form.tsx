@@ -19,12 +19,12 @@ import {
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import Button from '^/src/shared/ui/button';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
-import Button from '^/src/shared/ui/button';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -537,7 +537,7 @@ export default function RecordForm({
       {post?.thumbnailUrl && (
         <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 retro-rounded-2 relative flex justify-center items-center overflow-hidden">
+          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
             <Image
               src={post.thumbnailUrl}
               alt="기존 썸네일 이미지"

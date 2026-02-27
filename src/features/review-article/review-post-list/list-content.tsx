@@ -39,9 +39,9 @@ export default function ReviewPostListContent() {
   const data = rawData?.pages.map((page) =>
     page.content.map(convertReviewPostToPostListItem)
   );
-  const renderData = data?.map((page, i) =>
-    page.map((postListItem, j) => (
-      <PostListItem key={`review-post-list-item-${i}-${j}`} {...postListItem} />
+  const renderData = data?.map((page) =>
+    page.map((postListItem) => (
+      <PostListItem key={postListItem.id} {...postListItem} />
     ))
   );
 

@@ -1,3 +1,4 @@
+import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import {
   ArcadeRecordPost,
   ArcadeRecordPostDBColumn,
@@ -68,7 +69,7 @@ export function convertArcadeRecordPostToPostListItem({
   rank,
   score,
   elapsedTime,
-}: ArcadeRecordPost) {
+}: ArcadeRecordPost): PostListItemProps {
   const evaluations = [evaluation, score, elapsedTime]
     .filter((evaluationValue) => evaluationValue && evaluationValue.length > 0)
     .map((evaluationValue) => {
@@ -81,6 +82,7 @@ export function convertArcadeRecordPostToPostListItem({
     .join(', ');
 
   return {
+    id: arcadeRecordId,
     title: title,
     memo: `${arcade.label} - ${stage} / ${evaluations}${
       rank ? ` / ${rank}` : ''

@@ -1,3 +1,4 @@
+import { PostListItemProps } from '^/src/entities/post-list-item/props';
 import { ReviewPost, ReviewPostDBColumn } from '^/src/entities/types/post';
 
 export function convertReviewPostDBColumnToReviewPost({
@@ -59,8 +60,9 @@ export function convertReviewPostToPostListItem({
   youTubeId,
   reviewId,
   thumbnailUrl,
-}: ReviewPost) {
+}: ReviewPost): PostListItemProps {
   return {
+    id: reviewId,
     title: title,
     memo: `${subjectType} - ${subjectName} 리뷰`,
     dateToDisplay: createdAt,

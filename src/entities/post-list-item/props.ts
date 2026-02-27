@@ -1,4 +1,5 @@
 export interface PostListItemProps {
+  id: string;
   title: string;
   memo: string;
   dateToDisplay: Date;

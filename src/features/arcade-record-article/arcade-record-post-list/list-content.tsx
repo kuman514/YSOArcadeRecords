@@ -45,10 +45,7 @@ export function ArcadeRecordPostListContent() {
   );
   const renderData = data?.map((page, i) =>
     page.map((postListItem, j) => (
-      <PostListItem
-        key={`arcade-record-post-list-item-${i}-${j}`}
-        {...postListItem}
-      />
+      <PostListItem key={postListItem.id} {...postListItem} />
     ))
   );
 

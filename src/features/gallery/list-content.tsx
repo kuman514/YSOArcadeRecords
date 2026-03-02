@@ -4,6 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import Container from '^/src/shared/ui/container';
+import { INFINITE_SCROLL_AMOUNT } from '^/src/shared/util/constants';
 
 import { getExtendedGalleryList } from './data-client';
 import GalleryElement from './element';
@@ -26,7 +27,8 @@ export default function GalleryPostListContent() {
   useEffect(() => {
     function handleOnScroll() {
       const isScrollSufficient =
-        window.innerHeight + window.scrollY + 40 >= document.body.offsetHeight;
+        window.innerHeight + window.scrollY + INFINITE_SCROLL_AMOUNT >=
+        document.body.offsetHeight;
       if (isScrollSufficient && !isNextPageButtonDisabled) {
         fetchNextPage();
       }

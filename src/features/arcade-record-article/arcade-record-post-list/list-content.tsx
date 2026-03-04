@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
 import Container from '^/src/shared/ui/container';
+import { INFINITE_SCROLL_OFFSET } from '^/src/shared/util/constants';
 
 import { getExtendedArcadeRecordPostList } from './data-client';
 import { convertArcadeRecordPostToPostListItem } from './util';
@@ -32,7 +33,8 @@ export function ArcadeRecordPostListContent() {
   useEffect(() => {
     function handleOnScroll() {
       const isScrollSufficient =
-        window.innerHeight + window.scrollY + 40 >= document.body.offsetHeight;
+        window.innerHeight + window.scrollY + INFINITE_SCROLL_OFFSET >=
+        document.body.offsetHeight;
       if (isScrollSufficient && !isNextPageButtonDisabled) {
         fetchNextPage();
       }

@@ -269,35 +269,6 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
       onSubmit={handleOnSubmit}
     >
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="title">사진 제목</label>
-        <FormTextArea
-          type="text"
-          id="title"
-          name="title"
-          value={title}
-          onChange={(event) => {
-            setTitle(event.currentTarget.value);
-          }}
-        />
-        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
-      </p>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="galleryThemeId">주제</label>
-        <FormDropdown
-          id="galleryThemeId"
-          name="galleryThemeId"
-          value={galleryThemeId}
-          onChange={(event) => {
-            setGalleryThemeId(event.currentTarget.value);
-          }}
-        >
-          {renderGalleryThemeOptions}
-        </FormDropdown>
-        {!isGalleryThemeIdVerified && <span>주제를 선택해주세요.</span>}
-      </p>
-
       {post?.thumbnailUrl && (
         <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
@@ -339,6 +310,35 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
         />
         {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
       </div>
+
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="title">사진 제목</label>
+        <FormTextArea
+          type="text"
+          id="title"
+          name="title"
+          value={title}
+          onChange={(event) => {
+            setTitle(event.currentTarget.value);
+          }}
+        />
+        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
+      </p>
+
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="galleryThemeId">주제</label>
+        <FormDropdown
+          id="galleryThemeId"
+          name="galleryThemeId"
+          value={galleryThemeId}
+          onChange={(event) => {
+            setGalleryThemeId(event.currentTarget.value);
+          }}
+        >
+          {renderGalleryThemeOptions}
+        </FormDropdown>
+        {!isGalleryThemeIdVerified && <span>주제를 선택해주세요.</span>}
+      </p>
 
       <Button type="submit" disabled={!isSubmittable}>
         {post ? '수정하기' : '등록하기'}

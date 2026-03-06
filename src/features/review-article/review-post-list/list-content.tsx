@@ -1,9 +1,11 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import PostListItem from '^/src/entities/post-list-item';
-import Button from '^/src/shared/ui/button';
+import Container from '^/src/shared/ui/container';
+import { INFINITE_SCROLL_OFFSET } from '^/src/shared/util/constants';
 
 import { getExtendedReviewPostList } from './data-client';
 import { convertReviewPostToPostListItem } from './util';
@@ -24,16 +26,32 @@ export default function ReviewPostListContent() {
 
   const isNextPageButtonDisabled = !isHaveNextPage || isFetching;
 
+  useEffect(() => {
+    function handleOnScroll() {
+      const isScrollSufficient =
+        window.innerHeight + window.scrollY + INFINITE_SCROLL_OFFSET >=
+        document.body.offsetHeight;
+      if (isScrollSufficient && !isNextPageButtonDisabled) {
+        fetchNextPage();
+      }
+    }
+
+    window.addEventListener('scroll', handleOnScroll);
+    return () => {
+      window.removeEventListener('scroll', handleOnScroll);
+    };
+  }, [isNextPageButtonDisabled]);
+
   const nextPageLabel = (() => {
     if (!isHaveNextPage) {
-      return '마지막 페이지';
+      return '모두 불러옴';
     }
 
     if (isFetching) {
       return '불러오는 중';
     }
 
-    return '더보기';
+    return '스크롤하여 더보기';
   })();
 
   const data = rawData?.pages.map((page) =>
@@ -49,16 +67,7 @@ export default function ReviewPostListContent() {
     <>
       {renderData}
       <li>
-        <Button
-          type="button"
-          className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-          onClick={() => {
-            fetchNextPage();
-          }}
-          disabled={isNextPageButtonDisabled}
-        >
-          {nextPageLabel}
-        </Button>
+        <Container className="text-center">{nextPageLabel}</Container>
       </li>
     </>
   );

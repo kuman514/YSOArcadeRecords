@@ -20,3 +20,5 @@ export const KOREAN_NUMBER_UNIT_BY_POW_10 = {
 };
 
 export const TIME_REG = /(\d+:[0-5]\d|\d+):([0-5]\d)(\.\d+)?/g;
+
+export const INFINITE_SCROLL_OFFSET = 40;

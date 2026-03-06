@@ -358,6 +358,48 @@ export default function RecordForm({
       className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
       onSubmit={handleOnSubmit}
     >
+      {post?.thumbnailUrl && (
+        <div className="w-12/25 flex flex-col gap-2">
+          <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
+          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
+            <Image
+              src={post.thumbnailUrl}
+              alt="기존 썸네일 이미지"
+              fill
+              sizes="10rem"
+              unoptimized
+            />
+          </div>
+          <input
+            id="presentThumbnailUrl"
+            name="presentThumbnailUrl"
+            type="hidden"
+            value={post.thumbnailUrl}
+            readOnly
+          />
+        </div>
+      )}
+
+      <div className="w-12/25 flex flex-col gap-2">
+        <label htmlFor="thumbnail">새로운 썸네일</label>
+        <SingleImagePicker
+          name="thumbnail"
+          currentFile={localThumbnail}
+          onSelectFile={setLocalThumbnail}
+        />
+        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
+      </div>
+
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="originalImages">원본 이미지</label>
+        <MultipleImagePicker
+          name="originalImages"
+          images={images}
+          onChangeImages={setImages}
+        />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
+      </div>
+
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">기록 제목</label>
         <FormInput
@@ -533,48 +575,6 @@ export default function RecordForm({
           }}
         />
       </p>
-
-      {post?.thumbnailUrl && (
-        <div className="w-12/25 flex flex-col gap-2">
-          <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-            <Image
-              src={post.thumbnailUrl}
-              alt="기존 썸네일 이미지"
-              fill
-              sizes="10rem"
-              unoptimized
-            />
-          </div>
-          <input
-            id="presentThumbnailUrl"
-            name="presentThumbnailUrl"
-            type="hidden"
-            value={post.thumbnailUrl}
-            readOnly
-          />
-        </div>
-      )}
-
-      <div className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="thumbnail">새로운 썸네일</label>
-        <SingleImagePicker
-          name="thumbnail"
-          currentFile={localThumbnail}
-          onSelectFile={setLocalThumbnail}
-        />
-        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
-      </div>
-
-      <div className="w-full flex flex-col gap-2">
-        <label htmlFor="originalImages">원본 이미지</label>
-        <MultipleImagePicker
-          name="originalImages"
-          images={images}
-          onChangeImages={setImages}
-        />
-        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
-      </div>
 
       <Button type="submit" disabled={!isSubmittable}>
         {post ? '수정하기' : '등록하기'}

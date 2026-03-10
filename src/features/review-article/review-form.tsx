@@ -479,11 +479,6 @@ export default function ReviewForm({ post }: Props) {
 
       <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="releaseDate">출시일자</label>
-        {/**
-         * @todo
-         * - Make date icon in the right area fit to text color
-         * - Fit the date input in record/review form to the screen
-         */}
         <FormInput
           type="date"
           id="releaseDate"

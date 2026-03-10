@@ -9,7 +9,7 @@ export default function FormDropdown(props: Props) {
   return (
     <select
       {...props}
-      className="w-full retro-rounded-2 px-4 py-2 [&>option]:text-black"
+      className="w-full retro-rounded-2 h-12 px-4 [&>option]:text-black"
     />
   );
 }

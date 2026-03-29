@@ -3,11 +3,10 @@ import localFont from 'next/font/local';
 import Link from 'next/link';
 import { ToastContainer } from 'react-toastify';
 
-import Contact from '^/src/features/contact';
 import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
+import ContactButton from '^/src/shared/contact';
 import { APP_NAME } from '^/src/shared/lib/is-production';
-import Footer from '^/src/shared/ui/footer';
 import Header from '^/src/widgets/menu/header';
 import Modal from '^/src/widgets/modal';
 
@@ -91,11 +90,10 @@ export default async function RootLayout({ children }: Readonly<Props>) {
         className={`${neoDgm.className} ${pressStart2p.variable} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <Header />
-        <section className="w-full bg-background flex flex-col items-center">
+        <section className="w-full bg-background flex flex-col items-center min-h-[calc(100dvh-4rem)]">
           {children}
         </section>
-        <Footer />
-        <Contact />
+        <ContactButton />
         <Sidebar />
         <Modal />
         <ToastContainer toastClassName={neoDgm.className} />

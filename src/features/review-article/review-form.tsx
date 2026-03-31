@@ -53,7 +53,7 @@ export default function ReviewForm({ post }: Props) {
 
   const [details, setDetails] = useState<MultipleFormValue<string>>(
     post?.details?.map((detail, index) => ({
-      tmpId: `${new Date().getTime()}-${index}`,
+      tmpId: `0-${index}`,
       value: detail,
     })) ?? []
   );
@@ -66,7 +66,7 @@ export default function ReviewForm({ post }: Props) {
 
   const [images, setImages] = useState<ImageListElementValue[]>(
     post?.imageUrls.map((imageUrl, index) => ({
-      tmpId: `${new Date().getTime()}-${index}`,
+      tmpId: `0-${index}`,
       sourceUrl: imageUrl,
     })) ?? []
   );

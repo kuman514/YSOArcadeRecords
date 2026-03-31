@@ -46,11 +46,11 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
   const [images, setImages] = useState<ImageListElementValue[]>(
     (post?.imageUrl
-      ? [{ tmpId: `${new Date().getTime()}-0`, sourceUrl: post.imageUrl }]
+      ? [{ tmpId: '0-legacy-single', sourceUrl: post.imageUrl }]
       : []
     ).concat(
       post?.imageUrls.map((imageUrl, index) => ({
-        tmpId: `${new Date().getTime()}-${index}`,
+        tmpId: `0-${index}`,
         sourceUrl: imageUrl,
       })) ?? []
     )

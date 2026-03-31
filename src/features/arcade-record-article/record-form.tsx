@@ -96,7 +96,7 @@ export default function RecordForm({
 
   const [images, setImages] = useState<ImageListElementValue[]>(
     post?.imageUrls.map((imageUrl, index) => ({
-      tmpId: `${new Date().getTime()}-${index}`,
+      tmpId: `0-${index}`,
       sourceUrl: imageUrl,
     })) ?? []
   );

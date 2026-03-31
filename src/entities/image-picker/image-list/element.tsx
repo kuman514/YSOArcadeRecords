@@ -6,6 +6,9 @@ import { useShallow } from 'zustand/shallow';
 
 import { useModalStore } from '^/src/shared/modal/store';
 import { ModalType } from '^/src/shared/modal/types';
+import LeftArrowBackup2SvgRepoComSvg from '^/public/icons/left-arrow-backup-2-svgrepo-com.svg';
+import RightArrowBackup2SvgRepoComSvg from '^/public/icons/right-arrow-backup-2-svgrepo-com.svg';
+import TrashcanSvgRepoComSvg from '^/public/icons/trashcan-svgrepo-com.svg';
 
 import { ImageListElementValue } from '../types';
 
@@ -95,14 +98,14 @@ export default function ImageListElement({
           className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
           type="button"
         >
-          ⬅️
+          <LeftArrowBackup2SvgRepoComSvg width={16} height={16} />
         </button>
         <button
           className="cursor-pointer"
           type="button"
           onClick={onClickDelete}
         >
-          ❌
+          <TrashcanSvgRepoComSvg width={16} height={16} />
         </button>
         <button
           id={`image-list-element_${elementInfo.tmpId}_click-right`}
@@ -110,7 +113,7 @@ export default function ImageListElement({
           className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
           type="button"
         >
-          ➡️
+          <RightArrowBackup2SvgRepoComSvg width={16} height={16} />
         </button>
       </div>
     </div>

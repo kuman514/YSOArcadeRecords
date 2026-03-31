@@ -56,7 +56,7 @@ export default function ImageListElement({
   return (
     <div
       id={`image-list-element_${elementInfo.tmpId}`}
-      className="flex flex-row gap-2"
+      className="flex flex-col gap-2"
       draggable
     >
       <div
@@ -91,21 +91,25 @@ export default function ImageListElement({
           className="absolute right-0 top-0 w-1/2 h-full"
         />
       </div>
-      <div className="flex flex-col gap-4 justify-center items-center">
+      <div className="flex flex-row gap-4 justify-center items-center">
         <button
           id={`image-list-element_${elementInfo.tmpId}_click-left`}
           disabled={position === 'first' || position === 'unique'}
           className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
           type="button"
         >
-          <LeftArrowBackup2SvgRepoComSvg width={16} height={16} />
+          <div className="pointer-events-none">
+            <LeftArrowBackup2SvgRepoComSvg width={16} height={16} />
+          </div>
         </button>
         <button
           className="cursor-pointer"
           type="button"
           onClick={onClickDelete}
         >
-          <TrashcanSvgRepoComSvg width={16} height={16} />
+          <div className="pointer-events-none">
+            <TrashcanSvgRepoComSvg width={16} height={16} />
+          </div>
         </button>
         <button
           id={`image-list-element_${elementInfo.tmpId}_click-right`}
@@ -113,7 +117,9 @@ export default function ImageListElement({
           className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
           type="button"
         >
-          <RightArrowBackup2SvgRepoComSvg width={16} height={16} />
+          <div className="pointer-events-none">
+            <RightArrowBackup2SvgRepoComSvg width={16} height={16} />
+          </div>
         </button>
       </div>
     </div>

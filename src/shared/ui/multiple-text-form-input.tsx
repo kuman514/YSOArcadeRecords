@@ -1,3 +1,7 @@
+import DownArrowBackup2SvgRepoComSvg from '^/public/icons/down-arrow-backup-2-svgrepo-com.svg';
+import DownArrowBackup3SvgRepoComSvg from '^/public/icons/down-arrow-backup-3-svgrepo-com.svg';
+import TrashcanSvgRepoComSvg from '^/public/icons/trashcan-svgrepo-com.svg';
+
 import Button from './button';
 import FormTextArea from './form-textarea';
 import { MultipleFormValue } from './types';
@@ -46,7 +50,7 @@ export default function MultipleTextFormInput({
               disabled={index === 0}
               className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
             >
-              ⬆️
+              <DownArrowBackup3SvgRepoComSvg width={16} height={16} />
             </button>
             <button
               type="button"
@@ -55,7 +59,7 @@ export default function MultipleTextFormInput({
               }}
               className="cursor-pointer"
             >
-              ❌
+              <TrashcanSvgRepoComSvg width={16} height={16} />
             </button>
             <button
               type="button"
@@ -65,7 +69,7 @@ export default function MultipleTextFormInput({
               disabled={index === values.length - 1}
               className="cursor-pointer disabled:cursor-auto disabled:opacity-0"
             >
-              ⬇️
+              <DownArrowBackup2SvgRepoComSvg width={16} height={16} />
             </button>
           </span>
         </span>

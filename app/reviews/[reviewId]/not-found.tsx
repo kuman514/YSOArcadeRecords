@@ -1,12 +1,5 @@
-import NotFoundSvg from '^/public/status/not-found.svg';
+import ArticleNotFoundIndicator from '^/src/shared/ui/article-not-found';
 
 export default function ReviewArticleNotFoundPage() {
-  return (
-    <main className="w-full h-full max-w-3xl flex flex-col items-center px-4 sm:px-8 py-32 gap-12 sm:gap-16">
-      <div className="w-full">
-        <NotFoundSvg width="100%" />
-      </div>
-      <h1 className="text-4xl font-bold text-center">리뷰가 없습니다.</h1>
-    </main>
-  );
+  return <ArticleNotFoundIndicator message="리뷰가 없습니다." />;
 }

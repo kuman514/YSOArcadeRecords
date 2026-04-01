@@ -110,10 +110,10 @@ export default function ImageList({ images, onChangeImages }: Props) {
             images.length <= 1
               ? 'unique'
               : index === 0
-              ? 'first'
-              : index === images.length - 1
-              ? 'last'
-              : 'middle'
+                ? 'first'
+                : index === images.length - 1
+                  ? 'last'
+                  : 'middle'
           }
           elementInfo={image}
           onClickDelete={() => {

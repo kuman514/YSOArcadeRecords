@@ -63,8 +63,8 @@ export default function ReviewArticle({ post }: Props) {
     <>
       <h1 className="text-4xl font-bold">{post.title}</h1>
       <div className="w-full flex flex-col">
-        {post.subjectName} - {post.createdBy}({post.releaseDate.getFullYear()}
-        년)
+        {post.subjectName} - {post.createdBy}
+        {post.releaseDate && `(${post.releaseDate.getFullYear()}년)`}
       </div>
       <div className="w-full flex flex-col">
         {renderCreatedAt}

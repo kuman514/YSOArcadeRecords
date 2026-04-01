@@ -5,7 +5,7 @@ export interface HavingIntroduction {
   subjectName: string;
   subjectType: string;
   createdBy: string;
-  releaseDate: Date;
+  releaseDate: Date | null;
 }
 
 // ===========================================

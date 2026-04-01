@@ -33,7 +33,7 @@ export async function PUT(
   const subjectName = formData.get('subjectName')?.toString();
   const subjectType = formData.get('subjectType')?.toString();
   const createdBy = formData.get('createdBy')?.toString();
-  const releaseDate = formData.get('releaseDate')?.toString();
+  const releaseDate = formData.get('releaseDate')?.toString() ?? null;
   const details = formData.getAll('details') as string[];
   const reviewScore = formData.get('reviewScore')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
@@ -89,16 +89,6 @@ export async function PUT(
       {
         result: 'failed',
         error: '제작사를 입력해주세요.',
-      },
-      { status: 400 }
-    );
-  }
-
-  if (!releaseDate) {
-    return NextResponse.json(
-      {
-        result: 'failed',
-        error: '출시 일자를 입력해주세요.',
       },
       { status: 400 }
     );

@@ -47,8 +47,8 @@ export default function ReviewForm({ post }: Props) {
     post?.subjectType ?? ''
   );
   const [createdBy, setCreatedBy] = useState<string>(post?.createdBy ?? '');
-  const [releaseDate, setReleaseDate] = useState<Date>(
-    post?.releaseDate ?? new Date()
+  const [releaseDate, setReleaseDate] = useState<Date | null>(
+    post?.releaseDate ?? null
   );
 
   const [details, setDetails] = useState<MultipleFormValue<string>>(
@@ -145,66 +145,6 @@ export default function ReviewForm({ post }: Props) {
     newDetails[index] = tmp;
     setDetails(newDetails);
   }
-
-  /**
-   * @legacy
-   * These functions were designed to produce unified handlers while there is more than one types of multiple text form inputs.
-   * Therefore, if the form requires more types of multiple text form inputs again, revive and apply this commentarized functions below.
-
-    function handleOnInputMultipleTextFormInput(
-      values: MultipleFormValue<string>,
-      setValues: (newValues: MultipleFormValue<string>) => void
-    ) {
-      return (index: number, newValue: string) => {
-        setValues(
-          values.with(index, {
-            tmpId: values[index].tmpId,
-            value: newValue,
-          })
-        );
-      };
-    }
-
-    function handleOnAppendMultipleTextFormInput(
-      values: MultipleFormValue<string>,
-      setValues: (newValues: MultipleFormValue<string>) => void
-    ) {
-      return () => {
-        setValues(
-          values.concat([
-            {
-              tmpId: `${new Date().getTime()}-0`,
-              value: '',
-            },
-          ])
-        );
-      };
-    }
-
-    function handleOnDeleteMultipleTextFormInput(
-      values: MultipleFormValue<string>,
-      setValues: (newValues: MultipleFormValue<string>) => void
-    ) {
-      return (index: number) => {
-        const newValues = Array.from(values);
-        newValues.splice(index, 1);
-        setValues(newValues);
-      };
-    }
-
-    function handleOnSwapMultipleTextFormInput(
-      values: MultipleFormValue<string>,
-      setValues: (newValues: MultipleFormValue<string>) => void
-    ) {
-      return (index: number, targetIndex: number) => {
-        const newValues = Array.from(values);
-        const tmp = newValues[targetIndex];
-        newValues[targetIndex] = newValues[index];
-        newValues[index] = tmp;
-        setValues(newValues);
-      };
-    }
-  */
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -318,7 +258,9 @@ export default function ReviewForm({ post }: Props) {
     reviewFormData.append('subjectName', subjectName);
     reviewFormData.append('subjectType', subjectType);
     reviewFormData.append('createdBy', createdBy);
-    reviewFormData.append('releaseDate', releaseDate.toISOString());
+    if (releaseDate) {
+      reviewFormData.append('releaseDate', releaseDate?.toISOString());
+    }
     details.forEach((detail) => {
       reviewFormData.append('details', detail.value);
     });
@@ -463,7 +405,7 @@ export default function ReviewForm({ post }: Props) {
         )}
       </p>
 
-      <p className="w-12/25 flex flex-col gap-2">
+      <p className="w-full sm:w-12/25 flex flex-col gap-2">
         <label htmlFor="createdBy">제작사</label>
         <FormInput
           type="text"
@@ -477,22 +419,41 @@ export default function ReviewForm({ post }: Props) {
         {!isCreatedByVerified && <span>제작사를 입력해주세요.</span>}
       </p>
 
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="releaseDate">출시일자</label>
-        <FormInput
-          type="date"
-          id="releaseDate"
-          name="releaseDate"
-          value={`${releaseDate.getFullYear()}-${String(
-            releaseDate.getMonth() + 1
-          ).padStart(2, '0')}-${String(releaseDate.getDate()).padStart(
-            2,
-            '0'
-          )}`}
-          onChange={(event) => {
-            setReleaseDate(new Date(event.currentTarget.value));
-          }}
-        />
+      <p className="w-full sm:w-12/25 flex flex-col gap-2">
+        <span className="flex flex-row justify-between items-center">
+          <label htmlFor="releaseDate">출시일</label>
+          <span className="flex flex-row justify-center items-center gap-2">
+            <label htmlFor="releaseDateUnknown">출시일을 모름</label>
+            <input
+              checked={!releaseDate}
+              type="checkbox"
+              id="releaseDateUnknown"
+              onChange={(event) => {
+                if (event.currentTarget.checked) {
+                  setReleaseDate(null);
+                } else {
+                  setReleaseDate(new Date());
+                }
+              }}
+            />
+          </span>
+        </span>
+        {releaseDate && (
+          <FormInput
+            type="date"
+            id="releaseDate"
+            name="releaseDate"
+            value={`${releaseDate.getFullYear()}-${String(
+              releaseDate.getMonth() + 1
+            ).padStart(2, '0')}-${String(releaseDate.getDate()).padStart(
+              2,
+              '0'
+            )}`}
+            onChange={(event) => {
+              setReleaseDate(new Date(event.currentTarget.value));
+            }}
+          />
+        )}
       </p>
 
       <div className="w-full flex flex-col gap-2">

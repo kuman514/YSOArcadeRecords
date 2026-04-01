@@ -20,7 +20,8 @@ export interface BasePost {
 }
 
 export interface ArcadeRecordPost
-  extends BasePost,
+  extends
+    BasePost,
     Taggable,
     Commentable,
     ArcadeRecord,
@@ -56,7 +57,8 @@ export interface ArcadeRecordPostDBColumn extends ArcadeRecordPostDBInput {
 }
 
 export interface ReviewPost
-  extends BasePost,
+  extends
+    BasePost,
     Taggable,
     Review,
     HavingThumbnail,
@@ -71,7 +73,7 @@ export interface ReviewPostDBInput {
   subject_name: ReviewPost['subjectName'];
   subject_type: ReviewPost['subjectType'];
   created_by: ReviewPost['createdBy'];
-  release_date: string;
+  release_date: string | null;
   details: ReviewPost['details'];
   /**
    * @legacy

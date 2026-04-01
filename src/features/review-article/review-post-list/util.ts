@@ -32,7 +32,7 @@ export function convertReviewPostDBColumnToReviewPost({
     subjectName: subject_name,
     subjectType: subject_type,
     createdBy: created_by,
-    releaseDate: new Date(release_date),
+    releaseDate: release_date ? new Date(release_date) : null,
     details: [
       ...details,
       ...key_features,

@@ -19,6 +19,7 @@ import {
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import Button from '^/src/shared/ui/button';
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
@@ -516,13 +517,9 @@ export default function ReviewForm({ post }: Props) {
         />
       </p>
 
-      <button
-        type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-        disabled={!isSubmittable}
-      >
+      <Button type="submit" disabled={!isSubmittable}>
         {post ? '수정하기' : '등록하기'}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -3,7 +3,7 @@ import { v7 as uuidv7 } from 'uuid';
 
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
-export async function POST() {
+export async function GET() {
   const supabase = await createServerSideClient();
   const { data, error } = await supabase.auth.getUser();
 

@@ -8,6 +8,8 @@ import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import { generateKstDate } from '^/src/shared/util/generate-kst-date';
+import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
 
 export async function PUT(
   request: Request,
@@ -171,10 +173,7 @@ export async function PUT(
     );
   }
 
-  const modifiedDate = new Date();
-  const formattedDate = `${modifiedDate.getFullYear()}-${String(
-    modifiedDate.getMonth() + 1
-  ).padStart(2, '0')}-${String(modifiedDate.getDate()).padStart(2, '0')}`;
+  const modifiedAt = parseDateToDatabaseString(generateKstDate());
 
   try {
     await updateData<Partial<ArcadeRecordPostDBInput>>({
@@ -199,7 +198,7 @@ export async function PUT(
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
         image_urls: originalImageUrls,
         achieved_at: achievedAt,
-        modified_at: formattedDate,
+        modified_at: modifiedAt,
       },
       where: [
         {
@@ -209,6 +208,10 @@ export async function PUT(
         },
       ],
     });
+
+    console.log(
+      `Modified arcade-record post: ${arcadeRecordId} at ${modifiedAt}`
+    );
 
     revalidatePath('/', 'page');
     revalidatePath('/records', 'layout');
@@ -225,6 +228,10 @@ export async function PUT(
 
     return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch (error) {
+    console.error(
+      `Error in modifying arcade-record post: ${arcadeRecordId} at ${modifiedAt} (${error})`
+    );
+
     return NextResponse.json(
       {
         result: 'failed',

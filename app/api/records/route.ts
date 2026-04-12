@@ -7,6 +7,8 @@ import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import { generateKstDate } from '^/src/shared/util/generate-kst-date';
+import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
 
 export async function POST(request: Request) {
   const supabase = await createServerSideClient();
@@ -165,10 +167,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const createdDate = new Date();
-  const formattedDate = `${createdDate.getFullYear()}-${String(
-    createdDate.getMonth() + 1
-  ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+  const createdAt = parseDateToDatabaseString(generateKstDate());
 
   try {
     await insertData<Omit<ArcadeRecordPostDBInput, 'id'>>({
@@ -194,10 +193,14 @@ export async function POST(request: Request) {
         thumbnail_url: thumbnailUrl,
         image_urls: originalImageUrls,
         achieved_at: achievedAt,
-        created_at: formattedDate,
-        modified_at: formattedDate,
+        created_at: createdAt,
+        modified_at: createdAt,
       },
     });
+
+    console.log(
+      `Created arcade-record post: ${arcadeRecordId} at ${createdAt}`
+    );
 
     revalidatePath('/', 'page');
     revalidatePath('/records', 'layout');
@@ -210,6 +213,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch (error) {
+    console.error(
+      `Error in creating arcade-record post: ${arcadeRecordId} at ${createdAt} (${error})`
+    );
+
     return NextResponse.json(
       {
         result: 'failed',

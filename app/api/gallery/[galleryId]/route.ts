@@ -6,6 +6,8 @@ import { updateData } from '^/src/shared/supabase/database';
 import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
+import { generateKstDate } from '^/src/shared/util/generate-kst-date';
+import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
 
 export async function PUT(
   request: Request,
@@ -91,7 +93,7 @@ export async function PUT(
     );
   }
 
-  const modifiedDate = new Date().toISOString();
+  const modifiedAt = parseDateToDatabaseString(generateKstDate());
 
   try {
     await updateData<Partial<GalleryPostDBInput>>({
@@ -103,7 +105,7 @@ export async function PUT(
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,
         image_url: '',
         image_urls: originalImageUrls,
-        modified_at: modifiedDate,
+        modified_at: modifiedAt,
       },
       where: [
         {
@@ -113,6 +115,8 @@ export async function PUT(
         },
       ],
     });
+
+    console.log(`Modified gallery post: ${galleryId} at ${modifiedAt}`);
 
     revalidatePath('/gallery', 'layout');
 
@@ -128,6 +132,10 @@ export async function PUT(
 
     return NextResponse.json({ result: 'success' }, { status: 200 });
   } catch (error) {
+    console.error(
+      `Error in modifying gallery post: ${galleryId} at ${modifiedAt} (${error})`
+    );
+
     return NextResponse.json(
       {
         result: 'failed',

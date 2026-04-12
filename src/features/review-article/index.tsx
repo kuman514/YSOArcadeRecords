@@ -5,7 +5,7 @@ import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
 import Tag from '^/src/shared/tag';
 import Container from '^/src/shared/ui/container';
-import UnorderedList from '^/src/shared/unordered-list';
+import UnorderedList from '^/src/shared/ui/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';
 
 import { ShareToBlueskyButton } from '^/src/shared/share/share-to-bluesky';

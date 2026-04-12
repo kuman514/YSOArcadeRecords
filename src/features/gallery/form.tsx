@@ -3,9 +3,8 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { v7 as uuidv7 } from 'uuid';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
 import SingleImagePicker from '^/src/entities/image-picker/single';
@@ -21,6 +20,7 @@ import {
 import Button from '^/src/shared/ui/button';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormTextArea from '^/src/shared/ui/form-textarea';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: GalleryPost;
@@ -31,12 +31,8 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useLoadingBlockModal(isLoading);
-
-  const galleryId = useRef<string>(post?.galleryId ?? uuidv7()).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [galleryThemeId, setGalleryThemeId] = useState<string>(
@@ -66,36 +62,19 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     isGalleryThemeIdVerified &&
     isThumbnailVerified &&
     isOriginalImagesVerified &&
-    !isLoading &&
-    !isSuccess;
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast(
-        post
-          ? '갤러리 사진이 수정되었습니다.'
-          : '갤러리 사진이 등록되었습니다.',
-        {
-          type: 'success',
-        }
-      );
-      route.replace(`/gallery/${galleryId}`);
-    }
-  }, [post, isSuccess, galleryId, route]);
-
-  useEffect(() => {
-    if (errorMessage) {
-      toast(errorMessage, {
-        type: 'error',
-      });
-    }
-  }, [errorMessage]);
+    !isLoading;
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setIsLoading(true);
-    setErrorMessage(null);
+
+    const galleryId = post?.galleryId ?? (await issueUuid());
+
+    if (!galleryId) {
+      setIsLoading(false);
+      return false;
+    }
 
     const path = `gallery/${galleryId}`;
     const timestamp = new Date().toISOString();
@@ -115,8 +94,11 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
             if (
               response.data.result === RouteHandlerCallResponseStatus.FAILED
             ) {
-              setErrorMessage(
-                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+              toast(
+                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.',
+                {
+                  type: 'error',
+                }
               );
               setIsLoading(false);
               return null;
@@ -127,10 +109,15 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
               const newErrorMessage =
                 error.response?.data.error ??
                 '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
-              setErrorMessage(newErrorMessage);
+              toast(newErrorMessage, {
+                type: 'error',
+              });
             } else {
-              setErrorMessage(
-                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+              toast(
+                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.',
+                {
+                  type: 'error',
+                }
               );
             }
             setIsLoading(false);
@@ -163,8 +150,11 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
             RouteHandlerCallResponse<{ imageUrl: string }>
           >('/api/upload-image', imageFormData);
           if (response.data.result === RouteHandlerCallResponseStatus.FAILED) {
-            setErrorMessage(
-              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+            toast(
+              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.',
+              {
+                type: 'error',
+              }
             );
             setIsLoading(false);
             return null;
@@ -175,10 +165,15 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
             const newErrorMessage =
               error.response?.data.error ??
               '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
-            setErrorMessage(newErrorMessage);
+            toast(newErrorMessage, {
+              type: 'error',
+            });
           } else {
-            setErrorMessage(
-              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+            toast(
+              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.',
+              {
+                type: 'error',
+              }
             );
           }
           setIsLoading(false);
@@ -224,10 +219,20 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
 
       switch (response.data.result) {
         case RouteHandlerCallResponseStatus.SUCCESS:
-          setIsSuccess(true);
+          toast(
+            post
+              ? '갤러리 사진이 수정되었습니다.'
+              : '갤러리 사진이 등록되었습니다.',
+            {
+              type: 'success',
+            }
+          );
+          route.replace(`/gallery/${galleryId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:
-          setErrorMessage(response.data.error);
+          toast(response.data.error, {
+            type: 'error',
+          });
           break;
         default:
           break;
@@ -237,11 +242,13 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
         const newErrorMessage =
           error.response?.data.error ??
           '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.';
-        setErrorMessage(newErrorMessage);
+        toast(newErrorMessage, {
+          type: 'error',
+        });
       } else {
-        setErrorMessage(
-          '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.'
-        );
+        toast('예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.', {
+          type: 'error',
+        });
       }
     }
 

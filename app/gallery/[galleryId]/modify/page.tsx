@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getGalleryThemeList } from '^/src/features/gallery-theme/data';
 import { getGallery } from '^/src/features/gallery/data';
 import GalleryForm from '^/src/features/gallery/form';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {

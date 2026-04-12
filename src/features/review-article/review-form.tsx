@@ -3,9 +3,8 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
-import { v7 as uuidv7 } from 'uuid';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
@@ -19,9 +18,11 @@ import {
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import Button from '^/src/shared/ui/button';
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: ReviewPost;
@@ -31,12 +32,8 @@ export default function ReviewForm({ post }: Props) {
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useLoadingBlockModal(isLoading);
-
-  const reviewId = useRef<string>(post?.reviewId ?? uuidv7()).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [tags, setTags] = useState<string>(post?.tags.join(',') ?? '');
@@ -92,25 +89,7 @@ export default function ReviewForm({ post }: Props) {
     isReviewScoreVerified &&
     isThumbnailVerified &&
     isOriginalImagesVerified &&
-    !isLoading &&
-    !isSuccess;
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.', {
-        type: 'success',
-      });
-      route.replace(`/reviews/${reviewId}`);
-    }
-  }, [post, isSuccess, reviewId, route]);
-
-  useEffect(() => {
-    if (errorMessage) {
-      toast(errorMessage, {
-        type: 'error',
-      });
-    }
-  }, [errorMessage]);
+    !isLoading;
 
   function handleOnInputDetail(index: number, newValue: string) {
     setDetails(
@@ -150,7 +129,13 @@ export default function ReviewForm({ post }: Props) {
     event.preventDefault();
 
     setIsLoading(true);
-    setErrorMessage(null);
+
+    const reviewId = post?.reviewId ?? (await issueUuid());
+
+    if (!reviewId) {
+      setIsLoading(false);
+      return false;
+    }
 
     const path = `reviews/${reviewId}`;
     const timestamp = new Date().toISOString();
@@ -170,8 +155,11 @@ export default function ReviewForm({ post }: Props) {
             if (
               response.data.result === RouteHandlerCallResponseStatus.FAILED
             ) {
-              setErrorMessage(
-                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+              toast(
+                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.',
+                {
+                  type: 'error',
+                }
               );
               setIsLoading(false);
               return null;
@@ -182,10 +170,15 @@ export default function ReviewForm({ post }: Props) {
               const newErrorMessage =
                 error.response?.data.error ??
                 '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
-              setErrorMessage(newErrorMessage);
+              toast(newErrorMessage, {
+                type: 'error',
+              });
             } else {
-              setErrorMessage(
-                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+              toast(
+                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.',
+                {
+                  type: 'error',
+                }
               );
             }
             setIsLoading(false);
@@ -218,8 +211,11 @@ export default function ReviewForm({ post }: Props) {
             RouteHandlerCallResponse<{ imageUrl: string }>
           >('/api/upload-image', imageFormData);
           if (response.data.result === RouteHandlerCallResponseStatus.FAILED) {
-            setErrorMessage(
-              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+            toast(
+              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.',
+              {
+                type: 'error',
+              }
             );
             setIsLoading(false);
             return null;
@@ -230,10 +226,15 @@ export default function ReviewForm({ post }: Props) {
             const newErrorMessage =
               error.response?.data.error ??
               '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
-            setErrorMessage(newErrorMessage);
+            toast(newErrorMessage, {
+              type: 'error',
+            });
           } else {
-            setErrorMessage(
-              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+            toast(
+              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.',
+              {
+                type: 'error',
+              }
             );
           }
           setIsLoading(false);
@@ -290,10 +291,15 @@ export default function ReviewForm({ post }: Props) {
 
       switch (response.data.result) {
         case RouteHandlerCallResponseStatus.SUCCESS:
-          setIsSuccess(true);
+          toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.', {
+            type: 'success',
+          });
+          route.replace(`/reviews/${reviewId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:
-          setErrorMessage(response.data.error);
+          toast(response.data.error, {
+            type: 'error',
+          });
           break;
         default:
           break;
@@ -303,11 +309,13 @@ export default function ReviewForm({ post }: Props) {
         const newErrorMessage =
           error.response?.data.error ??
           '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.';
-        setErrorMessage(newErrorMessage);
+        toast(newErrorMessage, {
+          type: 'error',
+        });
       } else {
-        setErrorMessage(
-          '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.'
-        );
+        toast('예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.', {
+          type: 'error',
+        });
       }
     }
 
@@ -516,13 +524,9 @@ export default function ReviewForm({ post }: Props) {
         />
       </p>
 
-      <button
-        type="submit"
-        className="w-full p-4 bg-primary hover:bg-hovering text-white rounded-sm disabled:bg-gray-300 cursor-pointer disabled:cursor-auto"
-        disabled={!isSubmittable}
-      >
+      <Button type="submit" disabled={!isSubmittable}>
         {post ? '수정하기' : '등록하기'}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import { getHealth } from '^/src/features/health/api';
 import Sidebar from '^/src/features/sidebar';
 import ContactButton from '^/src/shared/contact';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import Header from '^/src/widgets/menu/header';
 import Modal from '^/src/widgets/modal';
 

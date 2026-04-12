@@ -4,10 +4,10 @@ import { Suspense } from 'react';
 
 import HomeBackgroundJpg from '^/public/background/home-background.jpg';
 import LogoPng from '^/public/logo/logo.png';
-import Skeleton from '^/src/shared/skeleton';
+import Skeleton from '^/src/shared/ui/skeleton';
 import Container from '^/src/shared/ui/container';
 import Footer from '^/src/shared/ui/footer';
-import UnorderedList from '^/src/shared/unordered-list';
+import UnorderedList from '^/src/shared/ui/unordered-list';
 import RecentArcadeRecordPostsWidget from '^/src/widgets/recent-post-widget/arcade-records';
 import RecentReviewPostsWidget from '^/src/widgets/recent-post-widget/reviews';
 

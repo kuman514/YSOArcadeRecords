@@ -5,6 +5,8 @@ import { ReviewPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
 import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import { generateKstDate } from '^/src/shared/util/generate-kst-date';
+import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
 
 export async function POST(request: Request) {
   const supabase = await createServerSideClient();
@@ -128,10 +130,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const createdDate = new Date();
-  const formattedDate = `${createdDate.getFullYear()}-${String(
-    createdDate.getMonth() + 1
-  ).padStart(2, '0')}-${String(createdDate.getDate()).padStart(2, '0')}`;
+  const createdAt = parseDateToDatabaseString(generateKstDate());
 
   try {
     await insertData<Omit<ReviewPostDBInput, 'id'>>({
@@ -159,10 +158,12 @@ export async function POST(request: Request) {
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl,
         image_urls: originalImageUrls,
-        created_at: formattedDate,
-        modified_at: formattedDate,
+        created_at: createdAt,
+        modified_at: createdAt,
       },
     });
+
+    console.log(`Created review post: ${reviewId} at ${createdAt}`);
 
     revalidatePath('/', 'page');
     revalidatePath('/reviews', 'layout');
@@ -175,6 +176,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch (error) {
+    console.error(
+      `Error in creating review post: ${reviewId} at ${createdAt} (${error})`
+    );
+
     return NextResponse.json(
       {
         result: 'failed',

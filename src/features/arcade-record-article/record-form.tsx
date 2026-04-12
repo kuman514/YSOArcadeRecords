@@ -3,9 +3,8 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { v7 as uuidv7 } from 'uuid';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
 import SingleImagePicker from '^/src/entities/image-picker/single';
@@ -25,6 +24,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -40,14 +40,8 @@ export default function RecordForm({
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useLoadingBlockModal(isLoading);
-
-  const arcadeRecordId = useRef<string>(
-    post?.arcadeRecordId ?? uuidv7()
-  ).current;
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
   const [arcadeId, setArcadeId] = useState<string>(post?.arcade.arcadeId ?? '');
@@ -141,31 +135,19 @@ export default function RecordForm({
     isCommentVerified &&
     isThumbnailVerified &&
     isOriginalImagesVerified &&
-    !isLoading &&
-    !isSuccess;
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast(post ? '기록이 수정되었습니다.' : '기록이 등록되었습니다.', {
-        type: 'success',
-      });
-      route.replace(`/records/${arcadeRecordId}`);
-    }
-  }, [post, isSuccess, arcadeId, route, arcadeRecordId]);
-
-  useEffect(() => {
-    if (errorMessage) {
-      toast(errorMessage, {
-        type: 'error',
-      });
-    }
-  }, [errorMessage]);
+    !isLoading;
 
   async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setIsLoading(true);
-    setErrorMessage(null);
+
+    const arcadeRecordId = post?.arcadeRecordId ?? (await issueUuid());
+
+    if (!arcadeRecordId) {
+      setIsLoading(false);
+      return false;
+    }
 
     const path = `records/${arcadeRecordId}`;
     const timestamp = new Date().toISOString();
@@ -185,8 +167,11 @@ export default function RecordForm({
             if (
               response.data.result === RouteHandlerCallResponseStatus.FAILED
             ) {
-              setErrorMessage(
-                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+              toast(
+                '신규 썸네일이 업로드되지 못하였습니다. 다시 시도해 주십시오.',
+                {
+                  type: 'error',
+                }
               );
               setIsLoading(false);
               return null;
@@ -197,10 +182,15 @@ export default function RecordForm({
               const newErrorMessage =
                 error.response?.data.error ??
                 '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
-              setErrorMessage(newErrorMessage);
+              toast(newErrorMessage, {
+                type: 'error',
+              });
             } else {
-              setErrorMessage(
-                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+              toast(
+                '신규 썸네일 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.',
+                {
+                  type: 'error',
+                }
               );
             }
             setIsLoading(false);
@@ -233,8 +223,11 @@ export default function RecordForm({
             RouteHandlerCallResponse<{ imageUrl: string }>
           >('/api/upload-image', imageFormData);
           if (response.data.result === RouteHandlerCallResponseStatus.FAILED) {
-            setErrorMessage(
-              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.'
+            toast(
+              '신규 원본 이미지가 업로드되지 못하였습니다. 다시 시도해 주십시오.',
+              {
+                type: 'error',
+              }
             );
             setIsLoading(false);
             return null;
@@ -245,10 +238,15 @@ export default function RecordForm({
             const newErrorMessage =
               error.response?.data.error ??
               '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.';
-            setErrorMessage(newErrorMessage);
+            toast(newErrorMessage, {
+              type: 'error',
+            });
           } else {
-            setErrorMessage(
-              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.'
+            toast(
+              '신규 원본 이미지 업로드 중 문제가 발생했습니다. 다시 시도해 주십시오.',
+              {
+                type: 'error',
+              }
             );
           }
           setIsLoading(false);
@@ -304,10 +302,15 @@ export default function RecordForm({
 
       switch (response.data.result) {
         case RouteHandlerCallResponseStatus.SUCCESS:
-          setIsSuccess(true);
+          toast(post ? '기록이 수정되었습니다.' : '기록이 등록되었습니다.', {
+            type: 'success',
+          });
+          route.replace(`/records/${arcadeRecordId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:
-          setErrorMessage(response.data.error);
+          toast(response.data.error, {
+            type: 'error',
+          });
           break;
         default:
           break;
@@ -317,11 +320,13 @@ export default function RecordForm({
         const newErrorMessage =
           error.response?.data.error ??
           '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.';
-        setErrorMessage(newErrorMessage);
+        toast(newErrorMessage, {
+          type: 'error',
+        });
       } else {
-        setErrorMessage(
-          '예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.'
-        );
+        toast('예기치 못한 문제가 발생하였습니다. 다시 시도해 주십시오.', {
+          type: 'error',
+        });
       }
     }
 

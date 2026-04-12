@@ -5,7 +5,7 @@ import {
 } from '@supabase/supabase-js';
 
 import { GetHealthApiResponse } from '^/src/entities/health/types';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function getHealth(): Promise<GetHealthApiResponse> {

@@ -1,14 +1,21 @@
 export enum ConditionType {
-  EQUAL = 'equal',
+  EQUAL = 'eq',
+  ILIKE = 'ilike',
+  OR = 'or',
 }
 
-export interface EqualityWhere {
-  type: ConditionType;
+export interface OrWhere {
+  type: ConditionType.OR;
+  wheres: CompareWhere[];
+}
+
+export interface CompareWhere {
+  type: ConditionType.EQUAL | ConditionType.ILIKE;
   column: string;
   value: string;
 }
 
-export type Where = EqualityWhere;
+export type Where = OrWhere | CompareWhere;
 
 export interface SelectOrder {
   column: string;

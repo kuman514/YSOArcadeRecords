@@ -5,7 +5,7 @@ import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import ReviewPostList from '^/src/features/review-article/review-post-list';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 
 export const metadata: Metadata = {
   title: `리뷰 목록 :: ${APP_NAME}`,

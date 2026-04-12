@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import SidebarCaller from '^/src/features/sidebar/caller';
-import { IS_PRODUCTION } from '^/src/shared/lib/is-production';
+import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 import NavLink from '^/src/shared/ui/nav-link';
 
 export default function Header() {

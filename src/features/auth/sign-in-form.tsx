@@ -4,8 +4,8 @@ import { useActionState, useState } from 'react';
 
 import FormInput from '^/src/shared/ui/form-input';
 
-import { checkIsEmailValid } from '^/src/shared/lib/email';
-import { checkIsPasswordValid } from '^/src/shared/lib/password';
+import { checkIsEmailValid } from '^/src/shared/util/email';
+import { checkIsPasswordValid } from '^/src/shared/util/password';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import Button from '^/src/shared/ui/button';
 

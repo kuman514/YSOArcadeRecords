@@ -1,4 +1,4 @@
-import Skeleton from '^/src/shared/skeleton';
+import Skeleton from '^/src/shared/ui/skeleton';
 
 export default function GalleryLoadingPage() {
   return (

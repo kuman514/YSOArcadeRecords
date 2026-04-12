@@ -7,7 +7,7 @@ import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { getArcadeInfo } from '^/src/features/arcade-info/data';
 import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 
 interface Props {
   searchParams: Promise<{

@@ -6,7 +6,7 @@ import ArcadeRecordArticle from '^/src/features/arcade-record-article';
 import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import DeleteArcadeRecordForm from '^/src/features/arcade-record-article/delete-form';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {

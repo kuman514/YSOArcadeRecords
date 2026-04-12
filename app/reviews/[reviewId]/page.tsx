@@ -6,7 +6,7 @@ import ReviewArticle from '^/src/features/review-article';
 import { getReviewPost } from '^/src/features/review-article/data';
 import DeleteReviewForm from '^/src/features/review-article/delete-form';
 import { convertReviewPostToPostListItem } from '^/src/features/review-article/review-post-list/util';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {

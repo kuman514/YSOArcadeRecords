@@ -24,7 +24,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
-import { issueUuid } from '^/src/shared/util/issue-uuid';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: ArcadeRecordPost;

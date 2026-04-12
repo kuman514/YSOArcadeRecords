@@ -20,7 +20,7 @@ import {
 import Button from '^/src/shared/ui/button';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormTextArea from '^/src/shared/ui/form-textarea';
-import { issueUuid } from '^/src/shared/util/issue-uuid';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: GalleryPost;

@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { getGalleryThemeList } from '^/src/features/gallery-theme/data';
 import GalleryForm from '^/src/features/gallery/form';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export const metadata: Metadata = {

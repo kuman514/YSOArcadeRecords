@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import { getReviewPost } from '^/src/features/review-article/data';
 import ReviewForm from '^/src/features/review-article/review-form';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {

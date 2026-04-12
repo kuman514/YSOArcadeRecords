@@ -1,4 +1,4 @@
-import Skeleton from '^/src/shared/skeleton';
+import Skeleton from '^/src/shared/ui/skeleton';
 import LoadingIndicator from '^/src/shared/ui/loading-indicator';
 
 export default function ReviewLoadingPage() {

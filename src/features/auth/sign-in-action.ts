@@ -2,8 +2,8 @@
 
 import { redirect } from 'next/navigation';
 
-import { checkIsEmailValid } from '^/src/shared/lib/email';
-import { checkIsPasswordValid } from '^/src/shared/lib/password';
+import { checkIsEmailValid } from '^/src/shared/util/email';
+import { checkIsPasswordValid } from '^/src/shared/util/password';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 import { AuthActionState } from './action-state';

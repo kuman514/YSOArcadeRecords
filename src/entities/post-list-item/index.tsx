@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import YouTubeMarkSvg from '^/public/icons/youtube-mark.svg';
-import Tag from '^/src/shared/tag';
+import Tag from '^/src/shared/ui/tag';
 
 import { PostListItemProps } from './props';
 

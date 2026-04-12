@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import { getGallery } from '^/src/features/gallery/data';
 import GalleryPostViewer from '^/src/features/gallery/viewer';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {

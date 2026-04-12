@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import ArcadeInfoForm from '^/src/features/arcade-info/form';
 import GalleryThemeForm from '^/src/features/gallery-theme/form';
 import MethodForm from '^/src/features/method/form';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export const metadata: Metadata = {

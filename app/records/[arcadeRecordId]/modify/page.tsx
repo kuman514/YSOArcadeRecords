@@ -5,7 +5,7 @@ import { getArcadeInfoList } from '^/src/features/arcade-info/data';
 import { getArcadeRecordPostArticle } from '^/src/features/arcade-record-article/data';
 import RecordForm from '^/src/features/arcade-record-article/record-form';
 import { getMethodList } from '^/src/features/method/data';
-import { APP_NAME } from '^/src/shared/lib/is-production';
+import { APP_NAME } from '^/src/shared/util/is-production';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 interface Props {

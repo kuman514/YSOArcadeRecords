@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import {
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
-} from '^/src/shared/route-handler-call/types';
+} from './types';
 
 export async function issueUuid() {
   try {

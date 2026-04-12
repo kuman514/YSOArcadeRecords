@@ -22,7 +22,7 @@ import Button from '^/src/shared/ui/button';
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
-import { issueUuid } from '^/src/shared/util/issue-uuid';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: ReviewPost;

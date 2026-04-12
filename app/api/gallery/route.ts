@@ -5,6 +5,8 @@ import { GalleryPostDBInput } from '^/src/entities/types/post';
 import { insertData } from '^/src/shared/supabase/database';
 import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import { generateKstDate } from '^/src/shared/util/generate-kst-date';
+import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
 
 export async function POST(request: Request) {
   const supabase = await createServerSideClient();
@@ -84,7 +86,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const createdDate = new Date().toISOString();
+  const createdAt = parseDateToDatabaseString(generateKstDate());
 
   try {
     await insertData<Omit<GalleryPostDBInput, 'id' | 'image_url'>>({
@@ -95,10 +97,12 @@ export async function POST(request: Request) {
         gallery_theme_id: galleryThemeId,
         thumbnail_url: thumbnailUrl,
         image_urls: originalImageUrls,
-        created_at: createdDate,
-        modified_at: createdDate,
+        created_at: createdAt,
+        modified_at: createdAt,
       },
     });
+
+    console.log(`Created gallery post: ${galleryId} at ${createdAt}`);
 
     revalidatePath('/gallery', 'layout');
 
@@ -110,6 +114,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ result: 'success' }, { status: 201 });
   } catch (error) {
+    console.error(
+      `Error in creating gallery post: ${galleryId} at ${createdAt} (${error})`
+    );
+
     return NextResponse.json(
       {
         result: 'failed',

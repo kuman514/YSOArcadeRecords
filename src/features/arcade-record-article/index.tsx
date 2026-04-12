@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import { CopyLinkButton } from '^/src/shared/share/copy-link';
 import { ShareToTwitterButton } from '^/src/shared/share/share-to-twitter';
-import Tag from '^/src/shared/tag';
+import Tag from '^/src/shared/ui/tag';
 import Container from '^/src/shared/ui/container';
 import UnorderedList from '^/src/shared/ui/unordered-list';
 import { parseDateToString } from '^/src/shared/util/parse-date';

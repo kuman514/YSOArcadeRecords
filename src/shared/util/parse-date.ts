@@ -1,9 +1,10 @@
 export function parseDateToString(date: Date) {
-  const fullYear = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const shiftedDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  const fullYear = shiftedDate.getFullYear();
+  const month = shiftedDate.getMonth() + 1;
+  const day = shiftedDate.getDate();
 
-  return `${fullYear}년 ${month}월 ${day}일`;
+  return `${fullYear}년 ${month}월 ${day}일 (대한민국 기준)`;
 }
 
 export function parseDateToDatabaseString(date: Date, timeZone?: `+${number}`) {

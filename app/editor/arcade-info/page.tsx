@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import ArcadeInfoForm from '^/src/features/arcade-info/form';
+import ArcadeInfoList from '^/src/features/arcade-info/list-table';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { APP_NAME } from '^/src/shared/util/is-production';
 
@@ -21,7 +21,7 @@ export default async function ArcadeInfoEditorPage() {
   return (
     <main className="w-full h-full max-w-3xl px-4 sm:px-8 py-32 flex flex-col gap-4">
       <h1 className="text-4xl font-bold">아케이드 부문 편집기</h1>
-      <ArcadeInfoForm />
+      <ArcadeInfoList />
     </main>
   );
 }

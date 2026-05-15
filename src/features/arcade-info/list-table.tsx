@@ -9,14 +9,11 @@ import {
 } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
-import InfoEditor from '^/src/entities/info-editor';
-
-import { createArcadeInfoAction } from './create-arcade-info-action';
+import InfoList from '^/src/entities/info-list';
 import { getArcadeInfoListClientSide } from './data-client';
-import { deleteArcadeInfoAction } from './delete-arcade-info-action';
 
-function ArcadeInfoFormContent() {
-  const { data: arcadeInfoList, refetch } = useQuery({
+function ArcadeInfoListContent() {
+  const { data: arcadeInfoList } = useQuery({
     queryKey: ['arcade-info'],
     queryFn: getArcadeInfoListClientSide,
   });
@@ -31,27 +28,17 @@ function ArcadeInfoFormContent() {
   );
 
   return (
-    <InfoEditor
-      editorLabel="아케이드 부문 편집기"
-      items={itemList}
-      idLabel="아케이드 부문 ID"
-      titleLabel="아케이드 부문 이름"
-      idName="arcadeId"
-      titleName="label"
-      refetch={refetch}
-      createItemAction={createArcadeInfoAction}
-      deleteItemAction={deleteArcadeInfoAction}
-    />
+    <InfoList items={itemList} type="arcade-info" label="아케이드 부문 목록" />
   );
 }
 
-export default function ArcadeInfoForm() {
+export default function ArcadeInfoList() {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ArcadeInfoFormContent />
+        <ArcadeInfoListContent />
       </HydrationBoundary>
     </QueryClientProvider>
   );

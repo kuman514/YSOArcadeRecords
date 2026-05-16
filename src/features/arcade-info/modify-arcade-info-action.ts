@@ -5,9 +5,9 @@ import { redirect } from 'next/navigation';
 import { InfoEditorActionState } from '^/src/entities/info-editor/types';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
-import { createArcadeInfo } from './data';
+import { modifyArcadeInfo } from './data';
 
-export async function createArcadeInfoAction(
+export async function modifyArcadeInfoAction(
   _: InfoEditorActionState,
   formData: FormData
 ) {
@@ -70,7 +70,7 @@ export async function createArcadeInfoAction(
   }
 
   try {
-    await createArcadeInfo({
+    await modifyArcadeInfo(arcadeId, {
       arcadeId,
       label,
       description,

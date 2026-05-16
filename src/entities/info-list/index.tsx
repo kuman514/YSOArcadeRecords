@@ -21,7 +21,7 @@ export default function InfoList({ type, label, items }: Props) {
       <Link
         key={item.itemId}
         className="w-full px-4 py-2 retro-rounded-2 flex justify-center items-center hover:bg-hovering"
-        href={`/${type}/${item.itemId}`}
+        href={`/editor/${type}/modify/${item.itemId}`}
       >
         {item.itemTitle}
       </Link>
@@ -30,6 +30,12 @@ export default function InfoList({ type, label, items }: Props) {
   return (
     <section className="w-full flex flex-col gap-2">
       <h2 className="text-2xl font-bold">{label}</h2>
+      <Link
+        className="w-full px-4 py-2 retro-rounded-2 flex justify-center items-center hover:bg-hovering"
+        href={`/editor/${type}/create`}
+      >
+        새로 만들기
+      </Link>
       {renderitemList}
     </section>
   );

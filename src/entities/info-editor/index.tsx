@@ -1,8 +1,8 @@
 import { useActionState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 
-import FormInput from '^/src/shared/ui/form-input';
 import Button from '^/src/shared/ui/button';
+import FormInput from '^/src/shared/ui/form-input';
 
 import { InfoEditorActionState } from './types';
 
@@ -40,6 +40,7 @@ export default function InfoEditor({
 }: Props) {
   const itemIdRef = useRef<HTMLInputElement>(null);
   const itemTitleRef = useRef<HTMLInputElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
 
   const [createState, createFormAction, isCreateLoading] = useActionState<
     InfoEditorActionState,
@@ -56,6 +57,12 @@ export default function InfoEditor({
       refetch();
     }
   }, [isCreateLoading, createState.isSuccess, refetch]);
+
+  useEffect(() => {
+    if (!isCreateLoading && createState.isSuccess) {
+      tableRef.current?.scrollTo(0, tableRef.current?.scrollHeight);
+    }
+  }, [isCreateLoading, createState.isSuccess, items.length]);
 
   useEffect(() => {
     if (!isCreateLoading && createState.errorMessage) {
@@ -94,7 +101,10 @@ export default function InfoEditor({
   return (
     <section className="w-full flex flex-col gap-2">
       <h2 className="text-2xl font-bold">{editorLabel}</h2>
-      <table className="w-full h-48 retro-rounded-2 overflow-y-auto block border-separate border-spacing-x-2">
+      <table
+        ref={tableRef}
+        className="w-full h-48 retro-rounded-2 overflow-y-auto block border-separate border-spacing-x-2"
+      >
         <thead className="w-full sticky top-0 left-0 bg-background">
           <tr>
             <th></th>

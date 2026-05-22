@@ -55,14 +55,9 @@ export default function InfoEditor({
   useEffect(() => {
     if (!isCreateLoading && createState.isSuccess) {
       refetch();
-    }
-  }, [isCreateLoading, createState.isSuccess, refetch]);
-
-  useEffect(() => {
-    if (!isCreateLoading && createState.isSuccess) {
       tableRef.current?.scrollTo(0, tableRef.current?.scrollHeight);
     }
-  }, [isCreateLoading, createState.isSuccess, items.length]);
+  }, [isCreateLoading, createState.isSuccess, refetch]);
 
   useEffect(() => {
     if (!isCreateLoading && createState.errorMessage) {
@@ -112,7 +107,14 @@ export default function InfoEditor({
             <th>{titleLabel}</th>
           </tr>
         </thead>
-        <tbody>{renderitemList}</tbody>
+        <tbody>
+          {renderitemList}
+          <tr className="opacity-0">
+            <td>.</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
       </table>
       <form
         action={createFormAction}

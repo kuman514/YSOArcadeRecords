@@ -13,6 +13,7 @@ import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -24,7 +25,6 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
-import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -358,6 +358,39 @@ export default function RecordForm({
     [methodList]
   );
 
+  const renderStageSelectOptions = useMemo(
+    () =>
+      ['']
+        .concat(
+          arcadeInfoList.find((arcadeInfo) => arcadeInfo.arcadeId === arcadeId)
+            ?.availableStages ?? []
+        )
+        .map((availableStage) => (
+          <option
+            key={`stage-selection-${availableStage}`}
+            value={availableStage}
+          >
+            {availableStage === '' ? '선택하세요' : availableStage}
+          </option>
+        )),
+    [arcadeInfoList, arcadeId]
+  );
+
+  const renderRankSelectOptions = useMemo(
+    () =>
+      ['']
+        .concat(
+          arcadeInfoList.find((arcadeInfo) => arcadeInfo.arcadeId === arcadeId)
+            ?.availableRanks ?? []
+        )
+        .map((availableRank) => (
+          <option key={`rank-selection-${availableRank}`} value={availableRank}>
+            {availableRank === '' ? '선택하세요' : availableRank}
+          </option>
+        )),
+    [arcadeInfoList, arcadeId]
+  );
+
   return (
     <form
       className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
@@ -426,6 +459,8 @@ export default function RecordForm({
           name="arcadeId"
           value={arcadeId}
           onChange={(event) => {
+            setStage('');
+            setRank('');
             setArcadeId(event.currentTarget.value);
           }}
         >
@@ -501,15 +536,16 @@ export default function RecordForm({
 
       <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="stage">최종 스테이지</label>
-        <FormInput
-          type="text"
+        <FormDropdown
           id="stage"
           name="stage"
           value={stage}
           onChange={(event) => {
             setStage(event.currentTarget.value);
           }}
-        />
+        >
+          {renderStageSelectOptions}
+        </FormDropdown>
         {!isStageVerified && (
           <span>어느 스테이지까지 도달하였는지 입력해주세요.</span>
         )}
@@ -517,15 +553,16 @@ export default function RecordForm({
 
       <p className="w-12/25 flex flex-col gap-2">
         <label htmlFor="rank">최종 등급</label>
-        <FormInput
-          type="text"
+        <FormDropdown
           id="rank"
           name="rank"
           value={rank}
           onChange={(event) => {
             setRank(event.currentTarget.value);
           }}
-        />
+        >
+          {renderRankSelectOptions}
+        </FormDropdown>
       </p>
 
       <p className="w-full flex flex-col gap-2">

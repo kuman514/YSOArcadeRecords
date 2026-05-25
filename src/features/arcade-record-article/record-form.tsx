@@ -84,7 +84,7 @@ export default function RecordForm({
   const [stage, setStage] = useState<string>(post?.stage ?? '');
   const [rank, setRank] = useState<string>(post?.rank ?? '');
   const [comment, setComment] = useState<string>(post?.comment ?? '');
-  const [tags, setTags] = useState<string>(post?.tags.join(',') ?? '');
+  const [tags, setTags] = useState<string[]>(post?.tags ?? []);
   const [note, setNote] = useState<string>(post?.note ?? '');
   const [youTubeId, setYouTubeId] = useState<string>(post?.youTubeId ?? '');
 
@@ -278,7 +278,7 @@ export default function RecordForm({
     recordFormData.append('comment', comment);
     recordFormData.append('note', note);
     recordFormData.append('youTubeId', youTubeId);
-    recordFormData.append('tags', tags);
+    tags.forEach((tag) => recordFormData.append('tags', tag));
 
     if (post?.thumbnailUrl) {
       recordFormData.append('presentThumbnailUrl', post.thumbnailUrl);
@@ -391,6 +391,35 @@ export default function RecordForm({
     [arcadeInfoList, arcadeId]
   );
 
+  const renderTags = (
+    arcadeInfoList.find((arcadeInfo) => arcadeInfo.arcadeId === arcadeId)
+      ?.availableTags ?? []
+  ).map((availableTag) => (
+    <span key={`tag-check-${availableTag}`} className="flex flex-row gap-2">
+      <input
+        name="tags"
+        id={`tag-check-${availableTag}`}
+        value={availableTag}
+        type="checkbox"
+        checked={tags.includes(availableTag)}
+        onChange={(event) => {
+          if (event.currentTarget.checked) {
+            setTags(tags.concat([availableTag]));
+            return;
+          }
+          const targetIndex = tags.findIndex((tag) => tag === availableTag);
+          if (targetIndex === -1) {
+            return;
+          }
+          const newTags = Array.from(tags);
+          newTags.splice(targetIndex, 1);
+          setTags(newTags);
+        }}
+      />
+      <label htmlFor={`tag-check-${availableTag}`}>{availableTag}</label>
+    </span>
+  ));
+
   return (
     <form
       className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
@@ -461,6 +490,7 @@ export default function RecordForm({
           onChange={(event) => {
             setStage('');
             setRank('');
+            setTags([]);
             setArcadeId(event.currentTarget.value);
           }}
         >
@@ -579,18 +609,10 @@ export default function RecordForm({
         {!isCommentVerified && <span>코멘터리를 입력해주세요.</span>}
       </p>
 
-      <p className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
-        <FormInput
-          type="text"
-          id="tags"
-          name="tags"
-          value={tags}
-          onChange={(event) => {
-            setTags(event.currentTarget.value);
-          }}
-        />
-      </p>
+        <div className="w-full flex flex-row gap-2">{renderTags}</div>
+      </div>
 
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="note">비고</label>

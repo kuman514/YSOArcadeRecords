@@ -6,10 +6,10 @@ import { updateData } from '^/src/shared/supabase/database';
 import { removeUnusedImages } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 import { ConditionType } from '^/src/shared/supabase/types';
-import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
-import { EvaluationCriterion } from '^/src/shared/util/types';
 import { generateKstDate } from '^/src/shared/util/generate-kst-date';
 import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
+import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { EvaluationCriterion } from '^/src/shared/util/types';
 
 export async function PUT(
   request: Request,
@@ -43,7 +43,7 @@ export async function PUT(
   const comment = formData.get('comment')?.toString();
   const note = formData.get('note')?.toString();
   const youTubeId = formData.get('youTubeId')?.toString();
-  const tags = formData.get('tags')?.toString();
+  const tags = formData.getAll('tags') as string[];
 
   const presentThumbnailUrl = formData.get('presentThumbnailUrl')?.toString();
   const thumbnailUrl = formData.get('thumbnailUrl')?.toString();
@@ -188,11 +188,7 @@ export async function PUT(
         stage: stage,
         rank,
         comment: comment,
-        tags:
-          tags
-            ?.split(',')
-            .map((tag) => tag.trim())
-            .filter((tag) => tag.length > 0) ?? [],
+        tags: tags,
         note,
         youtube_id: youTubeId,
         thumbnail_url: thumbnailUrl ?? presentThumbnailUrl,

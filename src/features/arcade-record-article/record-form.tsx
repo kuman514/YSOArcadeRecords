@@ -611,7 +611,7 @@ export default function RecordForm({
 
       <div className="w-full flex flex-col gap-2">
         <label>태그 (콤마로 구분)</label>
-        <div className="w-full flex flex-row gap-2">{renderTags}</div>
+        <div className="w-full flex flex-row gap-2 flex-wrap">{renderTags}</div>
       </div>
 
       <p className="w-full flex flex-col gap-2">

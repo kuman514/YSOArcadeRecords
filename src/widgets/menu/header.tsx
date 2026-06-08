@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/util/is-production';
-import NavLink from '^/src/shared/ui/nav-link';
+import AuthLink from '^/src/widgets/menu/auth-link';
 
 export default function Header() {
   return (
@@ -13,20 +13,7 @@ export default function Header() {
           <Link href="/" className="text-white">
             {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
           </Link>
-
-          <nav>
-            <ul className="flex flex-row gap-2 sm:gap-6">
-              <li>
-                <NavLink href="/records">기록</NavLink>
-              </li>
-              <li>
-                <NavLink href="/reviews">리뷰</NavLink>
-              </li>
-              <li>
-                <NavLink href="/gallery">갤러리</NavLink>
-              </li>
-            </ul>
-          </nav>
+          <AuthLink />
         </div>
       </div>
     </header>

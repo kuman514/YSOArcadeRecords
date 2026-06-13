@@ -4,9 +4,9 @@ export default function SidebarCaller() {
   return (
     <label
       htmlFor="sidebar-open-checker"
-      className="w-12 h-12 p-2 cursor-pointer"
+      className="w-16 h-16 flex flex-col justify-center items-center cursor-pointer"
     >
-      <StackSvgRepoComSvg width="100%" height="100%" />
+      <StackSvgRepoComSvg width="2rem" height="2rem" />
     </label>
   );
 }

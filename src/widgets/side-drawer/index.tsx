@@ -1,9 +1,7 @@
 import Link from 'next/link';
 
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
-import ByKuman514Svg from '^/public/logo/by-kuman514.svg';
-import YsoArcadeRecordsSvg from '^/public/logo/yso-arcade-records.svg';
-import SidebarLinkTree from '^/src/features/sidebar/link-tree';
+import Sidebar from '^/src/features/sidebar';
 import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 
 import SidebarOpenChecker from './open-checker';
@@ -16,7 +14,7 @@ export default function SideDrawer() {
         id="sidebar-overlay"
         className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"
       >
-        <aside className="w-full h-full bg-primary text-white max-w-160 grid grid-rows-[4rem_1fr_4rem]">
+        <aside className="w-full h-full bg-primary text-white max-w-72 grid grid-rows-[4rem_1fr_4rem]">
           <div className="w-full h-full flex flex-row items-center">
             <label
               htmlFor="sidebar-open-checker"
@@ -28,16 +26,7 @@ export default function SideDrawer() {
               {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
             </Link>
           </div>
-          <SidebarLinkTree />
-          <div className="w-full h-full flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-0">
-            <div className="w-18/30 sm:w-18/40">
-              <YsoArcadeRecordsSvg />
-            </div>
-            <div className="hidden w-1/30 sm:block sm:w-1/40"></div>
-            <div className="w-11/30 sm:w-11/40">
-              <ByKuman514Svg />
-            </div>
-          </div>
+          <Sidebar />
         </aside>
       </div>
     </>

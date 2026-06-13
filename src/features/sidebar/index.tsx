@@ -5,7 +5,7 @@ import SidebarLinkTree from './link-tree';
 
 export default function Sidebar() {
   return (
-    <aside className="sticky hidden top-16 left-0 w-full h-[calc(100dvh-4rem)] bg-primary text-white md:grid grid-rows-[1fr_4rem]">
+    <>
       <SidebarLinkTree />
       <div className="w-full h-full flex flex-col justify-center items-center gap-2">
         <div className="w-18/30 sm:w-18/40">
@@ -15,6 +15,6 @@ export default function Sidebar() {
           <ByKuman514Svg />
         </div>
       </div>
-    </aside>
+    </>
   );
 }

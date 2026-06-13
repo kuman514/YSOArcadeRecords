@@ -1,10 +1,8 @@
-import Link from 'next/link';
-
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import Sidebar from '^/src/features/sidebar';
-import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 
 import SidebarOpenChecker from './open-checker';
+import TitleLink from './title-link';
 
 export default function SideDrawer() {
   return (
@@ -22,9 +20,7 @@ export default function SideDrawer() {
             >
               <CloseSvgRepoComSvg width="100%" height="100%" />
             </label>
-            <Link href="/" className="text-white">
-              {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
-            </Link>
+            <TitleLink />
           </div>
           <Sidebar />
         </aside>

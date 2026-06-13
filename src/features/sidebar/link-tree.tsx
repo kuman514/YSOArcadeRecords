@@ -81,7 +81,7 @@ export default function SidebarLinkTree() {
           }
 
           const sidebarOpenChecker = document.querySelector(
-            'input#sidebar-open-checker'
+            'input#side-drawer-open-checker'
           );
 
           if (

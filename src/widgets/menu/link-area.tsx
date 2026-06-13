@@ -19,7 +19,7 @@ export default function AuthLinkArea({ children }: Props) {
         }
 
         const sidebarOpenChecker = document.querySelector(
-          'input#sidebar-open-checker'
+          'input#side-drawer-open-checker'
         );
 
         if (

@@ -69,7 +69,7 @@ export default function SidebarLinkTree() {
   ];
 
   return (
-    <nav className="overflow-y-auto">
+    <nav>
       <ul
         className="flex flex-col justify-start items-center gap-4"
         onClick={(event) => {

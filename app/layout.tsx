@@ -92,7 +92,7 @@ export default async function RootLayout({ children }: Readonly<Props>) {
       >
         <Header />
         <section className="w-full bg-background flex flex-row md:grid md:grid-cols-[18rem_1fr] min-h-[calc(100dvh-4rem)]">
-          <aside className="sticky hidden top-16 left-0 w-full h-[calc(100dvh-4rem)] bg-primary text-white md:grid grid-rows-[1fr_4rem]">
+          <aside className="sticky hidden top-16 left-0 w-full h-[calc(100dvh-4rem)] bg-primary text-white md:block">
             <Sidebar />
           </aside>
           <section className="w-full bg-background flex flex-col items-center min-h-[calc(100dvh-4rem)]">

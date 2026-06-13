@@ -4,6 +4,7 @@ import SignOutForm from '^/src/features/auth/sign-out-form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 import AuthLinkArea from './link-area';
+import MenuDrawer from './menu-drawer';
 
 export default async function AuthLink() {
   const supabase = await createServerSideClient();
@@ -13,10 +14,7 @@ export default async function AuthLink() {
 
   const renderLinkArea = isSignedIn ? (
     <>
-      <Link href="/editor">정보편집</Link>
-      <Link href="/create/records">새기록</Link>
-      <Link href="/create/reviews">새리뷰</Link>
-      <Link href="/create/gallery">새갤러리</Link>
+      <MenuDrawer />
       <SignOutForm />
     </>
   ) : (

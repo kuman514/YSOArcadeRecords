@@ -6,15 +6,13 @@ import AuthLink from '^/src/widgets/menu/auth-link';
 
 export default function Header() {
   return (
-    <header className="sticky top-0 left-0 w-full h-16 flex flex-row items-center pr-6 bg-primary z-50">
+    <header className="sticky top-0 left-0 w-full h-16 grid grid-cols-[4rem_1fr] pr-6 bg-primary z-50">
       <SidebarCaller />
-      <div className="w-full flex flex-col">
-        <div className="w-full h-12 flex flex-row items-center justify-between">
-          <Link href="/" className="text-white">
-            {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
-          </Link>
-          <AuthLink />
-        </div>
+      <div className="w-full h-full flex flex-row items-center justify-between">
+        <Link href="/" className="text-white">
+          {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
+        </Link>
+        <AuthLink />
       </div>
     </header>
   );

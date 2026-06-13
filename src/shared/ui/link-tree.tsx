@@ -40,7 +40,7 @@ export default function LinkTree({ node }: Props) {
   ) : null;
 
   return (
-    <li className="w-full max-w-[18rem] pl-4 flex flex-col gap-2">
+    <li className="w-full max-w-64 pl-2 flex flex-col gap-2">
       <div className="w-full flex flex-row justify-between items-center">
         <Link href={node.href}>{node.label}</Link>
         {renderOpenSubnodeButton}

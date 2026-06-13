@@ -27,8 +27,8 @@ export default function SidebarOpenChecker() {
     <input
       ref={checkerRef}
       type="checkbox"
-      id="sidebar-open-checker"
-      className="hidden [&+#sidebar-overlay]:hidden checked:[&+#sidebar-overlay]:block"
+      id="side-drawer-open-checker"
+      className="hidden [&+#side-drawer-overlay]:hidden checked:[&+#side-drawer-overlay]:block"
       onChange={(event) => {
         document.body.style.overflowY = event.currentTarget.checked
           ? 'hidden'

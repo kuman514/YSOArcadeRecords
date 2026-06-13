@@ -9,6 +9,7 @@ import ContactButton from '^/src/shared/contact';
 import { APP_NAME } from '^/src/shared/util/is-production';
 import Header from '^/src/widgets/menu/header';
 import Modal from '^/src/widgets/modal';
+import SideDrawer from '^/src/widgets/side-drawer';
 
 import './globals.css';
 
@@ -90,11 +91,16 @@ export default async function RootLayout({ children }: Readonly<Props>) {
         className={`${neoDgm.className} ${pressStart2p.variable} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <Header />
-        <section className="w-full bg-background flex flex-col items-center min-h-[calc(100dvh-4rem)]">
-          {children}
+        <section className="w-full bg-background flex flex-row md:grid md:grid-cols-[18rem_1fr] min-h-[calc(100dvh-4rem)]">
+          <aside className="sticky hidden top-16 left-0 w-full h-[calc(100dvh-4rem)] bg-primary text-white md:grid grid-rows-[1fr_4rem]">
+            <Sidebar />
+          </aside>
+          <section className="w-full bg-background flex flex-col items-center min-h-[calc(100dvh-4rem)]">
+            {children}
+          </section>
         </section>
         <ContactButton />
-        <Sidebar />
+        <SideDrawer />
         <Modal />
         <ToastContainer toastClassName={neoDgm.className} />
       </body>

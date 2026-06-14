@@ -12,7 +12,7 @@ export default function SideDrawer() {
         id="side-drawer-overlay"
         className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"
       >
-        <aside className="w-full h-full bg-primary text-white max-w-72 grid grid-rows-[4rem_1fr_4rem]">
+        <aside className="w-full h-full bg-primary text-white max-w-72 grid grid-rows-[4rem_1fr]">
           <div className="w-full h-full flex flex-row items-center">
             <label
               htmlFor="side-drawer-open-checker"

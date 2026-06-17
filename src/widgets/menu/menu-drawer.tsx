@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
+import PenSvgRepoComSvg from '^/public/icons/pen-svgrepo-com.svg';
+
 export default function MenuDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -42,9 +44,9 @@ export default function MenuDrawer() {
         onClick={() => {
           setIsDrawerOpen(true);
         }}
-        className="cursor-pointer"
+        className="w-16 h-16 flex flex-row justify-center items-center cursor-pointer"
       >
-        관리자 메뉴
+        <PenSvgRepoComSvg width="1.7rem" height="1.7rem" />
       </button>
       {renderMenu}
     </>

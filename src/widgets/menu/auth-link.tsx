@@ -23,7 +23,7 @@ export default async function AuthLink() {
       href="/signin"
       className="w-16 h-16 flex flex-row justify-center items-center"
     >
-      <KeySkeletonSvgRepoComSvg width="1.6rem" height="1.6rem" />
+      <KeySkeletonSvgRepoComSvg width="1.55rem" height="1.55rem" />
     </Link>
   );
 

@@ -9,7 +9,7 @@ interface Props {
 export default function AuthLinkArea({ children }: Props) {
   return (
     <div
-      className="h-full flex flex-row justify-end items-center text-white pr-4 gap-2 text-sm"
+      className="h-full flex flex-row justify-end items-center text-white gap-2 text-sm"
       onClick={(event) => {
         if (
           !(event.target instanceof HTMLElement) ||

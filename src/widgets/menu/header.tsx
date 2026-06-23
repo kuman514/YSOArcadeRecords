@@ -6,7 +6,7 @@ import AuthLink from '^/src/widgets/menu/auth-link';
 
 export default function Header() {
   return (
-    <header className="sticky top-0 left-0 w-full h-16 grid grid-cols-[4rem_1fr] pr-6 bg-primary z-50">
+    <header className="sticky top-0 left-0 w-full h-16 grid grid-cols-[4rem_1fr] pr-4 bg-primary z-50">
       <SidebarCaller />
       <div className="w-full h-full flex flex-row items-center justify-between">
         <Link href="/" className="text-white">

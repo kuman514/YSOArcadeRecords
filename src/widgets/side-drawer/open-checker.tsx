@@ -28,7 +28,7 @@ export default function SidebarOpenChecker() {
       ref={checkerRef}
       type="checkbox"
       id="side-drawer-open-checker"
-      className="hidden [&+#side-drawer-overlay]:hidden checked:[&+#side-drawer-overlay]:block checked:[&+#side-drawer-overlay>#side-drawer-content]:animate-slide-left-to-right"
+      className="hidden [&+#side-drawer-overlay]:hidden checked:[&+#side-drawer-overlay]:block [&~#side-drawer-content]:translate-x-[-100%] checked:[&~#side-drawer-content]:translate-x-[0%] [&~#side-drawer-content]:animate-slide-right-to-left checked:[&~#side-drawer-content]:animate-slide-left-to-right"
       onChange={(event) => {
         document.body.style.overflowY = event.currentTarget.checked
           ? 'hidden'

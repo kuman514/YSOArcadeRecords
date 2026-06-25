@@ -20,6 +20,18 @@
   }
 }
 
+@theme {
+  --animate-slide-left-to-right: slide-left-to-right 100ms linear;
+  @keyframes slide-left-to-right {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+}
+
 :root {
   --primary-color: #006814;
   --hovering-color: #39fd72;

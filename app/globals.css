@@ -20,6 +20,28 @@
   }
 }
 
+@theme {
+  --animate-slide-left-to-right: slide-left-to-right 300ms ease-in-out;
+  @keyframes slide-left-to-right {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+  --animate-slide-right-to-left: slide-right-to-left 300ms ease-in-out;
+  @keyframes slide-right-to-left {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+}
+
 :root {
   --primary-color: #006814;
   --hovering-color: #39fd72;

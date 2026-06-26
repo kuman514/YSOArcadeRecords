@@ -71,7 +71,7 @@ export default function SidebarLinkTree() {
   return (
     <nav>
       <ul
-        className="flex flex-col justify-start items-center gap-4"
+        className="flex flex-col justify-start items-center pt-4 gap-4"
         onClick={(event) => {
           if (
             !(event.target instanceof HTMLAnchorElement) ||

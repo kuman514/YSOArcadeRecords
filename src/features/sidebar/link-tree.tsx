@@ -69,9 +69,9 @@ export default function SidebarLinkTree() {
   ];
 
   return (
-    <nav className="overflow-y-auto">
+    <nav>
       <ul
-        className="flex flex-col justify-start items-center gap-4"
+        className="flex flex-col justify-start items-center pt-4 gap-4"
         onClick={(event) => {
           if (
             !(event.target instanceof HTMLAnchorElement) ||
@@ -81,7 +81,7 @@ export default function SidebarLinkTree() {
           }
 
           const sidebarOpenChecker = document.querySelector(
-            'input#sidebar-open-checker'
+            'input#side-drawer-open-checker'
           );
 
           if (

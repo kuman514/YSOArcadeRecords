@@ -9,7 +9,7 @@ interface Props {
 export default function AuthLinkArea({ children }: Props) {
   return (
     <div
-      className="w-full h-full flex flex-row justify-end items-center text-white pr-8 gap-2 text-sm"
+      className="h-full flex flex-row justify-end items-center text-white"
       onClick={(event) => {
         if (
           !(event.target instanceof HTMLElement) ||
@@ -19,7 +19,7 @@ export default function AuthLinkArea({ children }: Props) {
         }
 
         const sidebarOpenChecker = document.querySelector(
-          'input#sidebar-open-checker'
+          'input#side-drawer-open-checker'
         );
 
         if (

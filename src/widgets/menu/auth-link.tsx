@@ -2,8 +2,10 @@ import Link from 'next/link';
 
 import SignOutForm from '^/src/features/auth/sign-out-form';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import KeySkeletonSvgRepoComSvg from '^/public/icons/key-skeleton-svgrepo-com.svg';
 
 import AuthLinkArea from './link-area';
+import MenuDrawer from './menu-drawer';
 
 export default async function AuthLink() {
   const supabase = await createServerSideClient();
@@ -13,14 +15,16 @@ export default async function AuthLink() {
 
   const renderLinkArea = isSignedIn ? (
     <>
-      <Link href="/editor">정보편집</Link>
-      <Link href="/create/records">새기록</Link>
-      <Link href="/create/reviews">새리뷰</Link>
-      <Link href="/create/gallery">새갤러리</Link>
+      <MenuDrawer />
       <SignOutForm />
     </>
   ) : (
-    <Link href="/signin">관리자 로그인</Link>
+    <Link
+      href="/signin"
+      className="w-16 h-16 flex flex-row justify-center items-center"
+    >
+      <KeySkeletonSvgRepoComSvg width="1.55rem" height="1.55rem" />
+    </Link>
   );
 
   return <AuthLinkArea>{renderLinkArea}</AuthLinkArea>;

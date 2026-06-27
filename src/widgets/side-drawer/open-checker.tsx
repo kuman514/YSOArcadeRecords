@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function SidebarOpenChecker() {
+export default function SideDrawerOpenChecker() {
   const checkerRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

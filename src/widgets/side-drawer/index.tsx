@@ -14,6 +14,9 @@ export default function SideDrawer() {
       ></div>
       <aside
         id="side-drawer-content"
+        style={{
+          visibility: 'hidden',
+        }}
         className="fixed left-0 top-0 w-full h-dvh z-51 bg-primary text-white max-w-72 grid grid-rows-[4rem_1fr]"
       >
         <div className="w-full h-full flex flex-row items-center">

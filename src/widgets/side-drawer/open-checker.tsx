@@ -30,6 +30,10 @@ export default function SideDrawerOpenChecker() {
       id="side-drawer-open-checker"
       className="hidden [&+#side-drawer-overlay]:hidden checked:[&+#side-drawer-overlay]:block [&~#side-drawer-content]:translate-x-[-100%] checked:[&~#side-drawer-content]:translate-x-[0%] [&~#side-drawer-content]:animate-slide-right-to-left checked:[&~#side-drawer-content]:animate-slide-left-to-right"
       onChange={(event) => {
+        const content = document.querySelector('#side-drawer-content');
+        if (content && content instanceof HTMLElement) {
+          content.style.visibility = 'visible';
+        }
         document.body.style.overflowY = event.currentTarget.checked
           ? 'hidden'
           : 'auto';

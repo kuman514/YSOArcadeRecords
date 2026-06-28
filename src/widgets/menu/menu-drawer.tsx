@@ -22,6 +22,9 @@ export default function MenuDrawer() {
       />
       <div
         id="menu-drawer-content"
+        style={{
+          visibility: 'hidden',
+        }}
         onClick={(event) => {
           if (
             !(event.target instanceof HTMLElement) ||

@@ -1,19 +1,22 @@
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import Sidebar from '^/src/features/sidebar';
 
-import SidebarOpenChecker from './open-checker';
+import SideDrawerOpenChecker from './open-checker';
 import TitleLink from './title-link';
 
 export default function SideDrawer() {
   return (
     <>
-      <SidebarOpenChecker />
+      <SideDrawerOpenChecker />
       <div
         id="side-drawer-overlay"
         className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"
       ></div>
       <aside
         id="side-drawer-content"
+        style={{
+          visibility: 'hidden',
+        }}
         className="fixed left-0 top-0 w-full h-dvh z-51 bg-primary text-white max-w-72 grid grid-rows-[4rem_1fr]"
       >
         <div className="w-full h-full flex flex-row items-center">

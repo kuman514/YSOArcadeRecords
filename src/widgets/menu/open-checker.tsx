@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function SidebarOpenChecker() {
+export default function MenuDrawerOpenChecker() {
   const checkerRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -27,9 +27,13 @@ export default function SidebarOpenChecker() {
     <input
       ref={checkerRef}
       type="checkbox"
-      id="sidebar-open-checker"
-      className="hidden [&+#sidebar-overlay]:hidden checked:[&+#sidebar-overlay]:block"
+      id="menu-drawer-open-checker"
+      className="hidden [&+#menu-drawer-overlay]:hidden checked:[&+#menu-drawer-overlay]:block [&~#menu-drawer-content]:translate-x-[100%] checked:[&~#menu-drawer-content]:translate-x-[0%] [&~#menu-drawer-content]:animate-slide-left-to-right checked:[&~#menu-drawer-content]:animate-slide-right-to-left"
       onChange={(event) => {
+        const content = document.querySelector('#menu-drawer-content');
+        if (content && content instanceof HTMLElement) {
+          content.style.visibility = 'visible';
+        }
         document.body.style.overflowY = event.currentTarget.checked
           ? 'hidden'
           : 'auto';

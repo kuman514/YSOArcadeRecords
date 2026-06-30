@@ -22,12 +22,15 @@ export async function selectData<T>({
       case ConditionType.EQUAL:
         return accFilter.eq(curWhere.column, curWhere.value);
       case ConditionType.ILIKE:
-        return accFilter.ilike(curWhere.column, curWhere.value);
+        return accFilter.ilike(curWhere.column, `%${curWhere.value}%`);
       case ConditionType.OR:
         return accFilter.or(
           curWhere.wheres
-            .map(({ column, type, value }) => `${column}.${type}.${value}`)
-            .join(', ')
+            .map(
+              ({ column, type, value }) =>
+                `${column}.${type}.${type === ConditionType.ILIKE ? `%${value}%` : value}`
+            )
+            .join(',')
         );
       default:
         return accFilter;

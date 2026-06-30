@@ -3,6 +3,7 @@ import Link from 'next/link';
 import SidebarCaller from '^/src/features/sidebar/caller';
 import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 import AuthLink from '^/src/widgets/menu/auth-link';
+import SearchBar from '^/src/features/search';
 
 export default function Header() {
   return (
@@ -12,6 +13,7 @@ export default function Header() {
         <Link href="/" className="text-white">
           {IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'}
         </Link>
+        <SearchBar />
         <AuthLink />
       </div>
     </header>

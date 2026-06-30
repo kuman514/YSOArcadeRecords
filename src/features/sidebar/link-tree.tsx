@@ -49,10 +49,6 @@ export default function SidebarLinkTree() {
   }, []);
 
   const totalLinkTrees: LinkTreeNode[] = [
-    {
-      href: '/',
-      label: 'YSOArcadeRecords',
-    },
     arcadeRecordTypeCount,
     {
       href: '/reviews',

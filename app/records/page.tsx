@@ -52,7 +52,7 @@ export default async function RecordListPage({ searchParams }: Props) {
       from: 0,
       to: ITEMS_PER_PAGE,
     },
-    arcadeId
+    { arcadeId }
   );
 
   // 다음 페이지 존재 여부 확인

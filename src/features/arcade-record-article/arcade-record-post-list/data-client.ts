@@ -8,18 +8,21 @@ import { convertArcadeRecordPostDBColumnToArcadeRecordPost } from './util';
 
 export async function getExtendedArcadeRecordPostList(
   page: number,
-  arcadeId?: ArcadeInfo['arcadeId']
+  params?: {
+    arcadeId?: ArcadeInfo['arcadeId'];
+    searchText?: string;
+  }
 ) {
   const result = await selectDataClientSide<ArcadeRecordPostDBColumn[]>({
     select:
       'id, arcade_record_id, stage, rank, title, evaluation, score, elapsed_time, achieved_at, tags, youtube_id, thumbnail_url, arcade_info (*), methods (*)',
     from: 'records',
-    where: arcadeId
+    where: params?.arcadeId
       ? [
           {
             type: ConditionType.EQUAL,
             column: 'arcade_id',
-            value: arcadeId,
+            value: params.arcadeId,
           },
         ]
       : [],

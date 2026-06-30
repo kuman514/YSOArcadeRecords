@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import ByKuman514Svg from '^/public/logo/by-kuman514.svg';
 import YsoArcadeRecordsSvg from '^/public/logo/yso-arcade-records.svg';
+import packageJson from '^/package.json';
 
 export default function Footer() {
   return (
@@ -15,7 +16,11 @@ export default function Footer() {
         </div>
       </div>
       <div className="w-full px-8">
-        <p>YSOArcadeRecords © 2023~2026 kuman514</p>
+        <p>
+          YSOArcadeRecords
+          {packageJson.version ? ` v${packageJson.version}` : ''}
+        </p>
+        <p>© 2023~2026 kuman514</p>
         <p>
           [
           <Link

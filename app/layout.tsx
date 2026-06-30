@@ -91,8 +91,8 @@ export default async function RootLayout({ children }: Readonly<Props>) {
         className={`${neoDgm.className} ${pressStart2p.variable} antialiased w-screen min-h-dvh flex flex-col items-center overflow-x-hidden`}
       >
         <Header />
-        <section className="w-full bg-background flex flex-row md:grid md:grid-cols-[18rem_1fr] min-h-[calc(100dvh-4rem)]">
-          <aside className="sticky hidden top-16 left-0 w-full h-[calc(100dvh-4rem)] bg-primary text-white md:block">
+        <section className="w-full bg-background flex flex-row lg:grid lg:grid-cols-[18rem_1fr] min-h-[calc(100dvh-4rem)]">
+          <aside className="sticky hidden top-16 left-0 w-full h-[calc(100dvh-4rem)] bg-primary text-white lg:block">
             <Sidebar />
           </aside>
           <section className="w-full bg-background flex flex-col items-center min-h-[calc(100dvh-4rem)]">

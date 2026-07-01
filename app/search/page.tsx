@@ -4,8 +4,9 @@ import EmptySvg from '^/public/status/empty.svg';
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { APP_NAME } from '^/src/shared/util/is-production';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import { convertArcadeRecordPostToPostListItem } from '^/src/features/arcade-record-article/arcade-record-post-list/util';
-import PostListItem from '^/src/entities/post-list-item';
+import SearchResult from '^/src/features/search/search-result';
+import { EvaluationCriterion } from '^/src/shared/util/types';
+import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 
 interface Props {
   searchParams: Promise<{
@@ -34,17 +35,38 @@ export default async function SearchPage({ searchParams }: Props) {
     }
   );
 
-  const data = rawData.map(convertArcadeRecordPostToPostListItem);
-  const renderData = data.map((postListItem) => (
-    <PostListItem key={postListItem.id} {...postListItem} />
-  ));
+  const renderData = rawData.map((post) => {
+    const evaluations = [post.evaluation, post.score, post.elapsedTime]
+      .filter(
+        (evaluationValue) => evaluationValue && evaluationValue.length > 0
+      )
+      .map((evaluationValue) => {
+        const parsed = parseEvaluation(evaluationValue);
+        if (parsed.evaluationCriterion === EvaluationCriterion.SCORE) {
+          return `${parsed.value}점`;
+        }
+        return parsed.value;
+      })
+      .join(', ');
+
+    return (
+      <SearchResult
+        key={post.arcadeRecordId}
+        title={post.title}
+        subheading={evaluations}
+        description={post.comment}
+        href={`/records/${post.arcadeRecordId}`}
+        thumbnailUrl={post.thumbnailUrl}
+      />
+    );
+  });
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">
         "{searchText}" 아케이드 기록 검색 결과
       </h1>
-      {data.length > 0 ? (
+      {renderData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderData}</ul>
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">

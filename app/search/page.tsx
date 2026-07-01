@@ -8,6 +8,7 @@ import SearchResult from '^/src/features/search/search-result';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
+import { getGalleryList } from '^/src/features/gallery/data';
 
 interface Props {
   searchParams: Promise<{
@@ -38,6 +39,16 @@ export default async function SearchPage({ searchParams }: Props) {
   );
 
   const rawReviewData = await getReviewPostList(
+    {
+      from: 0,
+      to: 4,
+    },
+    {
+      searchText,
+    }
+  );
+
+  const rawGalleryData = await getGalleryList(
     {
       from: 0,
       to: 4,
@@ -86,6 +97,17 @@ export default async function SearchPage({ searchParams }: Props) {
     />
   ));
 
+  const renderGalleryData = rawGalleryData.map((post) => (
+    <SearchResult
+      key={post.galleryId}
+      title={`${post.theme.galleryThemeTitle} 사진`}
+      description={post.title}
+      href={`/gallery/${post.galleryId}`}
+      thumbnailUrl={post.thumbnailUrl}
+      emphasize={searchText ?? ''}
+    />
+  ));
+
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">"{searchText}" 검색 결과</h1>
@@ -116,6 +138,18 @@ export default async function SearchPage({ searchParams }: Props) {
         </div>
       )}
       <h2 className="text-2xl font-bold">갤러리</h2>
+      {renderGalleryData.length > 0 ? (
+        <ul className="w-full flex flex-col gap-4">{renderGalleryData}</ul>
+      ) : (
+        <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
+          <div className="w-full flex flex-col items-center pt-12">
+            <EmptySvg width={`${(100 * 5) / 9}%`} />
+          </div>
+          <span className="text-2xl font-bold text-center">
+            검색 결과가 없습니다.
+          </span>
+        </div>
+      )}
     </main>
   );
 }

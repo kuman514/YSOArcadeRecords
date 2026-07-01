@@ -1,16 +1,31 @@
 import { Gallery } from '^/src/entities/types/gallery';
 import { GalleryPostDBColumn } from '^/src/entities/types/post';
 import { selectData } from '^/src/shared/supabase/database';
-import { ConditionType, SelectRange } from '^/src/shared/supabase/types';
+import { ConditionType, SelectRange, Where } from '^/src/shared/supabase/types';
 
 import { convertGalleryDBColumnToGalleryPost } from './util';
 
-export async function getGalleryList(range?: SelectRange) {
+export async function getGalleryList(
+  range?: SelectRange,
+  params?: {
+    searchText?: string;
+  }
+) {
+  const where: Where[] = [];
+
+  if (params?.searchText) {
+    where.push({
+      type: ConditionType.ILIKE,
+      column: 'title',
+      value: params.searchText,
+    });
+  }
+
   const result = await selectData<GalleryPostDBColumn[]>({
     select:
       'id, gallery_id, title, thumbnail_url, image_url, gallery_theme_id, image_urls, created_at, modified_at, gallery_theme (*)',
     from: 'gallery',
-    where: [],
+    where,
     order: [
       {
         column: 'id',

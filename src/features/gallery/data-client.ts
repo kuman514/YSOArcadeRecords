@@ -1,15 +1,31 @@
 import { GALLERY_PHOTOS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { GalleryPostDBColumn } from '^/src/entities/types/post';
 import { selectDataClientSide } from '^/src/shared/supabase/database-client';
+import { ConditionType, Where } from '^/src/shared/supabase/types';
 
 import { convertGalleryDBColumnToGalleryPost } from './util';
 
-export async function getExtendedGalleryList(page: number) {
+export async function getExtendedGalleryList(
+  page: number,
+  params?: {
+    searchText?: string;
+  }
+) {
+  const where: Where[] = [];
+
+  if (params?.searchText) {
+    where.push({
+      type: ConditionType.ILIKE,
+      column: 'title',
+      value: params.searchText,
+    });
+  }
+
   const result = await selectDataClientSide<GalleryPostDBColumn[]>({
     select:
       'id, gallery_id, title, thumbnail_url, image_url, gallery_theme_id, image_urls, created_at, modified_at, gallery_theme (*)',
     from: 'gallery',
-    where: [],
+    where,
     order: [
       {
         column: 'id',

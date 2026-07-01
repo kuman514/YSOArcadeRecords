@@ -7,6 +7,7 @@ import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/ar
 import SearchResult from '^/src/features/search/search-result';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 
 interface Props {
   searchParams: Promise<{
@@ -25,17 +26,28 @@ export async function generateMetadata({
 
 export default async function SearchPage({ searchParams }: Props) {
   const { searchText } = await searchParams;
-  const rawData = await getArcadeRecordPostList(
+
+  const rawArcadeRecordData = await getArcadeRecordPostList(
     {
       from: 0,
-      to: ITEMS_PER_PAGE,
+      to: 4,
     },
     {
       searchText,
     }
   );
 
-  const renderData = rawData.map((post) => {
+  const rawReviewData = await getReviewPostList(
+    {
+      from: 0,
+      to: 4,
+    },
+    {
+      searchText,
+    }
+  );
+
+  const renderArcadeRecordData = rawArcadeRecordData.map((post) => {
     const evaluations = [post.evaluation, post.score, post.elapsedTime]
       .filter(
         (evaluationValue) => evaluationValue && evaluationValue.length > 0
@@ -62,13 +74,24 @@ export default async function SearchPage({ searchParams }: Props) {
     );
   });
 
+  const renderReviewData = rawReviewData.map((post) => (
+    <SearchResult
+      key={post.reviewId}
+      title={post.title}
+      subheading={`${post.subjectType} 리뷰 - ${post.reviewScore}/5점`}
+      description={`항목명: ${post.subjectName} - ${post.details.join(' · ')}`}
+      href={`/reviews/${post.reviewId}`}
+      thumbnailUrl={post.thumbnailUrl}
+      emphasize={searchText ?? ''}
+    />
+  ));
+
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
-      <h1 className="text-4xl font-bold">
-        "{searchText}" 아케이드 기록 검색 결과
-      </h1>
-      {renderData.length > 0 ? (
-        <ul className="w-full flex flex-col gap-4">{renderData}</ul>
+      <h1 className="text-4xl font-bold">"{searchText}" 검색 결과</h1>
+      <h2 className="text-2xl font-bold">아케이드 기록</h2>
+      {renderArcadeRecordData.length > 0 ? (
+        <ul className="w-full flex flex-col gap-4">{renderArcadeRecordData}</ul>
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
           <div className="w-full flex flex-col items-center pt-12">
@@ -79,6 +102,20 @@ export default async function SearchPage({ searchParams }: Props) {
           </span>
         </div>
       )}
+      <h2 className="text-2xl font-bold">리뷰</h2>
+      {renderReviewData.length > 0 ? (
+        <ul className="w-full flex flex-col gap-4">{renderReviewData}</ul>
+      ) : (
+        <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
+          <div className="w-full flex flex-col items-center pt-12">
+            <EmptySvg width={`${(100 * 5) / 9}%`} />
+          </div>
+          <span className="text-2xl font-bold text-center">
+            검색 결과가 없습니다.
+          </span>
+        </div>
+      )}
+      <h2 className="text-2xl font-bold">갤러리</h2>
     </main>
   );
 }

@@ -57,6 +57,7 @@ export default async function SearchPage({ searchParams }: Props) {
         description={post.comment}
         href={`/records/${post.arcadeRecordId}`}
         thumbnailUrl={post.thumbnailUrl}
+        emphasize={searchText ?? ''}
       />
     );
   });

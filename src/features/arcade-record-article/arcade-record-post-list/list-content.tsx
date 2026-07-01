@@ -23,7 +23,7 @@ export function ArcadeRecordPostListContent() {
   } = useInfiniteQuery({
     queryKey: arcadeId ? ['arcade-records', arcadeId] : ['arcade-records'],
     queryFn: async ({ pageParam }) =>
-      await getExtendedArcadeRecordPostList(pageParam, arcadeId),
+      await getExtendedArcadeRecordPostList(pageParam, { arcadeId }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });

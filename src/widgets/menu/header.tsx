@@ -34,7 +34,7 @@ export default async function Header() {
     <header className="sticky top-0 left-0 w-full h-16 grid grid-cols-[4rem_1fr] pr-4 bg-primary z-50">
       <SidebarCaller />
       <div
-        className={`w-full h-full grid ${isSignedIn ? 'grid-cols-[1fr_8rem]' : 'grid-cols-[6rem_1fr_4rem]'} sm:grid-cols-[8rem_1fr_8rem]`}
+        className={`w-full h-full grid ${isSignedIn ? 'grid-cols-[1fr_8rem]' : 'grid-cols-[7rem_1fr_4rem]'} sm:grid-cols-[8rem_1fr_8rem]`}
       >
         <div
           className={`w-full ${isSignedIn ? 'hidden sm:flex' : 'flex'} flex-col justify-center items-start`}

@@ -4,11 +4,9 @@ import EmptySvg from '^/public/status/empty.svg';
 import { APP_NAME } from '^/src/shared/util/is-production';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import SearchResult from '^/src/entities/search/search-result';
-import { EvaluationCriterion } from '^/src/shared/util/types';
-import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 import { getGalleryList } from '^/src/features/gallery/data';
-import { parseDateToString } from '^/src/shared/util/parse-date';
+import { convertArcadeRecordPostToSearchResultProps } from '^/src/features/arcade-record-article/search-result-list/util';
 
 interface Props {
   searchParams: Promise<{
@@ -59,27 +57,11 @@ export default async function SearchPage({ searchParams }: Props) {
   );
 
   const renderArcadeRecordData = rawArcadeRecordData.map((post) => {
-    const evaluations = [post.evaluation, post.score, post.elapsedTime]
-      .filter(
-        (evaluationValue) => evaluationValue && evaluationValue.length > 0
-      )
-      .map((evaluationValue) => {
-        const parsed = parseEvaluation(evaluationValue);
-        if (parsed.evaluationCriterion === EvaluationCriterion.SCORE) {
-          return `${parsed.value}점`;
-        }
-        return parsed.value;
-      })
-      .join(', ');
-
+    const props = convertArcadeRecordPostToSearchResultProps(post);
     return (
       <SearchResult
         key={post.arcadeRecordId}
-        title={post.title}
-        subheading={`${evaluations} / 달성일자: ${parseDateToString(post.achievedAt)}`}
-        description={post.comment}
-        href={`/records/${post.arcadeRecordId}`}
-        thumbnailUrl={post.thumbnailUrl}
+        {...props}
         emphasize={searchText ?? ''}
       />
     );

@@ -5,10 +5,8 @@ import { useEffect } from 'react';
 import { getExtendedArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data-client';
 import { INFINITE_SCROLL_OFFSET } from '^/src/shared/util/constants';
 import SearchResult from '^/src/entities/search/search-result';
-import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
-import { EvaluationCriterion } from '^/src/shared/util/types';
 import Container from '^/src/shared/ui/container';
-import { parseDateToString } from '^/src/shared/util/parse-date';
+import { convertArcadeRecordPostToSearchResultProps } from '^/src/features/arcade-record-article/search-result-list/util';
 
 export default function RecordSearchResultListContent() {
   const searchParams = useSearchParams();
@@ -60,27 +58,11 @@ export default function RecordSearchResultListContent() {
   const data = rawData?.pages.map((page) => page.content);
   const renderData = data?.map((page) =>
     page.map((post) => {
-      const evaluations = [post.evaluation, post.score, post.elapsedTime]
-        .filter(
-          (evaluationValue) => evaluationValue && evaluationValue.length > 0
-        )
-        .map((evaluationValue) => {
-          const parsed = parseEvaluation(evaluationValue);
-          if (parsed.evaluationCriterion === EvaluationCriterion.SCORE) {
-            return `${parsed.value}점`;
-          }
-          return parsed.value;
-        })
-        .join(', ');
-
+      const props = convertArcadeRecordPostToSearchResultProps(post);
       return (
         <SearchResult
           key={post.arcadeRecordId}
-          title={post.title}
-          subheading={`${evaluations} / 달성일자: ${parseDateToString(post.achievedAt)}`}
-          description={post.comment}
-          href={`/records/${post.arcadeRecordId}`}
-          thumbnailUrl={post.thumbnailUrl}
+          {...props}
           emphasize={searchText ?? ''}
         />
       );

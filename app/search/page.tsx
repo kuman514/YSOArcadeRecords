@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 import EmptySvg from '^/public/status/empty.svg';
 import { APP_NAME } from '^/src/shared/util/is-production';
@@ -93,7 +94,15 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">"{searchText}" 검색 결과</h1>
-      <h2 className="text-2xl font-bold">아케이드 기록</h2>
+      <div className="w-full flex flex-row justify-between items-center">
+        <h2 className="text-2xl font-bold">아케이드 기록</h2>
+        <Link
+          href={`/search/records?searchText=${searchText}`}
+          className="hover:text-hovering"
+        >
+          더보기
+        </Link>
+      </div>
       {renderArcadeRecordData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderArcadeRecordData}</ul>
       ) : (
@@ -106,7 +115,16 @@ export default async function SearchPage({ searchParams }: Props) {
           </span>
         </div>
       )}
-      <h2 className="text-2xl font-bold">리뷰</h2>
+
+      <div className="w-full flex flex-row justify-between items-center">
+        <h2 className="text-2xl font-bold">리뷰</h2>
+        <Link
+          href={`/search/reviews?searchText=${searchText}`}
+          className="hover:text-hovering"
+        >
+          더보기
+        </Link>
+      </div>
       {renderReviewData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderReviewData}</ul>
       ) : (
@@ -119,7 +137,16 @@ export default async function SearchPage({ searchParams }: Props) {
           </span>
         </div>
       )}
-      <h2 className="text-2xl font-bold">갤러리</h2>
+
+      <div className="w-full flex flex-row justify-between items-center">
+        <h2 className="text-2xl font-bold">갤러리</h2>
+        <Link
+          href={`/search/gallery?searchText=${searchText}`}
+          className="hover:text-hovering"
+        >
+          더보기
+        </Link>
+      </div>
       {renderGalleryData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderGalleryData}</ul>
       ) : (

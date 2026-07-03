@@ -2,12 +2,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 import EmptySvg from '^/public/status/empty.svg';
-import { APP_NAME } from '^/src/shared/util/is-production';
-import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import SearchResult from '^/src/entities/search/search-result';
-import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
-import { getGalleryList } from '^/src/features/gallery/data';
+import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import { convertArcadeRecordPostToSearchResultProps } from '^/src/features/arcade-record-article/search-result-list/util';
+import { getGalleryList } from '^/src/features/gallery/data';
+import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
+import { APP_NAME } from '^/src/shared/util/is-production';
 
 interface Props {
   searchParams: Promise<{
@@ -107,7 +107,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <ul className="w-full flex flex-col gap-4">{renderArcadeRecordData}</ul>
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
-          <div className="w-full flex flex-col items-center pt-12">
+          <div className="w-full flex flex-col items-center">
             <EmptySvg width={`${(100 * 5) / 9}%`} />
           </div>
           <span className="text-2xl font-bold text-center">
@@ -129,7 +129,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <ul className="w-full flex flex-col gap-4">{renderReviewData}</ul>
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
-          <div className="w-full flex flex-col items-center pt-12">
+          <div className="w-full flex flex-col items-center">
             <EmptySvg width={`${(100 * 5) / 9}%`} />
           </div>
           <span className="text-2xl font-bold text-center">
@@ -151,7 +151,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <ul className="w-full flex flex-col gap-4">{renderGalleryData}</ul>
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
-          <div className="w-full flex flex-col items-center pt-12">
+          <div className="w-full flex flex-col items-center">
             <EmptySvg width={`${(100 * 5) / 9}%`} />
           </div>
           <span className="text-2xl font-bold text-center">

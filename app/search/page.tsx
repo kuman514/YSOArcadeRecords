@@ -1,10 +1,9 @@
 import { Metadata } from 'next';
 
 import EmptySvg from '^/public/status/empty.svg';
-import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { APP_NAME } from '^/src/shared/util/is-production';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import SearchResult from '^/src/features/search/search-result';
+import SearchResult from '^/src/entities/search/search-result';
 import { EvaluationCriterion } from '^/src/shared/util/types';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';

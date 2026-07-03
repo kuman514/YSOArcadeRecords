@@ -8,6 +8,7 @@ import { EvaluationCriterion } from '^/src/shared/util/types';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 import { getGalleryList } from '^/src/features/gallery/data';
+import { parseDateToString } from '^/src/shared/util/parse-date';
 
 interface Props {
   searchParams: Promise<{
@@ -75,7 +76,7 @@ export default async function SearchPage({ searchParams }: Props) {
       <SearchResult
         key={post.arcadeRecordId}
         title={post.title}
-        subheading={evaluations}
+        subheading={`${evaluations} / 달성일자: ${parseDateToString(post.achievedAt)}`}
         description={post.comment}
         href={`/records/${post.arcadeRecordId}`}
         thumbnailUrl={post.thumbnailUrl}

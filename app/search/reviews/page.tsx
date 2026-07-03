@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
 
 import EmptySvg from '^/public/status/empty.svg';
 import { APP_NAME } from '^/src/shared/util/is-production';
@@ -57,6 +58,12 @@ export default async function ReviewSearchPage({ searchParams }: Props) {
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
+      <Link
+        className="hover:text-hovering"
+        href={`/search?searchText=${searchText}`}
+      >
+        {'<'} 전체 검색 결과 보기
+      </Link>
       <h1 className="text-4xl font-bold">"{searchText}" 리뷰 검색 결과</h1>
       {content.length > 0 ? (
         <ReviewSearchResultList dehydratedState={dehydrate(queryClient)} />

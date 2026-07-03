@@ -22,7 +22,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function SearchPage({ searchParams }: Props) {
+export default async function RecordSearchPage({ searchParams }: Props) {
   const { searchText } = await searchParams;
 
   const queryClient = new QueryClient();

@@ -6,7 +6,8 @@ import { getExtendedArcadeRecordPostList } from '^/src/features/arcade-record-ar
 import { INFINITE_SCROLL_OFFSET } from '^/src/shared/util/constants';
 import SearchResult from '^/src/entities/search/search-result';
 import Container from '^/src/shared/ui/container';
-import { convertArcadeRecordPostToSearchResultProps } from '^/src/features/arcade-record-article/search-result-list/util';
+
+import { convertArcadeRecordPostToSearchResultProps } from './util';
 
 export default function RecordSearchResultListContent() {
   const searchParams = useSearchParams();

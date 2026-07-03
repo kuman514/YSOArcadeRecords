@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SubmitEvent } from 'react';
 
 import FormInput from '^/src/shared/ui/form-input';
@@ -9,9 +9,13 @@ import SearchSvgRepoSvg from '^/public/icons/search-left-1504-svgrepo-com.svg';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 
 export default function SearchBar() {
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const initialSearchText = searchParams.get('searchText') ?? '';
+
   const [isSearchExpanded, setIsSearchExpanded] = useState<boolean>(false);
 
-  const [searchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>(initialSearchText);
   const route = useRouter();
 
   function handleOnSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -22,7 +26,12 @@ export default function SearchBar() {
       return false;
     }
 
-    route.push(`/search?searchText=${searchText}`);
+    if (pathName?.startsWith('/search')) {
+      route.push(`${pathName}?searchText=${searchText}`);
+    } else {
+      route.push(`/search?searchText=${searchText}`);
+    }
+
     return false;
   }
 

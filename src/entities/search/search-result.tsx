@@ -2,14 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Fragment, ReactNode } from 'react';
 
-interface Props {
-  title: string;
-  subheading?: string;
-  description: string;
-  href: string;
-  thumbnailUrl: string;
-  emphasize: string;
-}
+import { SearchResultProps } from '^/src/entities/search/types';
 
 export default function SearchResult({
   title,
@@ -18,7 +11,7 @@ export default function SearchResult({
   href,
   thumbnailUrl,
   emphasize,
-}: Props) {
+}: SearchResultProps) {
   const splitTitle = title.split(emphasize);
   const splitDescription = description.split(emphasize);
 

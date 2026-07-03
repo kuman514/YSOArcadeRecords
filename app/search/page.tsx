@@ -1,14 +1,13 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 import EmptySvg from '^/public/status/empty.svg';
-import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { APP_NAME } from '^/src/shared/util/is-production';
 import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
-import SearchResult from '^/src/features/search/search-result';
-import { EvaluationCriterion } from '^/src/shared/util/types';
-import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
+import SearchResult from '^/src/entities/search/search-result';
 import { getReviewPostList } from '^/src/features/review-article/review-post-list/data';
 import { getGalleryList } from '^/src/features/gallery/data';
+import { convertArcadeRecordPostToSearchResultProps } from '^/src/features/arcade-record-article/search-result-list/util';
 
 interface Props {
   searchParams: Promise<{
@@ -59,27 +58,11 @@ export default async function SearchPage({ searchParams }: Props) {
   );
 
   const renderArcadeRecordData = rawArcadeRecordData.map((post) => {
-    const evaluations = [post.evaluation, post.score, post.elapsedTime]
-      .filter(
-        (evaluationValue) => evaluationValue && evaluationValue.length > 0
-      )
-      .map((evaluationValue) => {
-        const parsed = parseEvaluation(evaluationValue);
-        if (parsed.evaluationCriterion === EvaluationCriterion.SCORE) {
-          return `${parsed.value}점`;
-        }
-        return parsed.value;
-      })
-      .join(', ');
-
+    const props = convertArcadeRecordPostToSearchResultProps(post);
     return (
       <SearchResult
         key={post.arcadeRecordId}
-        title={post.title}
-        subheading={evaluations}
-        description={post.comment}
-        href={`/records/${post.arcadeRecordId}`}
-        thumbnailUrl={post.thumbnailUrl}
+        {...props}
         emphasize={searchText ?? ''}
       />
     );
@@ -111,7 +94,15 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
       <h1 className="text-4xl font-bold">"{searchText}" 검색 결과</h1>
-      <h2 className="text-2xl font-bold">아케이드 기록</h2>
+      <div className="w-full flex flex-row justify-between items-center">
+        <h2 className="text-2xl font-bold">아케이드 기록</h2>
+        <Link
+          href={`/search/records?searchText=${searchText}`}
+          className="hover:text-hovering"
+        >
+          더보기
+        </Link>
+      </div>
       {renderArcadeRecordData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderArcadeRecordData}</ul>
       ) : (
@@ -124,7 +115,16 @@ export default async function SearchPage({ searchParams }: Props) {
           </span>
         </div>
       )}
-      <h2 className="text-2xl font-bold">리뷰</h2>
+
+      <div className="w-full flex flex-row justify-between items-center">
+        <h2 className="text-2xl font-bold">리뷰</h2>
+        <Link
+          href={`/search/reviews?searchText=${searchText}`}
+          className="hover:text-hovering"
+        >
+          더보기
+        </Link>
+      </div>
       {renderReviewData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderReviewData}</ul>
       ) : (
@@ -137,7 +137,16 @@ export default async function SearchPage({ searchParams }: Props) {
           </span>
         </div>
       )}
-      <h2 className="text-2xl font-bold">갤러리</h2>
+
+      <div className="w-full flex flex-row justify-between items-center">
+        <h2 className="text-2xl font-bold">갤러리</h2>
+        <Link
+          href={`/search/gallery?searchText=${searchText}`}
+          className="hover:text-hovering"
+        >
+          더보기
+        </Link>
+      </div>
       {renderGalleryData.length > 0 ? (
         <ul className="w-full flex flex-col gap-4">{renderGalleryData}</ul>
       ) : (

@@ -5,8 +5,14 @@ interface Props extends DetailedHTMLProps<
   HTMLInputElement
 > {
   type: 'text' | 'password' | 'email' | 'phone' | 'date';
+  additionalClassName?: string;
 }
 
-export default function FormInput(props: Props) {
-  return <input {...props} className="retro-rounded-2 px-4 py-2" />;
+export default function FormInput({ additionalClassName, ...props }: Props) {
+  return (
+    <input
+      {...props}
+      className={`retro-rounded-2 px-4 py-2 ${additionalClassName}`}
+    />
+  );
 }

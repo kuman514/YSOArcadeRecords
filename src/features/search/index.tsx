@@ -1,12 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { SubmitEvent } from 'react';
+import { SubmitEvent, useState } from 'react';
 
-import FormInput from '^/src/shared/ui/form-input';
-import SearchSvgRepoSvg from '^/public/icons/search-left-1504-svgrepo-com.svg';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
+import SearchSvgRepoSvg from '^/public/icons/search-left-1504-svgrepo-com.svg';
+import FormInput from '^/src/shared/ui/form-input';
 
 export default function SearchBar() {
   const pathName = usePathname();
@@ -39,6 +38,7 @@ export default function SearchBar() {
     <>
       <form method="get" className="hidden sm:flex" onSubmit={handleOnSubmit}>
         <FormInput
+          additionalClassName="retro-rounded-2-darkonly text-white"
           name="searchText"
           type="text"
           placeholder="포스트 검색"
@@ -52,7 +52,7 @@ export default function SearchBar() {
         <div className="flex sm:hidden w-full h-full flex flex-row justify-end items-center">
           <button
             type="button"
-            className="w-16 h-16 flex flex-row justify-center items-center cursor-pointer sm:hidden"
+            className="w-16 h-16 flex flex-row justify-center items-center cursor-pointer sm:hidden text-white"
             onClick={() => {
               setIsSearchExpanded(true);
             }}
@@ -72,6 +72,7 @@ export default function SearchBar() {
               style={{
                 width: '100%',
               }}
+              additionalClassName="retro-rounded-2-darkonly text-white"
               name="searchText"
               type="text"
               placeholder="포스트 검색"

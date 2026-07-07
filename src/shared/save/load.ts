@@ -1,6 +1,6 @@
 'use client';
 
-export function loadFromLocalStorage<T>(key: string) {
+export function loadFromLocalStorage<T extends object>(key: string) {
   const data = localStorage.getItem(key);
   if (data === null) {
     return null;

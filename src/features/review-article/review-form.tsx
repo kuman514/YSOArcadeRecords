@@ -23,6 +23,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
 import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
+import { useTempSave } from '^/src/shared/save/hook';
 
 interface Props {
   post?: ReviewPost;
@@ -68,6 +69,46 @@ export default function ReviewForm({ post }: Props) {
     })) ?? []
   );
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+
+  useTempSave<{
+    title: string;
+    tags: string;
+    subjectName: string;
+    subjectType: string;
+    createdBy: string;
+    releaseDate: Date | null;
+    details: MultipleFormValue<string>;
+    reviewScore: number;
+    youTubeId: string;
+    // images: ImageListElementValue[];
+    // localThumbnail: File;
+  }>({
+    key: 'yso-arcade-records-temp-review',
+    delay: 1000,
+    isActive: !post,
+    params: {
+      title,
+      tags,
+      subjectName,
+      subjectType,
+      createdBy,
+      releaseDate,
+      details,
+      reviewScore,
+      youTubeId,
+    },
+    onLoad: (loaded) => {
+      setTitle(loaded.title);
+      setTags(loaded.tags);
+      setSubjectName(loaded.subjectName);
+      setSubjectName(loaded.subjectType);
+      setCreatedBy(loaded.createdBy);
+      setReleaseDate(loaded.releaseDate);
+      setDetails(loaded.details);
+      setReviewScore(loaded.reviewScore);
+      setYouTubeId(loaded.youTubeId);
+    },
+  });
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { loadFromLocalStorage } from '^/src/shared/save/load';
@@ -22,8 +22,10 @@ export function useTempSave<T extends object>({
   delay,
   onLoad,
 }: Params<T>) {
+  const [isSaveActivated, setIsSaveActivated] = useState<boolean>(false);
+
   useEffect(() => {
-    if (!isActive) {
+    if (!isSaveActivated) {
       return;
     }
 
@@ -37,7 +39,7 @@ export function useTempSave<T extends object>({
     return () => {
       clearTimeout(timeout);
     };
-  }, [isActive, ...Object.values(params)]);
+  }, [isSaveActivated, ...Object.values(params)]);
 
   useEffect(() => {
     if (!isActive) {
@@ -46,11 +48,13 @@ export function useTempSave<T extends object>({
 
     const loaded = loadFromLocalStorage<T>(key);
     if (!loaded) {
+      setIsSaveActivated(true);
       return;
     }
 
     if (confirm('이전에 작성하던 포스트가 있습니다. 불러오시겠습니까?')) {
       onLoad(loaded);
     }
+    setIsSaveActivated(true);
   }, [isActive]);
 }

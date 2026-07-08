@@ -1,15 +1,41 @@
 import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
 import { ReviewPostDBColumn } from '^/src/entities/types/post';
 import { selectDataClientSide } from '^/src/shared/supabase/database-client';
+import { ConditionType, Where } from '^/src/shared/supabase/types';
 
 import { convertReviewPostDBColumnToReviewPost } from './util';
 
-export async function getExtendedReviewPostList(page: number) {
+export async function getExtendedReviewPostList(
+  page: number,
+  params?: {
+    searchText?: string;
+  }
+) {
+  const where: Where[] = [];
+
+  if (params?.searchText) {
+    where.push({
+      type: ConditionType.OR,
+      wheres: [
+        {
+          type: ConditionType.ILIKE,
+          column: 'title',
+          value: params.searchText,
+        },
+        {
+          type: ConditionType.ILIKE,
+          column: 'subject_name',
+          value: params.searchText,
+        },
+      ],
+    });
+  }
+
   const result = await selectDataClientSide<ReviewPostDBColumn[]>({
     select:
       'id, review_id, title, tags, subject_name, subject_type, created_by, release_date, details, key_features, expectations, first_impressions, positives, negatives, conclusions, review_score, youtube_id, thumbnail_url, image_urls, created_at, modified_at',
     from: 'reviews',
-    where: [],
+    where,
     order: [
       {
         column: 'id',

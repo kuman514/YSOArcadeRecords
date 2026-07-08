@@ -1,50 +1,33 @@
-import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
 
 import EmptySvg from '^/public/status/empty.svg';
-import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
-import { getArcadeInfo } from '^/src/features/arcade-info/data';
-import ArcadeRecordPostList from '^/src/features/arcade-record-article/arcade-record-post-list';
-import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 import { APP_NAME } from '^/src/shared/util/is-production';
+import { ITEMS_PER_PAGE } from '^/src/entities/constants/pagenation';
+import RecordSearchResultList from '^/src/features/arcade-record-article/search-result-list';
+import { getArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data';
 
 interface Props {
   searchParams: Promise<{
-    arcadeId?: string;
+    searchText?: string;
   }>;
 }
 
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
-  const { arcadeId } = await searchParams;
-
-  const arcadeInfo = arcadeId ? await getArcadeInfo(arcadeId) : null;
-  if (arcadeId && !arcadeInfo) {
-    return {
-      title: `페이지를 찾을 수 없음 :: ${APP_NAME}`,
-    };
-  }
-
+  const { searchText } = await searchParams;
   return {
-    title: `${arcadeInfo?.label ?? '모든 아케이드'} 기록 목록 :: ${APP_NAME}`,
-    description: arcadeInfo
-      ? `${arcadeInfo.label}에 관한 아케이드 기록 모음집`
-      : 'YSO(kuman514)의 모든 부문의 아케이드 기록에 대한 목록',
+    title: `${searchText} 아케이드 기록 검색 결과 :: ${APP_NAME}`,
   };
 }
 
-export default async function RecordListPage({ searchParams }: Props) {
-  const { arcadeId } = await searchParams;
-
-  const arcadeInfo = arcadeId ? await getArcadeInfo(arcadeId) : null;
-  if (arcadeId && !arcadeInfo) {
-    notFound();
-  }
+export default async function RecordSearchPage({ searchParams }: Props) {
+  const { searchText } = await searchParams;
 
   const queryClient = new QueryClient();
-  const queryKey = arcadeId ? ['arcade-records', arcadeId] : ['arcade-records'];
+  const queryKey = ['search', 'arcade-records', searchText];
 
   // 첫 번째 페이지(0페이지) 데이터 가져오기 - 다음 페이지 확인을 위해 +1개 더 가져옴
   const firstPageData = await getArcadeRecordPostList(
@@ -52,7 +35,9 @@ export default async function RecordListPage({ searchParams }: Props) {
       from: 0,
       to: ITEMS_PER_PAGE,
     },
-    { arcadeId }
+    {
+      searchText,
+    }
   );
 
   // 다음 페이지 존재 여부 확인
@@ -73,18 +58,24 @@ export default async function RecordListPage({ searchParams }: Props) {
 
   return (
     <main className="w-full h-full max-w-3xl flex flex-col items-start px-4 sm:px-8 py-32 gap-8">
+      <Link
+        className="hover:text-hovering"
+        href={`/search?searchText=${searchText}`}
+      >
+        {'<'} 전체 검색 결과 보기
+      </Link>
       <h1 className="text-4xl font-bold">
-        {arcadeInfo?.label ?? '모든 아케이드'} 기록 목록
+        "{searchText}" 아케이드 기록 검색 결과
       </h1>
       {content.length > 0 ? (
-        <ArcadeRecordPostList dehydratedState={dehydrate(queryClient)} />
+        <RecordSearchResultList dehydratedState={dehydrate(queryClient)} />
       ) : (
         <div className="w-full flex flex-col items-center gap-12 sm:gap-16">
           <div className="w-full flex flex-col items-center pt-12">
             <EmptySvg width={`${(100 * 5) / 9}%`} />
           </div>
           <span className="text-2xl font-bold text-center">
-            기록이 없습니다.
+            검색 결과가 없습니다.
           </span>
         </div>
       )}

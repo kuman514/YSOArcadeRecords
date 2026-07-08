@@ -39,7 +39,9 @@ export default function MenuDrawer() {
         }}
         className="fixed top-[4rem] right-0 w-full max-w-72 bg-primary flex flex-col px-4 py-4 gap-4 z-51 overflow-hidden"
       >
-        <Link href="/editor">정보편집</Link>
+        <Link href="/editor/arcade-info">아케이드 부문 편집</Link>
+        <Link href="/editor/methods">플레이 수단 편집</Link>
+        <Link href="/editor/gallery-theme">갤러리 주제 편집</Link>
         <Link href="/create/records">새기록</Link>
         <Link href="/create/reviews">새리뷰</Link>
         <Link href="/create/gallery">새갤러리</Link>

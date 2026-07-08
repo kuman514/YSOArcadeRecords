@@ -1,19 +1,17 @@
-'use client';
-
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-import PostListItem from '^/src/entities/post-list-item';
-import Container from '^/src/shared/ui/container';
+import { getExtendedArcadeRecordPostList } from '^/src/features/arcade-record-article/arcade-record-post-list/data-client';
 import { INFINITE_SCROLL_OFFSET } from '^/src/shared/util/constants';
+import SearchResult from '^/src/entities/search/search-result';
+import Container from '^/src/shared/ui/container';
 
-import { getExtendedArcadeRecordPostList } from './data-client';
-import { convertArcadeRecordPostToPostListItem } from './util';
+import { convertArcadeRecordPostToSearchResultProps } from './util';
 
-export function ArcadeRecordPostListContent() {
+export default function RecordSearchResultListContent() {
   const searchParams = useSearchParams();
-  const arcadeId = searchParams.get('arcadeId') ?? undefined;
+  const searchText = searchParams.get('searchText') ?? '';
 
   const {
     data: rawData,
@@ -21,9 +19,9 @@ export function ArcadeRecordPostListContent() {
     hasNextPage: isHaveNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: arcadeId ? ['arcade-records', arcadeId] : ['arcade-records'],
+    queryKey: ['search', 'arcade-records', searchText],
     queryFn: async ({ pageParam }) =>
-      await getExtendedArcadeRecordPostList(pageParam, { arcadeId }),
+      await getExtendedArcadeRecordPostList(pageParam, { searchText }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
@@ -58,13 +56,18 @@ export function ArcadeRecordPostListContent() {
     return '스크롤하여 더보기';
   })();
 
-  const data = rawData?.pages.map((page) =>
-    page.content.map(convertArcadeRecordPostToPostListItem)
-  );
-  const renderData = data?.map((page, i) =>
-    page.map((postListItem, j) => (
-      <PostListItem key={postListItem.id} {...postListItem} />
-    ))
+  const data = rawData?.pages.map((page) => page.content);
+  const renderData = data?.map((page) =>
+    page.map((post) => {
+      const props = convertArcadeRecordPostToSearchResultProps(post);
+      return (
+        <SearchResult
+          key={post.arcadeRecordId}
+          {...props}
+          emphasize={searchText ?? ''}
+        />
+      );
+    })
   );
 
   return (

@@ -11,10 +11,21 @@ export async function selectDataClientSide<T>({
   const supabase = createClientSideClient();
 
   const rawQuery = supabase.from(from).select(select);
-  const queryWithWhere = where.reduce((accFilter, curWhere) => {
+  const queryWithWhere = (where ?? []).reduce((accFilter, curWhere) => {
     switch (curWhere.type) {
       case ConditionType.EQUAL:
         return accFilter.eq(curWhere.column, curWhere.value);
+      case ConditionType.ILIKE:
+        return accFilter.ilike(curWhere.column, `%${curWhere.value}%`);
+      case ConditionType.OR:
+        return accFilter.or(
+          curWhere.wheres
+            .map(
+              ({ column, type, value }) =>
+                `${column}.${type}.${type === ConditionType.ILIKE ? `%${value}%` : value}`
+            )
+            .join(',')
+        );
       default:
         return accFilter;
     }

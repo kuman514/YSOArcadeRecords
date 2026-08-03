@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Fragment, ReactNode } from 'react';
 
 import { SearchResultProps } from '^/src/entities/search/types';
@@ -52,11 +52,11 @@ export default function SearchResult({
           />
         </div>
         <div className="flex flex-col overflow-hidden">
-          <h3 className="text-2xl overflow-hidden text-ellipsis [&_strong]:bg-primary">
+          <h3 className="text-2xl overflow-hidden text-ellipsis [&_strong]:bg-primary [&_strong]:text-white">
             {renderTitle}
           </h3>
           {subheading && <h4 className="block text-sm">{subheading}</h4>}
-          <span className="block overflow-hidden text-ellipsis text-sm [&_strong]:bg-primary">
+          <span className="block overflow-hidden text-ellipsis text-sm [&_strong]:bg-primary [&_strong]:text-white">
             {renderDescription}
           </span>
         </div>

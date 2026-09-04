@@ -1,3 +1,7 @@
+'use client';
+
+import { useRef } from 'react';
+
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import Sidebar from '^/src/features/sidebar';
 
@@ -5,13 +9,18 @@ import SideDrawerOpenChecker from './open-checker';
 import TitleLink from './title-link';
 
 export default function SideDrawer() {
+  const labelRef = useRef<HTMLLabelElement>(null);
+
   return (
     <>
       <SideDrawerOpenChecker />
       <div
         id="side-drawer-overlay"
-        className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50 touch-none"
-      ></div>
+        className="fixed left-0 top-0 w-screen h-dvh bg-[rgba(0,0,0,0.4)] z-50"
+        onClick={() => {
+          labelRef.current?.click();
+        }}
+      />
       <aside
         id="side-drawer-content"
         style={{
@@ -21,6 +30,7 @@ export default function SideDrawer() {
       >
         <div className="w-full h-full flex flex-row items-center">
           <label
+            ref={labelRef}
             htmlFor="side-drawer-open-checker"
             className="w-16 h-full p-4 cursor-pointer"
           >

@@ -55,7 +55,11 @@ export default function MultipleImagePicker({
                 !event.target?.result ||
                 typeof event.target.result !== 'string'
               ) {
-                reject('존재하지 않거나 잘못된 파일입니다.');
+                toast(
+                  `${rawFile.name} 파일은 존재하지 않거나 잘못되었습니다.`,
+                  { type: 'error' }
+                );
+                reject();
                 return;
               }
               img.src = event.target.result;
@@ -63,9 +67,11 @@ export default function MultipleImagePicker({
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 if (!ctx) {
-                  reject(
-                    '리사이징용 캔버스 컨텍스트 생성에 문제가 발생했습니다.'
+                  toast(
+                    `${rawFile.name} 파일 리사이징에 쓰일 캔버스 컨텍스트 생성에 문제가 발생했습니다.`,
+                    { type: 'error' }
                   );
+                  reject();
                   return;
                 }
 
@@ -80,7 +86,11 @@ export default function MultipleImagePicker({
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 canvas.toBlob((blob) => {
                   if (!blob) {
-                    reject('리사이징된 이미지 생성 실패');
+                    toast(
+                      `${rawFile.name} 파일을 리사이징한 이미지 생성에 실패했습니다.`,
+                      { type: 'error' }
+                    );
+                    reject();
                     return;
                   }
                   resolve(new File([blob], ''));

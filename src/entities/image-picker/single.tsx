@@ -57,7 +57,9 @@ export default function SingleImagePicker({
       fileReader.onload = (event) => {
         const img = new Image();
         if (!event.target?.result || typeof event.target.result !== 'string') {
-          toast('존재하지 않거나 잘못된 파일입니다.', { type: 'error' });
+          toast(`${file.name} 파일은 존재하지 않거나 잘못되었습니다.`, {
+            type: 'error',
+          });
           return;
         }
         img.src = event.target.result;
@@ -65,9 +67,12 @@ export default function SingleImagePicker({
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           if (!ctx) {
-            toast('리사이징용 캔버스 컨텍스트 생성에 문제가 발생했습니다.', {
-              type: 'error',
-            });
+            toast(
+              `${file.name} 파일 리사이징에 쓰일 캔버스 컨텍스트 생성에 문제가 발생했습니다.`,
+              {
+                type: 'error',
+              }
+            );
             return;
           }
 
@@ -82,11 +87,16 @@ export default function SingleImagePicker({
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           canvas.toBlob((blob) => {
             if (!blob) {
-              toast('리사이징된 이미지 생성 실패', { type: 'error' });
+              toast(
+                `${file.name} 파일을 리사이징한 이미지 생성에 실패했습니다.`,
+                { type: 'error' }
+              );
               return;
             }
             onSelectFile(new File([blob], ''));
-            toast('용량이 큰 이미지를 최적화 처리했습니다.', { type: 'info' });
+            toast(`용량이 큰 ${file.name} 파일을 최적화 처리했습니다.`, {
+              type: 'info',
+            });
           });
         };
       };

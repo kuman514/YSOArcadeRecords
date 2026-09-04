@@ -36,7 +36,7 @@ export default function MultipleImagePicker({
     }
 
     const rawFiles = Array.from(files);
-    const isHaveOversizedImages = rawFiles.some(
+    const overSizedImages = rawFiles.filter(
       (rawFile) => rawFile.size > MAXIMUM_IMAGE_SIZE
     );
     const finalFiles = await Promise.all(
@@ -110,8 +110,11 @@ export default function MultipleImagePicker({
       })
     );
 
-    if (isHaveOversizedImages) {
-      toast('일부 용량이 큰 이미지를 최적화 처리했습니다.', { type: 'info' });
+    if (overSizedImages.length > 0) {
+      toast(
+        `용량이 큰 이미지를 최적화 처리했습니다. 처리된 이미지: ${overSizedImages.map((file) => file.name).join(', ')}`,
+        { type: 'info' }
+      );
     }
 
     onChangeImages(images.concat(newImages));

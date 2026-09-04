@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useShallow } from 'zustand/shallow';
@@ -9,7 +9,10 @@ import { useModalStore } from '^/src/shared/modal/store';
 import { ModalType } from '^/src/shared/modal/types';
 import Button from '^/src/shared/ui/button';
 
-import { MAXIMUM_IMAGE_SIZE } from './constants';
+import {
+  MAXIMUM_IMAGE_LENGTH_ON_RESIZE,
+  MAXIMUM_IMAGE_SIZE,
+} from './constants';
 
 interface Props {
   name: string;
@@ -48,14 +51,49 @@ export default function SingleImagePicker({
     if (!file) {
       return;
     }
+
     if (file.size > MAXIMUM_IMAGE_SIZE) {
-      toast(
-        '이미지의 용량이 너무 큽니다. 더 작은 용량의 이미지를 선택해주세요.',
-        { type: 'error' }
-      );
-      return;
+      const fileReader = new FileReader();
+      fileReader.onload = (event) => {
+        const img = new Image();
+        if (!event.target?.result || typeof event.target.result !== 'string') {
+          toast('존재하지 않거나 잘못된 파일입니다.', { type: 'error' });
+          return;
+        }
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            toast('리사이징용 캔버스 컨텍스트 생성에 문제가 발생했습니다.', {
+              type: 'error',
+            });
+            return;
+          }
+
+          const scaleFactor = Math.min(
+            MAXIMUM_IMAGE_LENGTH_ON_RESIZE / img.width,
+            MAXIMUM_IMAGE_LENGTH_ON_RESIZE / img.height
+          );
+
+          canvas.width = img.width * scaleFactor;
+          canvas.height = img.height * scaleFactor;
+
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              toast('리사이징된 이미지 생성 실패', { type: 'error' });
+              return;
+            }
+            onSelectFile(new File([blob], ''));
+            toast('용량이 큰 이미지를 최적화 처리했습니다.', { type: 'info' });
+          });
+        };
+      };
+      fileReader.readAsDataURL(file);
+    } else {
+      onSelectFile(file);
     }
-    onSelectFile(file);
   }
 
   return (
@@ -67,7 +105,7 @@ export default function SingleImagePicker({
         }}
       >
         {imageUrl ? (
-          <Image
+          <NextImage
             className="cursor-pointer"
             onClick={() => {
               setModal({

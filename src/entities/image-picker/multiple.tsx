@@ -5,7 +5,10 @@ import { toast } from 'react-toastify';
 
 import Button from '^/src/shared/ui/button';
 
-import { MAXIMUM_IMAGE_SIZE } from './constants';
+import {
+  MAXIMUM_IMAGE_LENGTH_ON_RESIZE,
+  MAXIMUM_IMAGE_SIZE,
+} from './constants';
 import ImageList from './image-list';
 import { ImageListElementValue } from './types';
 
@@ -26,28 +29,79 @@ export default function MultipleImagePicker({
     imageInputRef.current?.click();
   }
 
-  function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
+  async function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
     if (!files) {
       return;
     }
 
-    const allowedFiles = Array.from(files).filter(
-      (file) => file.size <= MAXIMUM_IMAGE_SIZE
+    const rawFiles = Array.from(files);
+    const isHaveOversizedImages = rawFiles.some(
+      (rawFile) => rawFile.size > MAXIMUM_IMAGE_SIZE
     );
+    const finalFiles = await Promise.all(
+      rawFiles.map(
+        (rawFile) =>
+          new Promise<File>((resolve, reject) => {
+            if (rawFile.size <= MAXIMUM_IMAGE_SIZE) {
+              resolve(rawFile);
+              return;
+            }
+
+            const fileReader = new FileReader();
+            fileReader.onload = (event) => {
+              const img = new Image();
+              if (
+                !event.target?.result ||
+                typeof event.target.result !== 'string'
+              ) {
+                reject('존재하지 않거나 잘못된 파일입니다.');
+                return;
+              }
+              img.src = event.target.result;
+              img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                  reject(
+                    '리사이징용 캔버스 컨텍스트 생성에 문제가 발생했습니다.'
+                  );
+                  return;
+                }
+
+                const scaleFactor = Math.min(
+                  MAXIMUM_IMAGE_LENGTH_ON_RESIZE / img.width,
+                  MAXIMUM_IMAGE_LENGTH_ON_RESIZE / img.height
+                );
+
+                canvas.width = img.width * scaleFactor;
+                canvas.height = img.height * scaleFactor;
+
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob((blob) => {
+                  if (!blob) {
+                    reject('리사이징된 이미지 생성 실패');
+                    return;
+                  }
+                  resolve(new File([blob], ''));
+                });
+              };
+            };
+            fileReader.readAsDataURL(rawFile);
+          })
+      )
+    );
+
     const timestamp = new Date().getTime();
-    const newImages: ImageListElementValue[] = allowedFiles.map(
+    const newImages: ImageListElementValue[] = finalFiles.map(
       (file, index): ImageListElementValue => ({
         tmpId: `${timestamp}-${index}`,
         localFile: file,
       })
     );
 
-    if (newImages.length !== files.length) {
-      toast(
-        '일부 이미지의 용량이 너무 커서 등록되지 못했습니다. 더 작은 용량의 이미지를 선택해주세요.',
-        { type: 'error' }
-      );
+    if (isHaveOversizedImages) {
+      toast('일부 용량이 큰 이미지를 최적화 처리했습니다.', { type: 'info' });
     }
 
     onChangeImages(images.concat(newImages));

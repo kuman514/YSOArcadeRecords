@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -10,7 +10,10 @@ import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg'
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
 import SingleImagePicker from '^/src/entities/image-picker/single';
-import { ImageListElementValue } from '^/src/entities/image-picker/types';
+import {
+  ImageListElementValue,
+  TempSaveImageListElementValue,
+} from '^/src/entities/image-picker/types';
 import { ReviewPost } from '^/src/entities/types/post';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import {
@@ -23,6 +26,11 @@ import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
 import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
+import { useTempSave } from '^/src/shared/save/hook';
+import {
+  convertDataUrlToImageFile,
+  convertImageFileToDataUrl,
+} from '^/src/shared/image/convert';
 
 interface Props {
   post?: ReviewPost;
@@ -68,6 +76,71 @@ export default function ReviewForm({ post }: Props) {
     })) ?? []
   );
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+
+  useTempSave<{
+    title: string;
+    tags: string;
+    subjectName: string;
+    subjectType: string;
+    createdBy: string;
+    releaseDate: Date | null;
+    details: MultipleFormValue<string>;
+    reviewScore: number;
+    youTubeId: string;
+    images: TempSaveImageListElementValue[];
+    localThumbnail: string | null;
+  }>({
+    key: 'yso-arcade-records-temp-review',
+    delay: 1000,
+    isActive: !post,
+    getParams: async () => ({
+      title,
+      tags,
+      subjectName,
+      subjectType,
+      createdBy,
+      releaseDate,
+      details,
+      reviewScore,
+      youTubeId,
+      images: await Promise.all<TempSaveImageListElementValue>(
+        images.map(async (image) => ({
+          tmpId: image.tmpId,
+          localFile: image.localFile
+            ? await convertImageFileToDataUrl(image.localFile)
+            : undefined,
+          sourceUrl: image.sourceUrl,
+        }))
+      ),
+      localThumbnail: localThumbnail
+        ? await convertImageFileToDataUrl(localThumbnail)
+        : null,
+    }),
+    onLoad: async (loaded) => {
+      setTitle(loaded.title);
+      setTags(loaded.tags);
+      setSubjectName(loaded.subjectName);
+      setSubjectName(loaded.subjectType);
+      setCreatedBy(loaded.createdBy);
+      setReleaseDate(loaded.releaseDate);
+      setDetails(loaded.details);
+      setReviewScore(loaded.reviewScore);
+      setYouTubeId(loaded.youTubeId);
+      setImages(
+        await Promise.all<ImageListElementValue>(
+          loaded.images.map(async (image) => ({
+            tmpId: image.tmpId,
+            localFile: image.localFile
+              ? await convertDataUrlToImageFile(image.localFile, {
+                  type: 'image/jpeg',
+                })
+              : undefined,
+            sourceUrl: image.sourceUrl,
+          }))
+        )
+      );
+    },
+  });
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;
@@ -332,7 +405,7 @@ export default function ReviewForm({ post }: Props) {
         <div className="w-12/25 flex flex-col gap-2">
           <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
           <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-            <Image
+            <NextImage
               src={post.thumbnailUrl}
               alt="기존 썸네일 이미지"
               fill

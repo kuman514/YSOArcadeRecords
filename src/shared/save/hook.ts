@@ -10,16 +10,16 @@ import { saveToLocalStorage } from './save';
 interface Params<T extends object> {
   isActive: boolean;
   key: string;
-  params: T;
   delay: number;
+  getParams: () => T | Promise<T>;
   onLoad: (loaded: T) => void;
 }
 
 export function useTempSave<T extends object>({
   isActive,
   key,
-  params,
   delay,
+  getParams,
   onLoad,
 }: Params<T>) {
   const [isSaveActivated, setIsSaveActivated] = useState<boolean>(false);
@@ -29,8 +29,8 @@ export function useTempSave<T extends object>({
       return;
     }
 
-    const timeout = setTimeout(() => {
-      saveToLocalStorage(key, params);
+    const timeout = setTimeout(async () => {
+      saveToLocalStorage(key, await getParams());
       toast('임시 저장이 완료되었습니다.', {
         type: 'success',
       });
@@ -39,7 +39,7 @@ export function useTempSave<T extends object>({
     return () => {
       clearTimeout(timeout);
     };
-  }, [isSaveActivated, ...Object.values(params)]);
+  }, [isSaveActivated, getParams]);
 
   useEffect(() => {
     if (!isActive) {

@@ -3,3 +3,9 @@ export interface ImageListElementValue {
   sourceUrl?: string;
   tmpId: string;
 }
+
+export interface TempSaveImageListElementValue {
+  localFile?: string;
+  sourceUrl?: ImageListElementValue['sourceUrl'];
+  tmpId: ImageListElementValue['tmpId'];
+}

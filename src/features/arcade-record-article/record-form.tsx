@@ -32,6 +32,21 @@ interface Props {
   methodList: Method[];
 }
 
+/**
+ * @todo
+ * - 가장 첫번째로 썸네일용 이미지를 입력한다.
+ * - 썸네일이 입력된 후 커다랗게 썸네일을 보여주며, 아래와 같은 순서로 입력한다.
+ *   - 이 게임이 어떤지 (어떤 부문을 플레이했는지)
+ *   - <둘 중 적어도 하나는 필수> 점수나 클리어 시간 (또는 둘 다)
+ *   - 종착한 스테이지
+ *   - <스킵 가능> 랭크
+ *   - 달성일자와 플레이 수단
+ *   - 코멘터리
+ *   - 유튜브 영상 ID
+ *   - 비고와 태그
+ * - 원본 이미지들을 입력한 뒤 제출 가능
+ */
+
 export default function RecordForm({
   post,
   arcadeInfoList,
@@ -40,6 +55,8 @@ export default function RecordForm({
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [currentPage, setCurrentPage] = useState<number>(0);
 
   useLoadingBlockModal(isLoading);
 

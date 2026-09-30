@@ -460,3 +460,8 @@
   - 아케이드 기록/리뷰/갤러리 폼에서 4MB를 초과하는 이미지를 금지하는 것이 아닌, 자동으로 리사이징하여 최적화를 진행
   - 검색 시 대소문자를 가리지 않고 검색결과를 강조
   - 사이드바 간소화
+- `v1.8.4` (2026년 9월 30일)
+  - <핫픽스> Next.js를 비롯한 여러 패키지의 보안 취약점 업데이트
+    - 대표적인 예시
+      - Next.js에서 AVIF 이미지 최적화 시 허가되지 않은 원격 코드 실행: https://github.com/advisories/GHSA-2xp9-vwfh-vxw4
+      - svgo의 removeScripts가 SVG foreignObject 내에서 실행될 수 있는 HTML 태그를 제대로 정화(Sanitize)하지 못하는 문제: https://github.com/advisories/GHSA-4vpr-x523-8j87

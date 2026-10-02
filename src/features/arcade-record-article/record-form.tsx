@@ -25,6 +25,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import { ArcadeRecordFormPages } from '^/src/features/arcade-record-article/types';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -39,11 +40,11 @@ interface Props {
  *   - 이 게임이 어떤지 (어떤 부문을 플레이했는지)
  *   - <둘 중 적어도 하나는 필수> 점수나 클리어 시간 (또는 둘 다)
  *   - 종착한 스테이지
- *   - <스킵 가능> 랭크
  *   - 달성일자와 플레이 수단
  *   - 코멘터리
- *   - 유튜브 영상 ID
- *   - 비고와 태그
+ *   - <스킵 가능> 랭크
+ *   - <스킵 가능> 비고와 태그
+ *   - <스킵 가능> 유튜브 영상 ID
  * - 원본 이미지들을 입력한 뒤 제출 가능
  */
 
@@ -56,7 +57,9 @@ export default function RecordForm({
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<ArcadeRecordFormPages>(
+    ArcadeRecordFormPages.PAGE_THUMBNAIL
+  );
 
   useLoadingBlockModal(isLoading);
 
@@ -408,6 +411,235 @@ export default function RecordForm({
     [arcadeInfoList, arcadeId]
   );
 
+  const renderPickedThumbnail = (() => {
+    if (currentPage === ArcadeRecordFormPages.PAGE_THUMBNAIL) {
+      return (
+        <>
+          {post?.thumbnailUrl && (
+            <div className="w-12/25 flex flex-col gap-2">
+              <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
+              <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
+                <Image
+                  src={post.thumbnailUrl}
+                  alt="기존 썸네일 이미지"
+                  fill
+                  sizes="10rem"
+                  unoptimized
+                />
+              </div>
+              <input
+                id="presentThumbnailUrl"
+                name="presentThumbnailUrl"
+                type="hidden"
+                value={post.thumbnailUrl}
+                readOnly
+              />
+            </div>
+          )}
+
+          <div className="w-12/25 flex flex-col gap-2">
+            <label htmlFor="thumbnail">새로운 썸네일</label>
+            <SingleImagePicker
+              name="thumbnail"
+              currentFile={localThumbnail}
+              onSelectFile={setLocalThumbnail}
+            />
+            {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
+          </div>
+        </>
+      );
+    }
+
+    if (localThumbnail) {
+      return (
+        <div className="w-12/25 flex flex-col gap-2">
+          <label htmlFor="thumbnail">새로운 썸네일</label>
+          <SingleImagePicker
+            name="thumbnail"
+            currentFile={localThumbnail}
+            onSelectFile={setLocalThumbnail}
+          />
+          {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
+        </div>
+      );
+    }
+
+    return post?.thumbnailUrl ? (
+      <div className="w-12/25 flex flex-col gap-2">
+        <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
+        <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
+          <Image
+            src={post.thumbnailUrl}
+            alt="기존 썸네일 이미지"
+            fill
+            sizes="10rem"
+            unoptimized
+          />
+        </div>
+        <input
+          id="presentThumbnailUrl"
+          name="presentThumbnailUrl"
+          type="hidden"
+          value={post.thumbnailUrl}
+          readOnly
+        />
+      </div>
+    ) : null;
+  })();
+
+  const renderArcadeSelection =
+    currentPage === ArcadeRecordFormPages.PAGE_ARCADE ? (
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="arcadeId">아케이드 부문</label>
+        <FormDropdown
+          id="arcadeId"
+          name="arcadeId"
+          value={arcadeId}
+          onChange={(event) => {
+            setStage('');
+            setRank('');
+            setTags([]);
+            setArcadeId(event.currentTarget.value);
+          }}
+        >
+          {renderArcadeSelectOptions}
+        </FormDropdown>
+        {!isArcadeIdVerified && <span>아케이드 부문을 선택해주세요.</span>}
+      </p>
+    ) : null;
+
+  const renderScoreAndTime =
+    currentPage === ArcadeRecordFormPages.PAGE_SCORE_TIME ? (
+      <div className="w-full flex flex-col gap-8">
+        <div className="w-full flex flex-col justify-start items-center gap-y-8">
+          <p className="w-full flex flex-col gap-2">
+            <label htmlFor="score">점수</label>
+            <FormInput
+              type="text"
+              id="score"
+              name="score"
+              value={score}
+              onChange={(event) => {
+                setScore(event.currentTarget.value);
+              }}
+            />
+          </p>
+          <p className="w-full flex flex-col gap-2">
+            <label htmlFor="elapsedTime">클리어 타임</label>
+            <FormInput
+              type="text"
+              id="elapsedTime"
+              name="elapsedTime"
+              value={elapsedTime}
+              onChange={(event) => {
+                setElapsedTime(event.currentTarget.value);
+              }}
+            />
+          </p>
+        </div>
+        {!isEvaluationVerified && (
+          <p>
+            점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의
+            시간)을 형식에 맞게 입력해주세요.
+          </p>
+        )}
+      </div>
+    ) : null;
+
+  const renderStageSelection =
+    currentPage === ArcadeRecordFormPages.PAGE_STAGE ? (
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="stage">최종 스테이지</label>
+        <FormDropdown
+          id="stage"
+          name="stage"
+          value={stage}
+          onChange={(event) => {
+            setStage(event.currentTarget.value);
+          }}
+        >
+          {renderStageSelectOptions}
+        </FormDropdown>
+        {!isStageVerified && (
+          <span>어느 스테이지까지 도달하였는지 입력해주세요.</span>
+        )}
+      </p>
+    ) : null;
+
+  const renderAchievedAtAndMethodSelection =
+    currentPage === ArcadeRecordFormPages.PAGE_ACHIEVED_AT_METHOD ? (
+      <div className="w-full flex flex-col justify-start items-center gap-y-8">
+        <p className="w-full flex flex-col gap-2">
+          <label htmlFor="achievedAt">달성일자</label>
+          <FormInput
+            type="date"
+            id="achievedAt"
+            name="achievedAt"
+            value={`${achievedAt.getFullYear()}-${String(
+              achievedAt.getMonth() + 1
+            ).padStart(
+              2,
+              '0'
+            )}-${String(achievedAt.getDate()).padStart(2, '0')}`}
+            onChange={(event) => {
+              setAchievedAt(new Date(event.currentTarget.value));
+            }}
+          />
+        </p>
+        <p className="w-full flex flex-col gap-2">
+          <label htmlFor="arcadeId">아케이드 부문</label>
+          <FormDropdown
+            id="arcadeId"
+            name="arcadeId"
+            value={arcadeId}
+            onChange={(event) => {
+              setStage('');
+              setRank('');
+              setTags([]);
+              setArcadeId(event.currentTarget.value);
+            }}
+          >
+            {renderArcadeSelectOptions}
+          </FormDropdown>
+          {!isArcadeIdVerified && <span>아케이드 부문을 선택해주세요.</span>}
+        </p>
+      </div>
+    ) : null;
+
+  const renderComment =
+    currentPage === ArcadeRecordFormPages.PAGE_COMMENT ? (
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="comment">코멘터리</label>
+        <FormTextArea
+          type="text"
+          id="comment"
+          name="comment"
+          value={comment}
+          onChange={(event) => {
+            setComment(event.currentTarget.value);
+          }}
+        />
+        {!isCommentVerified && <span>코멘터리를 입력해주세요.</span>}
+      </p>
+    ) : null;
+
+  const renderRank =
+    currentPage === ArcadeRecordFormPages.PAGE_RANK ? (
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="rank">최종 등급</label>
+        <FormDropdown
+          id="rank"
+          name="rank"
+          value={rank}
+          onChange={(event) => {
+            setRank(event.currentTarget.value);
+          }}
+        >
+          {renderRankSelectOptions}
+        </FormDropdown>
+      </p>
+    ) : null;
+
   const renderTags = (
     arcadeInfoList.find((arcadeInfo) => arcadeInfo.arcadeId === arcadeId)
       ?.availableTags ?? []
@@ -437,213 +669,33 @@ export default function RecordForm({
     </span>
   ));
 
-  return (
-    <form
-      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
-      onSubmit={handleOnSubmit}
-    >
-      {post?.thumbnailUrl && (
-        <div className="w-12/25 flex flex-col gap-2">
-          <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-            <Image
-              src={post.thumbnailUrl}
-              alt="기존 썸네일 이미지"
-              fill
-              sizes="10rem"
-              unoptimized
-            />
-          </div>
-          <input
-            id="presentThumbnailUrl"
-            name="presentThumbnailUrl"
-            type="hidden"
-            value={post.thumbnailUrl}
-            readOnly
+  const renderNoteAndTags =
+    currentPage === ArcadeRecordFormPages.PAGE_NOTE_TAGS ? (
+      <div className="w-full flex flex-col justify-start items-center gap-y-8">
+        <p className="w-full flex flex-col gap-2">
+          <label htmlFor="note">비고</label>
+          <FormInput
+            type="text"
+            id="note"
+            name="note"
+            value={note}
+            onChange={(event) => {
+              setNote(event.currentTarget.value);
+            }}
           />
+        </p>
+
+        <div className="w-full flex flex-col gap-2">
+          <label>태그</label>
+          <div className="w-full flex flex-row gap-2 flex-wrap">
+            {renderTags}
+          </div>
         </div>
-      )}
-
-      <div className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="thumbnail">새로운 썸네일</label>
-        <SingleImagePicker
-          name="thumbnail"
-          currentFile={localThumbnail}
-          onSelectFile={setLocalThumbnail}
-        />
-        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
       </div>
+    ) : null;
 
-      <div className="w-full flex flex-col gap-2">
-        <label htmlFor="originalImages">원본 이미지</label>
-        <MultipleImagePicker
-          name="originalImages"
-          images={images}
-          onChangeImages={setImages}
-        />
-        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
-      </div>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="title">기록 제목</label>
-        <FormInput
-          type="text"
-          id="title"
-          name="title"
-          value={title}
-          onChange={(event) => {
-            setTitle(event.currentTarget.value);
-          }}
-        />
-        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
-      </p>
-
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="arcadeId">아케이드 부문</label>
-        <FormDropdown
-          id="arcadeId"
-          name="arcadeId"
-          value={arcadeId}
-          onChange={(event) => {
-            setStage('');
-            setRank('');
-            setTags([]);
-            setArcadeId(event.currentTarget.value);
-          }}
-        >
-          {renderArcadeSelectOptions}
-        </FormDropdown>
-        {!isArcadeIdVerified && <span>아케이드 부문을 선택해주세요.</span>}
-      </p>
-
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="methodId">수단</label>
-        <FormDropdown
-          id="methodId"
-          name="methodId"
-          value={methodId}
-          onChange={(event) => {
-            setMethodId(event.currentTarget.value);
-          }}
-        >
-          {renderMethodSelectOptions}
-        </FormDropdown>
-        {!isMethodIdVerified && <span>플레이 수단을 선택해주세요.</span>}
-      </p>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="achievedAt">달성일자</label>
-        <FormInput
-          type="date"
-          id="achievedAt"
-          name="achievedAt"
-          value={`${achievedAt.getFullYear()}-${String(
-            achievedAt.getMonth() + 1
-          ).padStart(2, '0')}-${String(achievedAt.getDate()).padStart(2, '0')}`}
-          onChange={(event) => {
-            setAchievedAt(new Date(event.currentTarget.value));
-          }}
-        />
-      </p>
-
-      <div className="w-full flex flex-col gap-2">
-        <div className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8">
-          <p className="w-12/25 flex flex-col gap-2">
-            <label htmlFor="score">점수</label>
-            <FormInput
-              type="text"
-              id="score"
-              name="score"
-              value={score}
-              onChange={(event) => {
-                setScore(event.currentTarget.value);
-              }}
-            />
-          </p>
-          <p className="w-12/25 flex flex-col gap-2">
-            <label htmlFor="elapsedTime">클리어 타임</label>
-            <FormInput
-              type="text"
-              id="elapsedTime"
-              name="elapsedTime"
-              value={elapsedTime}
-              onChange={(event) => {
-                setElapsedTime(event.currentTarget.value);
-              }}
-            />
-          </p>
-        </div>
-        {!isEvaluationVerified && (
-          <p>
-            점수(1234567 등등의 정수) 또는 클리어 타임(hh:mm:ss.ss 등등의
-            시간)을 형식에 맞게 입력해주세요.
-          </p>
-        )}
-      </div>
-
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="stage">최종 스테이지</label>
-        <FormDropdown
-          id="stage"
-          name="stage"
-          value={stage}
-          onChange={(event) => {
-            setStage(event.currentTarget.value);
-          }}
-        >
-          {renderStageSelectOptions}
-        </FormDropdown>
-        {!isStageVerified && (
-          <span>어느 스테이지까지 도달하였는지 입력해주세요.</span>
-        )}
-      </p>
-
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="rank">최종 등급</label>
-        <FormDropdown
-          id="rank"
-          name="rank"
-          value={rank}
-          onChange={(event) => {
-            setRank(event.currentTarget.value);
-          }}
-        >
-          {renderRankSelectOptions}
-        </FormDropdown>
-      </p>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="comment">코멘터리</label>
-        <FormTextArea
-          type="text"
-          id="comment"
-          name="comment"
-          value={comment}
-          onChange={(event) => {
-            setComment(event.currentTarget.value);
-          }}
-        />
-        {!isCommentVerified && <span>코멘터리를 입력해주세요.</span>}
-      </p>
-
-      <div className="w-full flex flex-col gap-2">
-        <label>태그 (콤마로 구분)</label>
-        <div className="w-full flex flex-row gap-2 flex-wrap">{renderTags}</div>
-      </div>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="note">비고</label>
-        <FormInput
-          type="text"
-          id="note"
-          name="note"
-          value={note}
-          onChange={(event) => {
-            setNote(event.currentTarget.value);
-          }}
-        />
-      </p>
-
+  const renderYouTubeId =
+    currentPage === ArcadeRecordFormPages.PAGE_YOUTUBE_ID ? (
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="youTubeId">YouTube 영상 ID</label>
         <FormInput
@@ -656,10 +708,95 @@ export default function RecordForm({
           }}
         />
       </p>
+    ) : null;
 
-      <Button type="submit" disabled={!isSubmittable}>
-        {post ? '수정하기' : '등록하기'}
+  const renderOriginalImages =
+    currentPage === ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES ? (
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="originalImages">원본 이미지</label>
+        <MultipleImagePicker
+          name="originalImages"
+          images={images}
+          onChangeImages={setImages}
+        />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
+      </div>
+    ) : null;
+
+  const renderMovePageButton = (
+    <div className="w-full flex flex-row gap-2">
+      <Button
+        type="button"
+        disabled={currentPage === ArcadeRecordFormPages.PAGE_THUMBNAIL}
+        onClick={() => {
+          setCurrentPage((state) => state - 1);
+        }}
+      >
+        이전
       </Button>
+      <Button
+        type={
+          currentPage === ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES
+            ? 'submit'
+            : 'button'
+        }
+        disabled={(() => {
+          switch (currentPage) {
+            case ArcadeRecordFormPages.PAGE_THUMBNAIL:
+              return !isThumbnailVerified;
+            case ArcadeRecordFormPages.PAGE_ARCADE:
+              return !isArcadeIdVerified;
+            case ArcadeRecordFormPages.PAGE_SCORE_TIME:
+              return !isEvaluationVerified;
+            case ArcadeRecordFormPages.PAGE_STAGE:
+              return !isStageVerified;
+            case ArcadeRecordFormPages.PAGE_ACHIEVED_AT_METHOD:
+              return !isMethodIdVerified;
+            case ArcadeRecordFormPages.PAGE_COMMENT:
+              return !isCommentVerified;
+            case ArcadeRecordFormPages.PAGE_RANK:
+            case ArcadeRecordFormPages.PAGE_NOTE_TAGS:
+            case ArcadeRecordFormPages.PAGE_YOUTUBE_ID:
+              return false;
+            case ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES:
+              return !isOriginalImagesVerified;
+          }
+        })()}
+        onClick={
+          currentPage !== ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES
+            ? () => {
+                setCurrentPage((state) => state + 1);
+              }
+            : undefined
+        }
+      >
+        {currentPage === ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES
+          ? post
+            ? '수정하기'
+            : '등록하기'
+          : '다음'}
+      </Button>
+    </div>
+  );
+
+  return (
+    <form
+      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
+      onSubmit={handleOnSubmit}
+    >
+      {renderPickedThumbnail}
+
+      {renderArcadeSelection}
+      {renderScoreAndTime}
+      {renderStageSelection}
+      {renderAchievedAtAndMethodSelection}
+      {renderComment}
+      {renderRank}
+      {renderNoteAndTags}
+      {renderYouTubeId}
+      {renderOriginalImages}
+
+      {renderMovePageButton}
     </form>
   );
 }

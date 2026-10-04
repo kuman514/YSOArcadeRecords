@@ -12,6 +12,7 @@ import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { ArcadeInfo } from '^/src/entities/types/arcade-info';
 import { Method } from '^/src/entities/types/method';
 import { ArcadeRecordPost } from '^/src/entities/types/post';
+import { ArcadeRecordFormPages } from '^/src/features/arcade-record-article/types';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import {
@@ -25,7 +26,6 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
-import { ArcadeRecordFormPages } from '^/src/features/arcade-record-article/types';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -37,6 +37,7 @@ interface Props {
  * @todo
  * - 가장 첫번째로 썸네일용 이미지를 입력한다.
  * - 썸네일이 입력된 후 커다랗게 썸네일을 보여주며, 아래와 같은 순서로 입력한다.
+ *   - 이 기록의 제목은 무엇인지
  *   - 이 게임이 어떤지 (어떤 부문을 플레이했는지)
  *   - <둘 중 적어도 하나는 필수> 점수나 클리어 시간 (또는 둘 다)
  *   - 종착한 스테이지
@@ -354,6 +355,23 @@ export default function RecordForm({
     return false;
   }
 
+  const renderTitle =
+    currentPage === ArcadeRecordFormPages.PAGE_TITLE ? (
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="title">기록 제목</label>
+        <FormInput
+          type="text"
+          id="title"
+          name="title"
+          value={title}
+          onChange={(event) => {
+            setTitle(event.currentTarget.value);
+          }}
+        />
+        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
+      </p>
+    ) : null;
+
   const renderArcadeSelectOptions = useMemo(
     () =>
       [{ arcadeId: '', label: '선택하세요' }]
@@ -586,22 +604,19 @@ export default function RecordForm({
             }}
           />
         </p>
-        <p className="w-full flex flex-col gap-2">
-          <label htmlFor="arcadeId">아케이드 부문</label>
+        <p className="w-12/25 flex flex-col gap-2">
+          <label htmlFor="methodId">수단</label>
           <FormDropdown
-            id="arcadeId"
-            name="arcadeId"
-            value={arcadeId}
+            id="methodId"
+            name="methodId"
+            value={methodId}
             onChange={(event) => {
-              setStage('');
-              setRank('');
-              setTags([]);
-              setArcadeId(event.currentTarget.value);
+              setMethodId(event.currentTarget.value);
             }}
           >
-            {renderArcadeSelectOptions}
+            {renderMethodSelectOptions}
           </FormDropdown>
-          {!isArcadeIdVerified && <span>아케이드 부문을 선택해주세요.</span>}
+          {!isMethodIdVerified && <span>플레이 수단을 선택해주세요.</span>}
         </p>
       </div>
     ) : null;
@@ -786,6 +801,7 @@ export default function RecordForm({
     >
       {renderPickedThumbnail}
 
+      {renderTitle}
       {renderArcadeSelection}
       {renderScoreAndTime}
       {renderStageSelection}

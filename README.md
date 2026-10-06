@@ -465,3 +465,5 @@
     - 대표적인 예시
       - Next.js에서 AVIF 이미지 최적화 시 허가되지 않은 원격 코드 실행: https://github.com/advisories/GHSA-2xp9-vwfh-vxw4
       - svgo의 removeScripts가 SVG foreignObject 내에서 실행될 수 있는 HTML 태그를 제대로 정화(Sanitize)하지 못하는 문제: https://github.com/advisories/GHSA-4vpr-x523-8j87
+- `v1.9.0` (일정 미정)
+  - 아케이드 기록 등록 편의성 증진을 위해 하나로 되어 있던 아케이드 기록 폼을 속성마다 페이지로 나눔

@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
@@ -157,9 +157,7 @@ export default function RecordForm({
     isOriginalImagesVerified &&
     !isLoading;
 
-  async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function handleOnSubmit() {
     setIsLoading(true);
 
     const arcadeRecordId = post?.arcadeRecordId ?? (await issueUuid());
@@ -686,11 +684,7 @@ export default function RecordForm({
         이전
       </Button>
       <Button
-        type={
-          currentPage === ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES
-            ? 'submit'
-            : 'button'
-        }
+        type="button"
         disabled={(() => {
           switch (currentPage) {
             case ArcadeRecordFormPages.PAGE_THUMBNAIL:
@@ -715,13 +709,13 @@ export default function RecordForm({
               return !isOriginalImagesVerified || !isSubmittable;
           }
         })()}
-        onClick={
-          currentPage !== ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES
-            ? () => {
-                setCurrentPage((state) => state + 1);
-              }
-            : undefined
-        }
+        onClick={() => {
+          if (currentPage !== ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES) {
+            setCurrentPage((state) => state + 1);
+            return;
+          }
+          handleOnSubmit();
+        }}
       >
         {currentPage === ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES
           ? post
@@ -735,7 +729,10 @@ export default function RecordForm({
   return (
     <form
       className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
-      onSubmit={handleOnSubmit}
+      onSubmit={(event) => {
+        event.preventDefault();
+        return false;
+      }}
     >
       {renderPickedThumbnail}
 

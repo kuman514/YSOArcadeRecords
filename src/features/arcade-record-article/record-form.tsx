@@ -1,7 +1,6 @@
 'use client';
 
 import axios from 'axios';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -429,81 +428,18 @@ export default function RecordForm({
     [arcadeInfoList, arcadeId]
   );
 
-  const renderPickedThumbnail = (() => {
-    if (currentPage === ArcadeRecordFormPages.PAGE_THUMBNAIL) {
-      return (
-        <>
-          {post?.thumbnailUrl && (
-            <div className="w-12/25 flex flex-col gap-2">
-              <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-              <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-                <Image
-                  src={post.thumbnailUrl}
-                  alt="기존 썸네일 이미지"
-                  fill
-                  sizes="10rem"
-                  unoptimized
-                />
-              </div>
-              <input
-                id="presentThumbnailUrl"
-                name="presentThumbnailUrl"
-                type="hidden"
-                value={post.thumbnailUrl}
-                readOnly
-              />
-            </div>
-          )}
-
-          <div className="w-12/25 flex flex-col gap-2">
-            <label htmlFor="thumbnail">새로운 썸네일</label>
-            <SingleImagePicker
-              name="thumbnail"
-              currentFile={localThumbnail}
-              onSelectFile={setLocalThumbnail}
-            />
-            {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
-          </div>
-        </>
-      );
-    }
-
-    if (localThumbnail) {
-      return (
-        <div className="w-12/25 flex flex-col gap-2">
-          <label htmlFor="thumbnail">새로운 썸네일</label>
-          <SingleImagePicker
-            name="thumbnail"
-            currentFile={localThumbnail}
-            onSelectFile={setLocalThumbnail}
-          />
-          {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
-        </div>
-      );
-    }
-
-    return post?.thumbnailUrl ? (
-      <div className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-        <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-          <Image
-            src={post.thumbnailUrl}
-            alt="기존 썸네일 이미지"
-            fill
-            sizes="10rem"
-            unoptimized
-          />
-        </div>
-        <input
-          id="presentThumbnailUrl"
-          name="presentThumbnailUrl"
-          type="hidden"
-          value={post.thumbnailUrl}
-          readOnly
-        />
-      </div>
-    ) : null;
-  })();
+  const renderPickedThumbnail = (
+    <div className="w-full flex flex-col gap-2">
+      <label htmlFor="thumbnail">{localThumbnail ? '새로운 ' : ''}썸네일</label>
+      <SingleImagePicker
+        name="thumbnail"
+        remoteImageUrl={!localThumbnail ? post?.thumbnailUrl : undefined}
+        currentFile={localThumbnail}
+        onSelectFile={setLocalThumbnail}
+      />
+      {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
+    </div>
+  );
 
   const renderArcadeSelection =
     currentPage === ArcadeRecordFormPages.PAGE_ARCADE ? (
@@ -604,7 +540,7 @@ export default function RecordForm({
             }}
           />
         </p>
-        <p className="w-12/25 flex flex-col gap-2">
+        <p className="w-full flex flex-col gap-2">
           <label htmlFor="methodId">수단</label>
           <FormDropdown
             id="methodId"
@@ -774,7 +710,7 @@ export default function RecordForm({
             case ArcadeRecordFormPages.PAGE_YOUTUBE_ID:
               return false;
             case ArcadeRecordFormPages.PAGE_ORIGINAL_IMAGES:
-              return !isOriginalImagesVerified;
+              return !isOriginalImagesVerified || !isSubmittable;
           }
         })()}
         onClick={

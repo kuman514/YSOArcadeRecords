@@ -3,11 +3,6 @@
 import NextImage from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useShallow } from 'zustand/shallow';
-
-import { useModalStore } from '^/src/shared/modal/store';
-import { ModalType } from '^/src/shared/modal/types';
-import Button from '^/src/shared/ui/button';
 
 import {
   MAXIMUM_IMAGE_LENGTH_ON_RESIZE,
@@ -16,19 +11,21 @@ import {
 
 interface Props {
   name: string;
+  remoteImageUrl?: string;
   currentFile: File | null;
   onSelectFile: (newFile: File) => void;
 }
 
 export default function SingleImagePicker({
   name,
+  remoteImageUrl,
   currentFile,
   onSelectFile,
 }: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  const setModal = useModalStore(useShallow((state) => state.setModal));
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    remoteImageUrl ?? null
+  );
 
   useEffect(() => {
     if (!currentFile) {
@@ -41,10 +38,6 @@ export default function SingleImagePicker({
     };
     fileReader.readAsDataURL(currentFile);
   }, [currentFile]);
-
-  function handleOnClickLoad() {
-    imageInputRef.current?.click();
-  }
 
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -107,31 +100,23 @@ export default function SingleImagePicker({
   }
 
   return (
-    <div className="w-40 flex flex-col gap-2">
-      <div
-        className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden"
-        style={{
-          borderRadius: 0,
-        }}
+    <div className="w-full flex flex-col gap-2">
+      <label
+        htmlFor={name}
+        className="cursor-pointer w-full aspect-square retro-rounded relative flex justify-center items-center overflow-hidden"
       >
         {imageUrl ? (
           <NextImage
-            className="cursor-pointer"
-            onClick={() => {
-              setModal({
-                type: ModalType.IMAGE_VIEWER,
-                imageUrls: [imageUrl],
-              });
-            }}
+            className="object-contain"
             src={imageUrl}
             alt="유저 선택 이미지"
             fill
             unoptimized
           />
         ) : (
-          <span>이미지 없음</span>
+          <span>클릭하여 등록하기</span>
         )}
-      </div>
+      </label>
       <input
         className="hidden"
         ref={imageInputRef}
@@ -141,9 +126,6 @@ export default function SingleImagePicker({
         name={name}
         onChange={handleOnChange}
       />
-      <Button type="button" onClick={handleOnClickLoad}>
-        이미지 불러오기
-      </Button>
     </div>
   );
 }

@@ -695,6 +695,8 @@ export default function RecordForm({
           switch (currentPage) {
             case ArcadeRecordFormPages.PAGE_THUMBNAIL:
               return !isThumbnailVerified;
+            case ArcadeRecordFormPages.PAGE_TITLE:
+              return !isTitleVerified;
             case ArcadeRecordFormPages.PAGE_ARCADE:
               return !isArcadeIdVerified;
             case ArcadeRecordFormPages.PAGE_SCORE_TIME:

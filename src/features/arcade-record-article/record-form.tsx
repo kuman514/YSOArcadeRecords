@@ -641,7 +641,7 @@ export default function RecordForm({
   const renderRank =
     currentPage === ArcadeRecordFormPages.PAGE_RANK ? (
       <p className="w-full flex flex-col gap-2">
-        <label htmlFor="rank">최종 등급</label>
+        <label htmlFor="rank">최종 등급 (스킵 가능)</label>
         <FormDropdown
           id="rank"
           name="rank"
@@ -688,7 +688,7 @@ export default function RecordForm({
     currentPage === ArcadeRecordFormPages.PAGE_NOTE_TAGS ? (
       <div className="w-full flex flex-col justify-start items-center gap-y-8">
         <p className="w-full flex flex-col gap-2">
-          <label htmlFor="note">비고</label>
+          <label htmlFor="note">비고 (스킵 가능)</label>
           <FormInput
             type="text"
             id="note"
@@ -701,7 +701,7 @@ export default function RecordForm({
         </p>
 
         <div className="w-full flex flex-col gap-2">
-          <label>태그</label>
+          <label>태그 (스킵 가능)</label>
           <div className="w-full flex flex-row gap-2 flex-wrap">
             {renderTags}
           </div>

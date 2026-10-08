@@ -13,6 +13,7 @@ import SingleImagePicker from '^/src/entities/image-picker/single';
 import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { ReviewPost } from '^/src/entities/types/post';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
@@ -22,11 +23,23 @@ import Button from '^/src/shared/ui/button';
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
-import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 
 interface Props {
   post?: ReviewPost;
 }
+
+/**
+ * @todo
+ * - 가장 첫번째로 썸네일용 이미지를 입력한다.
+ * - 썸네일이 입력된 후 커다랗게 썸네일을 보여주며, 아래와 같은 순서로 입력한다.
+ *   - 이 리뷰의 제목은 무엇인지
+ *   - 무엇을 리뷰하는지
+ *   - 총점은 몇점인지
+ *   - 리뷰 대상의 정보와 그 총점에 대한 근거는 어떤 것들이 있는지
+ *   - <스킵 가능> 비고와 태그
+ *   - <스킵 가능> 유튜브 영상 ID
+ * - 원본 이미지들을 입력한 뒤 제출 가능
+ */
 
 export default function ReviewForm({ post }: Props) {
   const route = useRouter();

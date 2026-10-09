@@ -4,7 +4,7 @@ export enum ReviewFormPages {
   PAGE_SUBJECT = 2,
   PAGE_SCORE = 3,
   PAGE_DETAILS = 4,
-  PAGE_NOTE_TAGS = 5,
+  PAGE_TAGS = 5,
   PAGE_YOUTUBE_ID = 6,
   PAGE_ORIGINAL_IMAGES = 7,
 }

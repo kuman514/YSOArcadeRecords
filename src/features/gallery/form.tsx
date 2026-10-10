@@ -27,6 +27,15 @@ interface Props {
   galleryThemeList: GalleryTheme[];
 }
 
+/**
+ * @todo
+ * - 가장 첫번째로 썸네일용 이미지를 입력한다.
+ * - 썸네일이 입력된 후 커다랗게 썸네일을 보여주며, 아래와 같은 순서로 입력한다.
+ *   - 어떤 주제에 관한 갤러리인지
+ *   - 이 갤러리 포스트의 제목은 무엇인지
+ * - 원본 이미지들을 입력한 뒤 제출 가능
+ */
+
 export default function GalleryForm({ post, galleryThemeList }: Props) {
   const route = useRouter();
 

@@ -1,9 +1,8 @@
 'use client';
 
 import axios from 'axios';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
@@ -21,16 +20,30 @@ import Button from '^/src/shared/ui/button';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
+import { GalleryFormPages } from '^/src/features/gallery/types';
 
 interface Props {
   post?: GalleryPost;
   galleryThemeList: GalleryTheme[];
 }
 
+/**
+ * @todo
+ * - 가장 첫번째로 썸네일용 이미지를 입력한다.
+ * - 썸네일이 입력된 후 커다랗게 썸네일을 보여주며, 아래와 같은 순서로 입력한다.
+ *   - 어떤 주제에 관한 갤러리인지
+ *   - 이 갤러리 포스트의 제목은 무엇인지
+ * - 원본 이미지들을 입력한 뒤 제출 가능
+ */
+
 export default function GalleryForm({ post, galleryThemeList }: Props) {
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [currentPage, setCurrentPage] = useState<GalleryFormPages>(
+    GalleryFormPages.PAGE_THUMBNAIL
+  );
 
   useLoadingBlockModal(isLoading);
 
@@ -64,9 +77,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     isOriginalImagesVerified &&
     !isLoading;
 
-  async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function handleOnSubmit() {
     setIsLoading(true);
 
     const galleryId = post?.galleryId ?? (await issueUuid());
@@ -271,67 +282,21 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     [galleryThemeList]
   );
 
-  return (
-    <form
-      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
-      onSubmit={handleOnSubmit}
-    >
-      {post?.thumbnailUrl && (
-        <div className="w-12/25 flex flex-col gap-2">
-          <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-            <Image
-              src={post.thumbnailUrl}
-              alt="기존 썸네일 이미지"
-              fill
-              sizes="10rem"
-              unoptimized
-            />
-          </div>
-          <input
-            id="presentThumbnailUrl"
-            name="presentThumbnailUrl"
-            type="hidden"
-            value={post.thumbnailUrl}
-            readOnly
-          />
-        </div>
-      )}
+  const renderPickedThumbnail = (
+    <div className="w-full flex flex-col gap-2">
+      <label htmlFor="thumbnail">{localThumbnail ? '새로운 ' : ''}썸네일</label>
+      <SingleImagePicker
+        name="thumbnail"
+        remoteImageUrl={!localThumbnail ? post?.thumbnailUrl : undefined}
+        currentFile={localThumbnail}
+        onSelectFile={setLocalThumbnail}
+      />
+      {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
+    </div>
+  );
 
-      <div className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="thumbnail">새로운 썸네일</label>
-        <SingleImagePicker
-          name="thumbnail"
-          currentFile={localThumbnail}
-          onSelectFile={setLocalThumbnail}
-        />
-        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
-      </div>
-
-      <div className="w-full flex flex-col gap-2">
-        <label htmlFor="originalImages">원본 이미지</label>
-        <MultipleImagePicker
-          name="originalImages"
-          images={images}
-          onChangeImages={setImages}
-        />
-        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
-      </div>
-
-      <p className="w-full flex flex-col gap-2">
-        <label htmlFor="title">사진 제목</label>
-        <FormTextArea
-          type="text"
-          id="title"
-          name="title"
-          value={title}
-          onChange={(event) => {
-            setTitle(event.currentTarget.value);
-          }}
-        />
-        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
-      </p>
-
+  const renderTheme =
+    currentPage === GalleryFormPages.PAGE_THEME ? (
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="galleryThemeId">주제</label>
         <FormDropdown
@@ -346,10 +311,95 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
         </FormDropdown>
         {!isGalleryThemeIdVerified && <span>주제를 선택해주세요.</span>}
       </p>
+    ) : null;
 
-      <Button type="submit" disabled={!isSubmittable}>
-        {post ? '수정하기' : '등록하기'}
+  const renderTitle =
+    currentPage === GalleryFormPages.PAGE_TITLE ? (
+      <p className="w-full flex flex-col gap-2">
+        <label htmlFor="title">사진 제목</label>
+        <FormTextArea
+          type="text"
+          id="title"
+          name="title"
+          value={title}
+          onChange={(event) => {
+            setTitle(event.currentTarget.value);
+          }}
+        />
+        {!isTitleVerified && <span>제목을 입력해주세요.</span>}
+      </p>
+    ) : null;
+
+  const renderOriginalImages =
+    currentPage === GalleryFormPages.PAGE_ORIGINAL_IMAGES ? (
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="originalImages">원본 이미지</label>
+        <MultipleImagePicker
+          name="originalImages"
+          images={images}
+          onChangeImages={setImages}
+        />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
+      </div>
+    ) : null;
+
+  const renderMovePageButton = (
+    <div className="w-full flex flex-row gap-2">
+      <Button
+        type="button"
+        disabled={currentPage === GalleryFormPages.PAGE_THUMBNAIL}
+        onClick={() => {
+          setCurrentPage((state) => state - 1);
+        }}
+      >
+        이전
       </Button>
+      <Button
+        type="button"
+        disabled={(() => {
+          switch (currentPage) {
+            case GalleryFormPages.PAGE_THUMBNAIL:
+              return !isThumbnailVerified;
+            case GalleryFormPages.PAGE_THEME:
+              return !isGalleryThemeIdVerified;
+            case GalleryFormPages.PAGE_TITLE:
+              return !isTitleVerified;
+            case GalleryFormPages.PAGE_ORIGINAL_IMAGES:
+              return !isOriginalImagesVerified || !isSubmittable;
+          }
+        })()}
+        onClick={() => {
+          if (currentPage !== GalleryFormPages.PAGE_ORIGINAL_IMAGES) {
+            setCurrentPage((state) => state + 1);
+            return;
+          }
+          handleOnSubmit();
+        }}
+      >
+        {currentPage === GalleryFormPages.PAGE_ORIGINAL_IMAGES
+          ? post
+            ? '수정하기'
+            : '등록하기'
+          : '다음'}
+      </Button>
+    </div>
+  );
+
+  return (
+    <form
+      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
+      onSubmit={(event) => {
+        event.preventDefault();
+        return false;
+      }}
+    >
+      {renderPickedThumbnail}
+
+      {renderTheme}
+      {renderTitle}
+      {renderOriginalImages}
+
+      {renderMovePageButton}
     </form>
   );
 }

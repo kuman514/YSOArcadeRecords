@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
@@ -18,10 +18,12 @@ import {
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import { useTempSave } from '^/src/shared/save/hook';
 import Button from '^/src/shared/ui/button';
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
+
 import { ReviewFormPages } from './types';
 
 interface Props {
@@ -49,6 +51,9 @@ export default function ReviewForm({ post }: Props) {
   );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [lastEditedAt, setLastEditedAt] = useState<number>(
+    new Date().getTime()
+  );
 
   useLoadingBlockModal(isLoading);
 
@@ -85,6 +90,67 @@ export default function ReviewForm({ post }: Props) {
     })) ?? []
   );
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+
+  useTempSave<{
+    title: string;
+    tags: string;
+    subjectName: string;
+    subjectType: string;
+    createdBy: string;
+    releaseDate: Date | null;
+    details: MultipleFormValue<string>;
+    reviewScore: number;
+    youTubeId: string;
+    images: ImageListElementValue[];
+    localThumbnail: File | null;
+  }>({
+    key: 'yso-arcade-records-temp-review',
+    delay: 1000,
+    isActive: !post,
+    lastEditedAt,
+    getParams: () => ({
+      title,
+      tags,
+      subjectName,
+      subjectType,
+      createdBy,
+      releaseDate,
+      details,
+      reviewScore,
+      youTubeId,
+      images,
+      localThumbnail,
+    }),
+    onLoad: async (loaded) => {
+      setTitle(loaded.title);
+      setTags(loaded.tags);
+      setSubjectName(loaded.subjectName);
+      setSubjectType(loaded.subjectType);
+      setCreatedBy(loaded.createdBy);
+      setReleaseDate(loaded.releaseDate);
+      setDetails(loaded.details);
+      setReviewScore(loaded.reviewScore);
+      setYouTubeId(loaded.youTubeId);
+      setImages(loaded.images);
+      setLocalThumbnail(loaded.localThumbnail);
+    },
+  });
+
+  useEffect(() => {
+    setLastEditedAt(new Date().getTime());
+  }, [
+    title,
+    subjectName,
+    subjectType,
+    createdBy,
+    details,
+    reviewScore,
+    localThumbnail,
+    images,
+    tags,
+    youTubeId,
+    releaseDate,
+  ]);
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;

@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
@@ -21,6 +21,7 @@ import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import { GalleryFormPages } from '^/src/features/gallery/types';
+import { useTempSave } from '^/src/shared/save/hook';
 
 interface Props {
   post?: GalleryPost;
@@ -45,6 +46,10 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     GalleryFormPages.PAGE_THUMBNAIL
   );
 
+  const [lastEditedAt, setLastEditedAt] = useState<number>(
+    new Date().getTime()
+  );
+
   useLoadingBlockModal(isLoading);
 
   const [title, setTitle] = useState<string>(post?.title ?? '');
@@ -64,6 +69,34 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
       })) ?? []
     )
   );
+
+  useTempSave<{
+    title: string;
+    galleryThemeId: string;
+    images: ImageListElementValue[];
+    localThumbnail: File | null;
+  }>({
+    key: 'yso-arcade-records-temp-gallery',
+    delay: 1000,
+    isActive: !post,
+    lastEditedAt,
+    getParams: () => ({
+      title,
+      galleryThemeId,
+      images,
+      localThumbnail,
+    }),
+    onLoad: async (loaded) => {
+      setTitle(loaded.title);
+      setGalleryThemeId(loaded.galleryThemeId);
+      setImages(loaded.images);
+      setLocalThumbnail(loaded.localThumbnail);
+    },
+  });
+
+  useEffect(() => {
+    setLastEditedAt(new Date().getTime());
+  }, [title, galleryThemeId, images, localThumbnail]);
 
   const isTitleVerified = title.length > 0;
   const isThumbnailVerified = !!post?.thumbnailUrl || !!localThumbnail;

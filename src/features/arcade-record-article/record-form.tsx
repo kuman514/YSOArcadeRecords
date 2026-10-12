@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
@@ -25,6 +25,7 @@ import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
+import { useTempSave } from '^/src/shared/save/hook';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -59,6 +60,10 @@ export default function RecordForm({
 
   const [currentPage, setCurrentPage] = useState<ArcadeRecordFormPages>(
     ArcadeRecordFormPages.PAGE_THUMBNAIL
+  );
+
+  const [lastEditedAt, setLastEditedAt] = useState<number>(
+    new Date().getTime()
   );
 
   useLoadingBlockModal(isLoading);
@@ -115,6 +120,79 @@ export default function RecordForm({
     })) ?? []
   );
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+
+  useTempSave<{
+    title: string;
+    arcadeId: string;
+    methodId: string;
+    achievedAt: Date;
+    score: string;
+    elapsedTime: string;
+    stage: string;
+    rank: string;
+    comment: string;
+    tags: string[];
+    note: string;
+    youTubeId: string;
+    images: ImageListElementValue[];
+    localThumbnail: File | null;
+  }>({
+    key: 'yso-arcade-records-temp-arcade-record',
+    delay: 1000,
+    isActive: !post,
+    lastEditedAt,
+    getParams: () => ({
+      title,
+      arcadeId,
+      methodId,
+      achievedAt,
+      score,
+      elapsedTime,
+      stage,
+      rank,
+      comment,
+      tags,
+      note,
+      youTubeId,
+      images,
+      localThumbnail,
+    }),
+    onLoad: async (loaded) => {
+      setTitle(loaded.title);
+      setArcadeId(loaded.arcadeId);
+      setMethodId(loaded.methodId);
+      setAchievedAt(loaded.achievedAt);
+      setScore(loaded.score);
+      setElapsedTime(loaded.elapsedTime);
+      setStage(loaded.stage);
+      setRank(loaded.rank);
+      setComment(loaded.comment);
+      setTags(loaded.tags);
+      setNote(loaded.note);
+      setYouTubeId(loaded.youTubeId);
+      setImages(loaded.images);
+      setLocalThumbnail(loaded.localThumbnail);
+    },
+  });
+
+  useEffect(() => {
+    setLastEditedAt(new Date().getTime());
+  }, [
+    title,
+    arcadeId,
+    methodId,
+    achievedAt,
+    score,
+    elapsedTime,
+    stage,
+    rank,
+    comment,
+    tags,
+    note,
+    youTubeId,
+    images,
+    localThumbnail,
+  ]);
 
   const isTitleVerified = title.length > 0;
   const isArcadeIdVerified = arcadeId.length > 0;

@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { loadFromLocalStorage } from '^/src/shared/save/load';
+import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 
-import { saveToLocalStorage } from './save';
+import { loadFromIndexedDatabase } from './load';
+import { saveToIndexedDatabase } from './save';
 
 interface Params<T extends object> {
   isActive: boolean;
@@ -23,14 +24,43 @@ export function useTempSave<T extends object>({
   onLoad,
 }: Params<T>) {
   const [isSaveActivated, setIsSaveActivated] = useState<boolean>(false);
+  const [database, setDatabase] = useState<IDBDatabase | null>(null);
 
   useEffect(() => {
-    if (!isSaveActivated) {
+    const indexedDBRequest = indexedDB.open(
+      IS_PRODUCTION ? 'YSOArcadeRecords' : 'DEV YSOARs'
+    );
+    indexedDBRequest.onerror = () => {
+      toast('indexedDB에 연결할 수 없습니다.', {
+        type: 'error',
+      });
+    };
+    indexedDBRequest.onsuccess = () => {
+      setDatabase(indexedDBRequest.result);
+    };
+    indexedDBRequest.onupgradeneeded = () => {
+      indexedDBRequest.result.createObjectStore('TempSaved', {
+        keyPath: 'key',
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!database) {
+      return;
+    }
+    return () => {
+      database.close();
+    };
+  }, [database]);
+
+  useEffect(() => {
+    if (!isSaveActivated || !database) {
       return;
     }
 
     const timeout = setTimeout(async () => {
-      saveToLocalStorage(key, await getParams());
+      await saveToIndexedDatabase(key, await getParams(), database);
       toast('임시 저장이 완료되었습니다.', {
         type: 'success',
       });
@@ -39,22 +69,24 @@ export function useTempSave<T extends object>({
     return () => {
       clearTimeout(timeout);
     };
-  }, [isSaveActivated, getParams]);
+  }, [isSaveActivated, database, getParams]);
 
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive || !database) {
       return;
     }
 
-    const loaded = loadFromLocalStorage<T>(key);
-    if (!loaded) {
+    (async () => {
+      const loaded = await loadFromIndexedDatabase<T>(key, database);
+      if (!loaded) {
+        setIsSaveActivated(true);
+        return;
+      }
+
+      if (confirm('이전에 작성하던 포스트가 있습니다. 불러오시겠습니까?')) {
+        onLoad(loaded);
+      }
       setIsSaveActivated(true);
-      return;
-    }
-
-    if (confirm('이전에 작성하던 포스트가 있습니다. 불러오시겠습니까?')) {
-      onLoad(loaded);
-    }
-    setIsSaveActivated(true);
-  }, [isActive]);
+    })();
+  }, [isActive, database]);
 }

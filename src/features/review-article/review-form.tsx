@@ -9,15 +9,8 @@ import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg'
 import StarSvgRepoComSvg from '^/public/icons/star-svgrepo-com.svg';
 import MultipleImagePicker from '^/src/entities/image-picker/multiple';
 import SingleImagePicker from '^/src/entities/image-picker/single';
-import {
-  ImageListElementValue,
-  TempSaveImageListElementValue,
-} from '^/src/entities/image-picker/types';
+import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { ReviewPost } from '^/src/entities/types/post';
-import {
-  convertDataUrlToImageFile,
-  convertImageFileToDataUrl,
-} from '^/src/shared/image/convert';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
 import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import {
@@ -105,13 +98,13 @@ export default function ReviewForm({ post }: Props) {
     details: MultipleFormValue<string>;
     reviewScore: number;
     youTubeId: string;
-    images: TempSaveImageListElementValue[];
-    localThumbnail: string | null;
+    images: ImageListElementValue[];
+    localThumbnail: File | null;
   }>({
     key: 'yso-arcade-records-temp-review',
     delay: 1000,
     isActive: !post,
-    getParams: async () => ({
+    getParams: () => ({
       title,
       tags,
       subjectName,
@@ -121,18 +114,8 @@ export default function ReviewForm({ post }: Props) {
       details,
       reviewScore,
       youTubeId,
-      images: await Promise.all<TempSaveImageListElementValue>(
-        images.map(async (image) => ({
-          tmpId: image.tmpId,
-          localFile: image.localFile
-            ? await convertImageFileToDataUrl(image.localFile)
-            : undefined,
-          sourceUrl: image.sourceUrl,
-        }))
-      ),
-      localThumbnail: localThumbnail
-        ? await convertImageFileToDataUrl(localThumbnail)
-        : null,
+      images,
+      localThumbnail,
     }),
     onLoad: async (loaded) => {
       setTitle(loaded.title);
@@ -144,19 +127,8 @@ export default function ReviewForm({ post }: Props) {
       setDetails(loaded.details);
       setReviewScore(loaded.reviewScore);
       setYouTubeId(loaded.youTubeId);
-      setImages(
-        await Promise.all<ImageListElementValue>(
-          loaded.images.map(async (image) => ({
-            tmpId: image.tmpId,
-            localFile: image.localFile
-              ? await convertDataUrlToImageFile(image.localFile, {
-                  type: 'image/jpeg',
-                })
-              : undefined,
-            sourceUrl: image.sourceUrl,
-          }))
-        )
-      );
+      setImages(loaded.images);
+      setLocalThumbnail(loaded.localThumbnail);
     },
   });
 

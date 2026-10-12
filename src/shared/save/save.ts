@@ -1,5 +1,7 @@
 'use client';
 
+import { OBJECT_STORE_NAME } from './constants';
+
 export function saveToLocalStorage<T extends object>(key: string, value: T) {
   localStorage.setItem(key, JSON.stringify(value));
 }
@@ -10,8 +12,8 @@ export async function saveToIndexedDatabase<T extends object>(
   database: IDBDatabase
 ) {
   const objectStore = database
-    .transaction('TempSaved', 'readwrite')
-    .objectStore('TempSaved');
+    .transaction(OBJECT_STORE_NAME, 'readwrite')
+    .objectStore(OBJECT_STORE_NAME);
 
   if (!objectStore) {
     throw new Error('오브젝트 스토어가 존재하지 않습니다.');

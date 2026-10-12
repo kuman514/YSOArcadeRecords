@@ -1,5 +1,7 @@
 'use client';
 
+import { OBJECT_STORE_NAME } from './constants';
+
 export function loadFromLocalStorage<T extends object>(key: string) {
   const data = localStorage.getItem(key);
   if (data === null) {
@@ -13,8 +15,8 @@ export async function loadFromIndexedDatabase<T extends object>(
   database: IDBDatabase
 ) {
   const objectStore = database
-    .transaction('TempSaved', 'readonly')
-    .objectStore('TempSaved');
+    .transaction(OBJECT_STORE_NAME, 'readonly')
+    .objectStore(OBJECT_STORE_NAME);
 
   if (!objectStore) {
     throw new Error('오브젝트 스토어가 존재하지 않습니다.');

@@ -7,6 +7,7 @@ import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 
 import { loadFromIndexedDatabase } from './load';
 import { saveToIndexedDatabase } from './save';
+import { OBJECT_STORE_NAME } from './constants';
 
 interface Params<T extends object> {
   isActive: boolean;
@@ -39,7 +40,7 @@ export function useTempSave<T extends object>({
       setDatabase(indexedDBRequest.result);
     };
     indexedDBRequest.onupgradeneeded = () => {
-      indexedDBRequest.result.createObjectStore('TempSaved', {
+      indexedDBRequest.result.createObjectStore(OBJECT_STORE_NAME, {
         keyPath: 'key',
       });
     };

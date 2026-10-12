@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { IS_PRODUCTION } from '^/src/shared/util/is-production';
@@ -13,6 +13,7 @@ interface Params<T extends object> {
   isActive: boolean;
   key: string;
   delay: number;
+  lastEditedAt: number;
   getParams: () => T | Promise<T>;
   onLoad: (loaded: T) => void;
 }
@@ -21,11 +22,14 @@ export function useTempSave<T extends object>({
   isActive,
   key,
   delay,
+  lastEditedAt,
   getParams,
   onLoad,
 }: Params<T>) {
   const [isSaveActivated, setIsSaveActivated] = useState<boolean>(false);
   const [database, setDatabase] = useState<IDBDatabase | null>(null);
+
+  const isLoadAnsweredRef = useRef<boolean>(false);
 
   useEffect(() => {
     const indexedDBRequest = indexedDB.open(
@@ -70,7 +74,7 @@ export function useTempSave<T extends object>({
     return () => {
       clearTimeout(timeout);
     };
-  }, [isSaveActivated, database, getParams]);
+  }, [isSaveActivated, database, lastEditedAt]);
 
   useEffect(() => {
     if (!isActive || !database) {
@@ -78,6 +82,10 @@ export function useTempSave<T extends object>({
     }
 
     (async () => {
+      if (isLoadAnsweredRef.current) {
+        return;
+      }
+
       const loaded = await loadFromIndexedDatabase<T>(key, database);
       if (!loaded) {
         setIsSaveActivated(true);
@@ -87,6 +95,7 @@ export function useTempSave<T extends object>({
       if (confirm('이전에 작성하던 포스트가 있습니다. 불러오시겠습니까?')) {
         onLoad(loaded);
       }
+      isLoadAnsweredRef.current = true;
       setIsSaveActivated(true);
     })();
   }, [isActive, database]);

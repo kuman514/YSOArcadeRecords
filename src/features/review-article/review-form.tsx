@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
@@ -51,6 +51,9 @@ export default function ReviewForm({ post }: Props) {
   );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [lastEditedAt, setLastEditedAt] = useState<number>(
+    new Date().getTime()
+  );
 
   useLoadingBlockModal(isLoading);
 
@@ -104,6 +107,7 @@ export default function ReviewForm({ post }: Props) {
     key: 'yso-arcade-records-temp-review',
     delay: 1000,
     isActive: !post,
+    lastEditedAt,
     getParams: () => ({
       title,
       tags,
@@ -121,7 +125,7 @@ export default function ReviewForm({ post }: Props) {
       setTitle(loaded.title);
       setTags(loaded.tags);
       setSubjectName(loaded.subjectName);
-      setSubjectName(loaded.subjectType);
+      setSubjectType(loaded.subjectType);
       setCreatedBy(loaded.createdBy);
       setReleaseDate(loaded.releaseDate);
       setDetails(loaded.details);
@@ -131,6 +135,22 @@ export default function ReviewForm({ post }: Props) {
       setLocalThumbnail(loaded.localThumbnail);
     },
   });
+
+  useEffect(() => {
+    setLastEditedAt(new Date().getTime());
+  }, [
+    title,
+    subjectName,
+    subjectType,
+    createdBy,
+    details,
+    reviewScore,
+    localThumbnail,
+    images,
+    tags,
+    youTubeId,
+    releaseDate,
+  ]);
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;

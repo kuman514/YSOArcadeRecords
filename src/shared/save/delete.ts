@@ -11,7 +11,7 @@ export async function deleteFromIndexedDatabase(
   database: IDBDatabase
 ) {
   const objectStore = database
-    .transaction(OBJECT_STORE_NAME, 'readonly')
+    .transaction(OBJECT_STORE_NAME, 'readwrite')
     .objectStore(OBJECT_STORE_NAME);
 
   if (!objectStore) {

@@ -51,6 +51,8 @@ export default function ReviewForm({ post }: Props) {
   );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCreateCompleted, setIsCreateCompleted] = useState<boolean>(false);
+
   const [lastEditedAt, setLastEditedAt] = useState<number>(
     new Date().getTime()
   );
@@ -108,6 +110,7 @@ export default function ReviewForm({ post }: Props) {
     delay: 1000,
     isActive: !post,
     lastEditedAt,
+    isCompleted: isCreateCompleted,
     getParams: () => ({
       title,
       tags,
@@ -375,6 +378,9 @@ export default function ReviewForm({ post }: Props) {
           toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.', {
             type: 'success',
           });
+          if (!post) {
+            setIsCreateCompleted(true);
+          }
           route.replace(`/reviews/${reviewId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:

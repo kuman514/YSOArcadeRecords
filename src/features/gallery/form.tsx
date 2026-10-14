@@ -10,18 +10,18 @@ import SingleImagePicker from '^/src/entities/image-picker/single';
 import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { GalleryTheme } from '^/src/entities/types/gallery-theme';
 import { GalleryPost } from '^/src/entities/types/post';
+import { GalleryFormPages } from '^/src/features/gallery/types';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import { useTempSave } from '^/src/shared/save/hook';
 import Button from '^/src/shared/ui/button';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormTextArea from '^/src/shared/ui/form-textarea';
-import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
-import { GalleryFormPages } from '^/src/features/gallery/types';
-import { useTempSave } from '^/src/shared/save/hook';
 
 interface Props {
   post?: GalleryPost;
@@ -41,6 +41,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCreateCompleted, setIsCreateCompleted] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<GalleryFormPages>(
     GalleryFormPages.PAGE_THUMBNAIL
@@ -80,6 +81,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     delay: 1000,
     isActive: !post,
     lastEditedAt,
+    isCompleted: isCreateCompleted,
     getParams: () => ({
       title,
       galleryThemeId,
@@ -271,6 +273,9 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
               type: 'success',
             }
           );
+          if (!post) {
+            setIsCreateCompleted(true);
+          }
           route.replace(`/gallery/${galleryId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:

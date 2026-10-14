@@ -5,15 +5,17 @@ import { toast } from 'react-toastify';
 
 import { IS_PRODUCTION } from '^/src/shared/util/is-production';
 
+import { OBJECT_STORE_NAME } from './constants';
+import { deleteFromIndexedDatabase } from './delete';
 import { loadFromIndexedDatabase } from './load';
 import { saveToIndexedDatabase } from './save';
-import { OBJECT_STORE_NAME } from './constants';
 
 interface Params<T extends object> {
   isActive: boolean;
   key: string;
   delay: number;
   lastEditedAt: number;
+  isCompleted: boolean;
   getParams: () => T | Promise<T>;
   onLoad: (loaded: T) => void;
 }
@@ -23,6 +25,7 @@ export function useTempSave<T extends object>({
   key,
   delay,
   lastEditedAt,
+  isCompleted,
   getParams,
   onLoad,
 }: Params<T>) {
@@ -49,6 +52,13 @@ export function useTempSave<T extends object>({
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (!isCompleted || !database) {
+      return;
+    }
+    deleteFromIndexedDatabase(key, database);
+  }, [isCompleted, database]);
 
   useEffect(() => {
     if (!database) {

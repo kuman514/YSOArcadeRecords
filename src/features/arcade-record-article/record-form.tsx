@@ -19,13 +19,13 @@ import {
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import { useTempSave } from '^/src/shared/save/hook';
 import Button from '^/src/shared/ui/button';
 import FormDropdown from '^/src/shared/ui/form-dropdown';
 import FormInput from '^/src/shared/ui/form-input';
 import FormTextArea from '^/src/shared/ui/form-textarea';
 import { parseEvaluation } from '^/src/shared/util/parse-evaluation';
 import { EvaluationCriterion } from '^/src/shared/util/types';
-import { useTempSave } from '^/src/shared/save/hook';
 
 interface Props {
   post?: ArcadeRecordPost;
@@ -57,6 +57,7 @@ export default function RecordForm({
   const route = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCreateCompleted, setIsCreateCompleted] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<ArcadeRecordFormPages>(
     ArcadeRecordFormPages.PAGE_THUMBNAIL
@@ -140,6 +141,7 @@ export default function RecordForm({
     key: 'yso-arcade-records-temp-arcade-record',
     delay: 1000,
     isActive: !post,
+    isCompleted: isCreateCompleted,
     lastEditedAt,
     getParams: () => ({
       title,
@@ -401,6 +403,9 @@ export default function RecordForm({
           toast(post ? '기록이 수정되었습니다.' : '기록이 등록되었습니다.', {
             type: 'success',
           });
+          if (!post) {
+            setIsCreateCompleted(true);
+          }
           route.replace(`/records/${arcadeRecordId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:
@@ -724,7 +729,7 @@ export default function RecordForm({
   const renderYouTubeId =
     currentPage === ArcadeRecordFormPages.PAGE_YOUTUBE_ID ? (
       <p className="w-full flex flex-col gap-2">
-        <label htmlFor="youTubeId">YouTube 영상 ID</label>
+        <label htmlFor="youTubeId">YouTube 영상 ID (스킵 가능)</label>
         <FormInput
           type="text"
           id="youTubeId"

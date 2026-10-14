@@ -1,0 +1,10 @@
+export enum ReviewFormPages {
+  PAGE_THUMBNAIL = 0,
+  PAGE_TITLE = 1,
+  PAGE_SUBJECT = 2,
+  PAGE_SCORE = 3,
+  PAGE_DETAILS = 4,
+  PAGE_TAGS = 5,
+  PAGE_YOUTUBE_ID = 6,
+  PAGE_ORIGINAL_IMAGES = 7,
+}

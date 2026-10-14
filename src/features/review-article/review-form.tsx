@@ -1,9 +1,8 @@
 'use client';
 
 import axios from 'axios';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import FilledStarSvgRepoComSvg from '^/public/icons/filled-star-svgrepo-com.svg';
@@ -13,25 +12,50 @@ import SingleImagePicker from '^/src/entities/image-picker/single';
 import { ImageListElementValue } from '^/src/entities/image-picker/types';
 import { ReviewPost } from '^/src/entities/types/post';
 import { useLoadingBlockModal } from '^/src/shared/modal/loading-block';
+import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
 import {
   FailedRouteHandlerCallResponse,
   RouteHandlerCallResponse,
   RouteHandlerCallResponseStatus,
 } from '^/src/shared/route-handler-call/types';
+import { useTempSave } from '^/src/shared/save/hook';
 import Button from '^/src/shared/ui/button';
 import FormInput from '^/src/shared/ui/form-input';
 import MultipleTextFormInput from '^/src/shared/ui/multiple-text-form-input';
 import { MultipleFormValue } from '^/src/shared/ui/types';
-import { issueUuid } from '^/src/shared/route-handler-call/issue-uuid';
+
+import { ReviewFormPages } from './types';
 
 interface Props {
   post?: ReviewPost;
 }
 
+/**
+ * @todo
+ * - 가장 첫번째로 썸네일용 이미지를 입력한다.
+ * - 썸네일이 입력된 후 커다랗게 썸네일을 보여주며, 아래와 같은 순서로 입력한다.
+ *   - 이 리뷰의 제목은 무엇인지
+ *   - 무엇을 리뷰하는지
+ *   - 총점은 몇점인지
+ *   - 리뷰 대상의 정보와 그 총점에 대한 근거는 어떤 것들이 있는지
+ *   - <스킵 가능> 태그
+ *   - <스킵 가능> 유튜브 영상 ID
+ * - 원본 이미지들을 입력한 뒤 제출 가능
+ */
+
 export default function ReviewForm({ post }: Props) {
   const route = useRouter();
 
+  const [currentPage, setCurrentPage] = useState<ReviewFormPages>(
+    ReviewFormPages.PAGE_THUMBNAIL
+  );
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCreateCompleted, setIsCreateCompleted] = useState<boolean>(false);
+
+  const [lastEditedAt, setLastEditedAt] = useState<number>(
+    new Date().getTime()
+  );
 
   useLoadingBlockModal(isLoading);
 
@@ -68,6 +92,68 @@ export default function ReviewForm({ post }: Props) {
     })) ?? []
   );
   const [localThumbnail, setLocalThumbnail] = useState<File | null>(null);
+
+  useTempSave<{
+    title: string;
+    tags: string;
+    subjectName: string;
+    subjectType: string;
+    createdBy: string;
+    releaseDate: Date | null;
+    details: MultipleFormValue<string>;
+    reviewScore: number;
+    youTubeId: string;
+    images: ImageListElementValue[];
+    localThumbnail: File | null;
+  }>({
+    key: 'yso-arcade-records-temp-review',
+    delay: 1000,
+    isActive: !post,
+    lastEditedAt,
+    isCompleted: isCreateCompleted,
+    getParams: () => ({
+      title,
+      tags,
+      subjectName,
+      subjectType,
+      createdBy,
+      releaseDate,
+      details,
+      reviewScore,
+      youTubeId,
+      images,
+      localThumbnail,
+    }),
+    onLoad: async (loaded) => {
+      setTitle(loaded.title);
+      setTags(loaded.tags);
+      setSubjectName(loaded.subjectName);
+      setSubjectType(loaded.subjectType);
+      setCreatedBy(loaded.createdBy);
+      setReleaseDate(loaded.releaseDate);
+      setDetails(loaded.details);
+      setReviewScore(loaded.reviewScore);
+      setYouTubeId(loaded.youTubeId);
+      setImages(loaded.images);
+      setLocalThumbnail(loaded.localThumbnail);
+    },
+  });
+
+  useEffect(() => {
+    setLastEditedAt(new Date().getTime());
+  }, [
+    title,
+    subjectName,
+    subjectType,
+    createdBy,
+    details,
+    reviewScore,
+    localThumbnail,
+    images,
+    tags,
+    youTubeId,
+    releaseDate,
+  ]);
 
   const isTitleVerified = title.length > 0;
   const isSubjectNameVerified = subjectName.length > 0;
@@ -125,9 +211,7 @@ export default function ReviewForm({ post }: Props) {
     setDetails(newDetails);
   }
 
-  async function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function handleOnSubmit() {
     setIsLoading(true);
 
     const reviewId = post?.reviewId ?? (await issueUuid());
@@ -294,6 +378,9 @@ export default function ReviewForm({ post }: Props) {
           toast(post ? '리뷰가 수정되었습니다.' : '리뷰가 등록되었습니다.', {
             type: 'success',
           });
+          if (!post) {
+            setIsCreateCompleted(true);
+          }
           route.replace(`/reviews/${reviewId}`);
           break;
         case RouteHandlerCallResponseStatus.FAILED:
@@ -323,52 +410,21 @@ export default function ReviewForm({ post }: Props) {
     return false;
   }
 
-  return (
-    <form
-      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
-      onSubmit={handleOnSubmit}
-    >
-      {post?.thumbnailUrl && (
-        <div className="w-12/25 flex flex-col gap-2">
-          <label htmlFor="presentThumbnailUrl">등록된 썸네일</label>
-          <div className="w-40 h-40 retro-rounded relative flex justify-center items-center overflow-hidden">
-            <Image
-              src={post.thumbnailUrl}
-              alt="기존 썸네일 이미지"
-              fill
-              sizes="10rem"
-            />
-          </div>
-          <input
-            id="presentThumbnailUrl"
-            name="presentThumbnailUrl"
-            type="hidden"
-            value={post.thumbnailUrl}
-            readOnly
-          />
-        </div>
-      )}
+  const renderPickedThumbnail = (
+    <div className="w-full flex flex-col gap-2">
+      <label htmlFor="thumbnail">{localThumbnail ? '새로운 ' : ''}썸네일</label>
+      <SingleImagePicker
+        name="thumbnail"
+        remoteImageUrl={!localThumbnail ? post?.thumbnailUrl : undefined}
+        currentFile={localThumbnail}
+        onSelectFile={setLocalThumbnail}
+      />
+      {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
+    </div>
+  );
 
-      <div className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="thumbnail">새로운 썸네일</label>
-        <SingleImagePicker
-          name="thumbnail"
-          currentFile={localThumbnail}
-          onSelectFile={setLocalThumbnail}
-        />
-        {!isThumbnailVerified && <span>썸네일을 등록해주세요.</span>}
-      </div>
-
-      <div className="w-full flex flex-col gap-2">
-        <label htmlFor="originalImages">원본 이미지</label>
-        <MultipleImagePicker
-          name="originalImages"
-          images={images}
-          onChangeImages={setImages}
-        />
-        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
-      </div>
-
+  const renderTitle =
+    currentPage === ReviewFormPages.PAGE_TITLE ? (
       <p className="w-full flex flex-col gap-2">
         <label htmlFor="title">리뷰 제목</label>
         <FormInput
@@ -382,88 +438,95 @@ export default function ReviewForm({ post }: Props) {
         />
         {!isTitleVerified && <span>제목을 입력해주세요.</span>}
       </p>
+    ) : null;
 
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="subjectName">리뷰 대상</label>
-        <FormInput
-          type="text"
-          id="subjectName"
-          name="subjectName"
-          value={subjectName}
-          onChange={(event) => {
-            setSubjectName(event.currentTarget.value);
-          }}
-        />
-        {!isSubjectNameVerified && <span>리뷰 대상을 입력해주세요.</span>}
-      </p>
-
-      <p className="w-12/25 flex flex-col gap-2">
-        <label htmlFor="subjectType">리뷰 대상의 종류</label>
-        <FormInput
-          type="text"
-          id="subjectType"
-          name="subjectType"
-          value={subjectType}
-          onChange={(event) => {
-            setSubjectType(event.currentTarget.value);
-          }}
-        />
-        {!isSubjectTypeVerified && (
-          <span>리뷰 대상의 종류를 입력해주세요.</span>
-        )}
-      </p>
-
-      <p className="w-full sm:w-12/25 flex flex-col gap-2">
-        <label htmlFor="createdBy">제작사</label>
-        <FormInput
-          type="text"
-          id="createdBy"
-          name="createdBy"
-          value={createdBy}
-          onChange={(event) => {
-            setCreatedBy(event.currentTarget.value);
-          }}
-        />
-        {!isCreatedByVerified && <span>제작사를 입력해주세요.</span>}
-      </p>
-
-      <p className="w-full sm:w-12/25 flex flex-col gap-2">
-        <span className="flex flex-row justify-between items-center">
-          <label htmlFor="releaseDate">출시일</label>
-          <span className="flex flex-row justify-center items-center gap-2">
-            <label htmlFor="releaseDateUnknown">출시일을 모름</label>
-            <input
-              checked={!releaseDate}
-              type="checkbox"
-              id="releaseDateUnknown"
-              onChange={(event) => {
-                if (event.currentTarget.checked) {
-                  setReleaseDate(null);
-                } else {
-                  setReleaseDate(new Date());
-                }
-              }}
-            />
-          </span>
-        </span>
-        {releaseDate && (
+  const renderSubject =
+    currentPage === ReviewFormPages.PAGE_SUBJECT ? (
+      <>
+        <p className="w-12/25 flex flex-col gap-2">
+          <label htmlFor="subjectName">리뷰 대상</label>
           <FormInput
-            type="date"
-            id="releaseDate"
-            name="releaseDate"
-            value={`${releaseDate.getFullYear()}-${String(
-              releaseDate.getMonth() + 1
-            ).padStart(2, '0')}-${String(releaseDate.getDate()).padStart(
-              2,
-              '0'
-            )}`}
+            type="text"
+            id="subjectName"
+            name="subjectName"
+            value={subjectName}
             onChange={(event) => {
-              setReleaseDate(new Date(event.currentTarget.value));
+              setSubjectName(event.currentTarget.value);
             }}
           />
-        )}
-      </p>
+          {!isSubjectNameVerified && <span>리뷰 대상을 입력해주세요.</span>}
+        </p>
 
+        <p className="w-12/25 flex flex-col gap-2">
+          <label htmlFor="subjectType">리뷰 대상의 종류</label>
+          <FormInput
+            type="text"
+            id="subjectType"
+            name="subjectType"
+            value={subjectType}
+            onChange={(event) => {
+              setSubjectType(event.currentTarget.value);
+            }}
+          />
+          {!isSubjectTypeVerified && (
+            <span>리뷰 대상의 종류를 입력해주세요.</span>
+          )}
+        </p>
+
+        <p className="w-full sm:w-12/25 flex flex-col gap-2">
+          <label htmlFor="createdBy">제작사</label>
+          <FormInput
+            type="text"
+            id="createdBy"
+            name="createdBy"
+            value={createdBy}
+            onChange={(event) => {
+              setCreatedBy(event.currentTarget.value);
+            }}
+          />
+          {!isCreatedByVerified && <span>제작사를 입력해주세요.</span>}
+        </p>
+        <p className="w-full sm:w-12/25 flex flex-col gap-2">
+          <span className="flex flex-row justify-between items-center">
+            <label htmlFor="releaseDate">출시일</label>
+            <span className="flex flex-row justify-center items-center gap-2">
+              <label htmlFor="releaseDateUnknown">출시일을 모름</label>
+              <input
+                checked={!releaseDate}
+                type="checkbox"
+                id="releaseDateUnknown"
+                onChange={(event) => {
+                  if (event.currentTarget.checked) {
+                    setReleaseDate(null);
+                  } else {
+                    setReleaseDate(new Date());
+                  }
+                }}
+              />
+            </span>
+          </span>
+          {releaseDate && (
+            <FormInput
+              type="date"
+              id="releaseDate"
+              name="releaseDate"
+              value={`${releaseDate.getFullYear()}-${String(
+                releaseDate.getMonth() + 1
+              ).padStart(2, '0')}-${String(releaseDate.getDate()).padStart(
+                2,
+                '0'
+              )}`}
+              onChange={(event) => {
+                setReleaseDate(new Date(event.currentTarget.value));
+              }}
+            />
+          )}
+        </p>
+      </>
+    ) : null;
+
+  const renderScore =
+    currentPage === ReviewFormPages.PAGE_SCORE ? (
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="releaseDate">총점</label>
         <div className="w-full flex flex-row gap-2 justify-center items-center">
@@ -486,7 +549,10 @@ export default function ReviewForm({ post }: Props) {
         </div>
         {!isReviewScoreVerified && <span>총점을 입력해주세요.</span>}
       </div>
+    ) : null;
 
+  const renderDetails =
+    currentPage === ReviewFormPages.PAGE_DETAILS ? (
       <MultipleTextFormInput
         name="details"
         values={details}
@@ -497,9 +563,12 @@ export default function ReviewForm({ post }: Props) {
         onDelete={handleOnDeleteDetail}
         onSwap={handleOnSwapDetails}
       />
+    ) : null;
 
+  const renderTags =
+    currentPage === ReviewFormPages.PAGE_TAGS ? (
       <p className="w-full flex flex-col gap-2">
-        <label>태그 (콤마로 구분)</label>
+        <label>태그 (콤마로 구분, 스킵 가능)</label>
         <FormInput
           type="text"
           id="tags"
@@ -510,9 +579,12 @@ export default function ReviewForm({ post }: Props) {
           }}
         />
       </p>
+    ) : null;
 
+  const renderYouTubeId =
+    currentPage === ReviewFormPages.PAGE_YOUTUBE_ID ? (
       <p className="w-full flex flex-col gap-2">
-        <label htmlFor="youTubeId">YouTube 영상 ID</label>
+        <label htmlFor="youTubeId">YouTube 영상 ID (스킵 가능)</label>
         <FormInput
           type="text"
           id="youTubeId"
@@ -523,10 +595,93 @@ export default function ReviewForm({ post }: Props) {
           }}
         />
       </p>
+    ) : null;
 
-      <Button type="submit" disabled={!isSubmittable}>
-        {post ? '수정하기' : '등록하기'}
+  const renderOriginalImages =
+    currentPage === ReviewFormPages.PAGE_ORIGINAL_IMAGES ? (
+      <div className="w-full flex flex-col gap-2">
+        <label htmlFor="originalImages">원본 이미지</label>
+        <MultipleImagePicker
+          name="originalImages"
+          images={images}
+          onChangeImages={setImages}
+        />
+        {!isOriginalImagesVerified && <span>원본 이미지를 첨부해주세요.</span>}
+      </div>
+    ) : null;
+
+  const renderMovePageButton = (
+    <div className="w-full flex flex-row gap-2">
+      <Button
+        type="button"
+        disabled={currentPage === ReviewFormPages.PAGE_THUMBNAIL}
+        onClick={() => {
+          setCurrentPage((state) => state - 1);
+        }}
+      >
+        이전
       </Button>
+      <Button
+        type="button"
+        disabled={(() => {
+          switch (currentPage) {
+            case ReviewFormPages.PAGE_THUMBNAIL:
+              return !isThumbnailVerified;
+            case ReviewFormPages.PAGE_TITLE:
+              return !isTitleVerified;
+            case ReviewFormPages.PAGE_SUBJECT:
+              return (
+                !isSubjectNameVerified ||
+                !isSubjectTypeVerified ||
+                !isCreatedByVerified
+              );
+            case ReviewFormPages.PAGE_SCORE:
+              return !isReviewScoreVerified;
+            case ReviewFormPages.PAGE_DETAILS:
+              return !isDetailsVerified;
+            case ReviewFormPages.PAGE_TAGS:
+            case ReviewFormPages.PAGE_YOUTUBE_ID:
+              return false;
+            case ReviewFormPages.PAGE_ORIGINAL_IMAGES:
+              return !isOriginalImagesVerified || !isSubmittable;
+          }
+        })()}
+        onClick={() => {
+          if (currentPage !== ReviewFormPages.PAGE_ORIGINAL_IMAGES) {
+            setCurrentPage((state) => state + 1);
+            return;
+          }
+          handleOnSubmit();
+        }}
+      >
+        {currentPage === ReviewFormPages.PAGE_ORIGINAL_IMAGES
+          ? post
+            ? '수정하기'
+            : '등록하기'
+          : '다음'}
+      </Button>
+    </div>
+  );
+
+  return (
+    <form
+      className="w-full flex flex-row flex-wrap justify-between items-start gap-y-8"
+      onSubmit={(event) => {
+        event.preventDefault();
+        return false;
+      }}
+    >
+      {renderPickedThumbnail}
+
+      {renderTitle}
+      {renderSubject}
+      {renderScore}
+      {renderDetails}
+      {renderTags}
+      {renderYouTubeId}
+      {renderOriginalImages}
+
+      {renderMovePageButton}
     </form>
   );
 }

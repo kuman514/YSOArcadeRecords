@@ -5,10 +5,7 @@ import { toast } from 'react-toastify';
 
 import Button from '^/src/shared/ui/button';
 
-import {
-  MAXIMUM_IMAGE_LENGTH_ON_RESIZE,
-  MAXIMUM_IMAGE_SIZE,
-} from './constants';
+import { MAXIMUM_IMAGE_LENGTH_ON_RESIZE } from './constants';
 import ImageList from './image-list';
 import { ImageListElementValue } from './types';
 
@@ -36,18 +33,10 @@ export default function MultipleImagePicker({
     }
 
     const rawFiles = Array.from(files);
-    const overSizedImages = rawFiles.filter(
-      (rawFile) => rawFile.size > MAXIMUM_IMAGE_SIZE
-    );
     const finalFiles = await Promise.all(
       rawFiles.map(
         (rawFile) =>
           new Promise<File>((resolve, reject) => {
-            if (rawFile.size <= MAXIMUM_IMAGE_SIZE) {
-              resolve(rawFile);
-              return;
-            }
-
             const fileReader = new FileReader();
             fileReader.onload = (event) => {
               const img = new Image();
@@ -110,12 +99,10 @@ export default function MultipleImagePicker({
       })
     );
 
-    if (overSizedImages.length > 0) {
-      toast(
-        `용량이 큰 이미지를 최적화 처리했습니다. 처리된 이미지: ${overSizedImages.map((file) => file.name).join(', ')}`,
-        { type: 'info' }
-      );
-    }
+    toast(
+      `여러 이미지를 최적화 처리했습니다. 처리된 이미지: ${rawFiles.map((file) => file.name).join(', ')}`,
+      { type: 'info' }
+    );
 
     onChangeImages(images.concat(newImages));
   }

@@ -222,7 +222,7 @@ export default function ReviewForm({ post }: Props) {
     }
 
     const path = `reviews/${reviewId}`;
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().getTime();
 
     const thumbnailUrl = localThumbnail
       ? await (async () => {

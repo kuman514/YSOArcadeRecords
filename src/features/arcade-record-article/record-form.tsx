@@ -248,7 +248,7 @@ export default function RecordForm({
     }
 
     const path = `records/${arcadeRecordId}`;
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().getTime();
 
     const thumbnailUrl = localThumbnail
       ? await (async () => {

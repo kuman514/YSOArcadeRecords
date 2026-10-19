@@ -123,7 +123,7 @@ export default function GalleryForm({ post, galleryThemeList }: Props) {
     }
 
     const path = `gallery/${galleryId}`;
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().getTime();
 
     const thumbnailUrl = localThumbnail
       ? await (async () => {

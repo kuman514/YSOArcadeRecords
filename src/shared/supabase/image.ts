@@ -1,6 +1,28 @@
 import sharp from 'sharp';
 import { createServerSideClient } from './server';
 
+const safeSegmentPattern = /^[a-zA-Z0-9_-]+$/;
+const allowedImageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
+
+/**
+ * Guards the storage object path against traversal. `directory` may contain
+ * slashes (e.g. `records/<id>`), so each segment is checked individually;
+ * `fileName` must be a single safe segment. This rejects `..`, leading/
+ * trailing slashes, and any other reserved character before the value is used
+ * to build a storage path.
+ */
+export function checkIsSafeStoragePath(
+  directory: string,
+  fileName: string
+): boolean {
+  const segments = directory.split('/');
+  const isDirectorySafe =
+    segments.length > 0 &&
+    segments.every((segment) => safeSegmentPattern.test(segment));
+  const isFileNameSafe = safeSegmentPattern.test(fileName);
+  return isDirectorySafe && isFileNameSafe;
+}
+
 export async function resizeImage(
   file: File,
   sizeOption: {
@@ -22,7 +44,16 @@ export async function saveImage(
   fileName: string,
   directory: string
 ) {
-  const extension = file.name.split('.').pop();
+  const extension = file.name.split('.').pop()?.toLowerCase();
+
+  if (!checkIsSafeStoragePath(directory, fileName)) {
+    throw new Error('Invalid image path.');
+  }
+
+  if (!extension || !allowedImageExtensions.includes(extension)) {
+    throw new Error('Unsupported image extension.');
+  }
+
   const finalFileName = `${fileName}.${extension}`;
 
   const supabase = await createServerSideClient();

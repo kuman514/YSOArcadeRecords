@@ -86,7 +86,7 @@ export default function SingleImagePicker({
           toast(`${file.name} 파일을 최적화 처리했습니다.`, {
             type: 'info',
           });
-        });
+        }, 'image/jpeg');
       };
     };
     fileReader.readAsDataURL(file);

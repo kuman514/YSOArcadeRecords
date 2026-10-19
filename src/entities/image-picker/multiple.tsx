@@ -83,7 +83,7 @@ export default function MultipleImagePicker({
                     return;
                   }
                   resolve(new File([blob], ''));
-                });
+                }, 'image/jpeg');
               };
             };
             fileReader.readAsDataURL(rawFile);

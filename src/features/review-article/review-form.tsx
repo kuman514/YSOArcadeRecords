@@ -230,7 +230,7 @@ export default function ReviewForm({ post }: Props) {
           thumbnailFormData.append('image', localThumbnail);
           thumbnailFormData.append('size', '480');
           thumbnailFormData.append('path', path);
-          thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
+          thumbnailFormData.append('fileName', `thumbnail-${timestamp}.jpg`);
 
           try {
             const response = await axios.post<
@@ -288,7 +288,10 @@ export default function ReviewForm({ post }: Props) {
         imageFormData.append('image', localFile);
         imageFormData.append('size', '1024');
         imageFormData.append('path', path);
-        imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
+        imageFormData.append(
+          'fileName',
+          `original-${timestamp}-${index + 1}.jpg`
+        );
 
         try {
           const response = await axios.post<

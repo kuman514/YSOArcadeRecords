@@ -3,7 +3,6 @@ import { createServerSideClient } from './server';
 
 const safeDirectoryPattern = /^[a-zA-Z0-9_-]+$/;
 const safeFileNamePattern = /^[a-zA-Z0-9_-]+.jpg$/;
-const allowedImageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
 
 /**
  * Guards the storage object path against traversal. `directory` may contain
@@ -46,13 +45,12 @@ export async function saveImage(
   directory: string
 ) {
   const extension = fileName.split('.').pop()?.toLowerCase();
-  console.log(extension);
 
   if (!checkIsSafeStoragePath(directory, fileName)) {
     throw new Error('Invalid image path.');
   }
 
-  if (!extension || !allowedImageExtensions.includes(extension)) {
+  if (!extension || extension !== 'jpg') {
     throw new Error('Unsupported image extension.');
   }
 

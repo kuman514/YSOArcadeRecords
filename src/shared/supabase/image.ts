@@ -1,7 +1,8 @@
 import sharp from 'sharp';
 import { createServerSideClient } from './server';
 
-const safeSegmentPattern = /^[a-zA-Z0-9_-]+$/;
+const safeDirectoryPattern = /^[a-zA-Z0-9_-]+$/;
+const safeFileNamePattern = /^[a-zA-Z0-9_-]+.jpg$/;
 const allowedImageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
 
 /**
@@ -18,8 +19,8 @@ export function checkIsSafeStoragePath(
   const segments = directory.split('/');
   const isDirectorySafe =
     segments.length > 0 &&
-    segments.every((segment) => safeSegmentPattern.test(segment));
-  const isFileNameSafe = safeSegmentPattern.test(fileName);
+    segments.every((segment) => safeDirectoryPattern.test(segment));
+  const isFileNameSafe = safeFileNamePattern.test(fileName);
   return isDirectorySafe && isFileNameSafe;
 }
 
@@ -44,7 +45,8 @@ export async function saveImage(
   fileName: string,
   directory: string
 ) {
-  const extension = file.name.split('.').pop()?.toLowerCase();
+  const extension = fileName.split('.').pop()?.toLowerCase();
+  console.log(extension);
 
   if (!checkIsSafeStoragePath(directory, fileName)) {
     throw new Error('Invalid image path.');
@@ -54,12 +56,10 @@ export async function saveImage(
     throw new Error('Unsupported image extension.');
   }
 
-  const finalFileName = `${fileName}.${extension}`;
-
   const supabase = await createServerSideClient();
   const { data: result, error } = await supabase.storage
     .from(process.env.NEXT_PUBLIC_SUPABASE_UPLOAD_BUCKET_ID!)
-    .upload(`${directory}/${finalFileName}`, file);
+    .upload(`${directory}/${fileName}`, file);
 
   if (error || !result) {
     throw new Error(error?.message ?? 'Failed to save image.');

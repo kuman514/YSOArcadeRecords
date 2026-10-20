@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 
-import { resizeImage, saveImage } from '^/src/shared/supabase/image';
+import {
+  checkIsSafeStoragePath,
+  resizeImage,
+  saveImage,
+} from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
 
 export async function POST(request: Request) {
@@ -18,17 +22,33 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData();
-  const image = formData.get('image') as File;
+  const image = formData.get('image');
   const size = formData.get('size')?.toString();
   const path = formData.get('path')?.toString();
   const fileName = formData.get('fileName')?.toString();
 
-  if (image.name === 'undefined' || !size || !path || !fileName) {
+  if (
+    !(image instanceof File) ||
+    image.name === 'undefined' ||
+    !size ||
+    !path ||
+    !fileName
+  ) {
     return NextResponse.json(
       {
         result: 'failed',
         error:
           '이미지 파일과 저장할 경로, 최대 사이즈, 저장할 파일명을 지정하셔야 합니다.',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!checkIsSafeStoragePath(path, fileName)) {
+    return NextResponse.json(
+      {
+        result: 'failed',
+        error: '저장할 경로 또는 파일명이 올바르지 않습니다.',
       },
       { status: 400 }
     );

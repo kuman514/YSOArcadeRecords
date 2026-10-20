@@ -248,7 +248,7 @@ export default function RecordForm({
     }
 
     const path = `records/${arcadeRecordId}`;
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().getTime();
 
     const thumbnailUrl = localThumbnail
       ? await (async () => {
@@ -256,7 +256,7 @@ export default function RecordForm({
           thumbnailFormData.append('image', localThumbnail);
           thumbnailFormData.append('size', '480');
           thumbnailFormData.append('path', path);
-          thumbnailFormData.append('fileName', `thumbnail-${timestamp}`);
+          thumbnailFormData.append('fileName', `thumbnail-${timestamp}.jpg`);
 
           try {
             const response = await axios.post<
@@ -314,7 +314,10 @@ export default function RecordForm({
         imageFormData.append('image', localFile);
         imageFormData.append('size', '1024');
         imageFormData.append('path', path);
-        imageFormData.append('fileName', `original-${timestamp}-${index + 1}`);
+        imageFormData.append(
+          'fileName',
+          `original-${timestamp}-${index + 1}.jpg`
+        );
 
         try {
           const response = await axios.post<

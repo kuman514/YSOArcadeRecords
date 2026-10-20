@@ -1,4 +1,5 @@
 import { createClientSideClient } from './client';
+import { escapeOrFilterValue } from './escape-or-filter-value';
 import { ConditionType, SelectQuery } from './types';
 
 export async function selectDataClientSide<T>({
@@ -22,7 +23,7 @@ export async function selectDataClientSide<T>({
           curWhere.wheres
             .map(
               ({ column, type, value }) =>
-                `${column}.${type}.${type === ConditionType.ILIKE ? `%${value}%` : value}`
+                `${column}.${type}.${type === ConditionType.ILIKE ? escapeOrFilterValue(`%${value}%`) : escapeOrFilterValue(value)}`
             )
             .join(',')
         );

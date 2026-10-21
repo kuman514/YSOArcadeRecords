@@ -1,3 +1,4 @@
+import { escapeOrFilterValue } from './escape-or-filter-value';
 import { createServerSideClient } from './server';
 import {
   ConditionType,
@@ -28,7 +29,7 @@ export async function selectData<T>({
           curWhere.wheres
             .map(
               ({ column, type, value }) =>
-                `${column}.${type}.${type === ConditionType.ILIKE ? `%${value}%` : value}`
+                `${column}.${type}.${type === ConditionType.ILIKE ? escapeOrFilterValue(`%${value}%`) : escapeOrFilterValue(value)}`
             )
             .join(',')
         );

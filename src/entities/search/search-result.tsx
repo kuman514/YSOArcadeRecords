@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment, ReactNode } from 'react';
+import { Fragment } from 'react';
 
 import { SearchResultProps } from '^/src/entities/search/types';
 
@@ -17,83 +17,91 @@ export default function SearchResult({
     ...description.matchAll(new RegExp(emphasize, 'gi')),
   ];
 
-  const renderTitle: ReactNode[] = matchesWithTitle.map((matchInfo, i) => {
-    if (i === 0) {
-      return (
-        <Fragment key={`${href}-title-${i}`}>
-          {title.slice(0, matchInfo.index)}
-          <strong>{matchInfo[0]}</strong>
-          {matchesWithTitle.length === 1
-            ? title.slice(matchInfo.index + matchInfo[0].length)
-            : null}
-        </Fragment>
-      );
-    }
+  console.log(matchesWithTitle, matchesWithDescription);
 
-    if (i === matchesWithTitle.length - 1) {
-      return (
-        <Fragment key={`${href}-title-${i}`}>
-          {title.slice(
-            matchesWithTitle[i - 1].index + matchesWithTitle[i - 1][0].length,
-            matchInfo.index
-          )}
-          <strong>{matchInfo[0]}</strong>
-          {title.slice(matchInfo.index + matchInfo[0].length)}
-        </Fragment>
-      );
-    }
+  const renderTitle =
+    matchesWithTitle.length > 0
+      ? matchesWithTitle.map((matchInfo, i) => {
+          if (i === 0) {
+            return (
+              <Fragment key={`${href}-title-${i}`}>
+                {title.slice(0, matchInfo.index)}
+                <strong>{matchInfo[0]}</strong>
+                {matchesWithTitle.length === 1
+                  ? title.slice(matchInfo.index + matchInfo[0].length)
+                  : null}
+              </Fragment>
+            );
+          }
 
-    return (
-      <Fragment key={`${href}-title-${i}`}>
-        {title.slice(
-          matchesWithTitle[i - 1].index + matchesWithTitle[i - 1][0].length,
-          matchInfo.index
-        )}
-        <strong>{matchInfo[0]}</strong>
-      </Fragment>
-    );
-  });
+          if (i === matchesWithTitle.length - 1) {
+            return (
+              <Fragment key={`${href}-title-${i}`}>
+                {title.slice(
+                  matchesWithTitle[i - 1].index +
+                    matchesWithTitle[i - 1][0].length,
+                  matchInfo.index
+                )}
+                <strong>{matchInfo[0]}</strong>
+                {title.slice(matchInfo.index + matchInfo[0].length)}
+              </Fragment>
+            );
+          }
 
-  const renderDescription: ReactNode[] = matchesWithDescription.map(
-    (matchInfo, i) => {
-      if (i === 0) {
-        return (
-          <Fragment key={`${href}-description-${i}`}>
-            {description.slice(0, matchInfo.index)}
-            <strong>{matchInfo[0]}</strong>
-            {matchesWithDescription.length === 1
-              ? description.slice(matchInfo.index + matchInfo[0].length)
-              : null}
-          </Fragment>
-        );
-      }
+          return (
+            <Fragment key={`${href}-title-${i}`}>
+              {title.slice(
+                matchesWithTitle[i - 1].index +
+                  matchesWithTitle[i - 1][0].length,
+                matchInfo.index
+              )}
+              <strong>{matchInfo[0]}</strong>
+            </Fragment>
+          );
+        })
+      : title;
 
-      if (i === matchesWithDescription.length - 1) {
-        return (
-          <Fragment key={`${href}-description-${i}`}>
-            {description.slice(
-              matchesWithDescription[i - 1].index +
-                matchesWithDescription[i - 1][0].length,
-              matchInfo.index
-            )}
-            <strong>{matchInfo[0]}</strong>
-            {description.slice(matchInfo.index + matchInfo[0].length)}
-          </Fragment>
-        );
-      }
+  const renderDescription =
+    matchesWithDescription.length > 0
+      ? matchesWithDescription.map((matchInfo, i) => {
+          if (i === 0) {
+            return (
+              <Fragment key={`${href}-description-${i}`}>
+                {description.slice(0, matchInfo.index)}
+                <strong>{matchInfo[0]}</strong>
+                {matchesWithDescription.length === 1
+                  ? description.slice(matchInfo.index + matchInfo[0].length)
+                  : null}
+              </Fragment>
+            );
+          }
 
-      return (
-        <Fragment key={`${href}-description-${i}`}>
-          {description.slice(
-            matchesWithDescription[i - 1].index +
-              matchesWithDescription[i - 1][0].length,
-            matchInfo.index
-          )}
-          <strong>{matchInfo[0]}</strong>
-        </Fragment>
-      );
-    }
-  );
+          if (i === matchesWithDescription.length - 1) {
+            return (
+              <Fragment key={`${href}-description-${i}`}>
+                {description.slice(
+                  matchesWithDescription[i - 1].index +
+                    matchesWithDescription[i - 1][0].length,
+                  matchInfo.index
+                )}
+                <strong>{matchInfo[0]}</strong>
+                {description.slice(matchInfo.index + matchInfo[0].length)}
+              </Fragment>
+            );
+          }
+
+          return (
+            <Fragment key={`${href}-description-${i}`}>
+              {description.slice(
+                matchesWithDescription[i - 1].index +
+                  matchesWithDescription[i - 1][0].length,
+                matchInfo.index
+              )}
+              <strong>{matchInfo[0]}</strong>
+            </Fragment>
+          );
+        })
+      : description;
 
   return (
     <li className="w-full">

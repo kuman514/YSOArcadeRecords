@@ -6,6 +6,8 @@ import {
   saveImage,
 } from '^/src/shared/supabase/image';
 import { createServerSideClient } from '^/src/shared/supabase/server';
+import { generateKstDate } from '^/src/shared/util/generate-kst-date';
+import { parseDateToDatabaseString } from '^/src/shared/util/parse-date';
 
 export async function POST(request: Request) {
   const supabase = await createServerSideClient();
@@ -64,10 +66,14 @@ export async function POST(request: Request) {
     );
     return NextResponse.json({ result: 'success', imageUrl }, { status: 201 });
   } catch (error) {
+    console.error(
+      `Error in uploading image: ${fileName} at ${parseDateToDatabaseString(generateKstDate())} (${error})`
+    );
+
     return NextResponse.json(
       {
         result: 'failed',
-        error: `서버에서 에러가 발생했습니다. (${error})`,
+        error: '서버에서 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       { status: 502 }
     );

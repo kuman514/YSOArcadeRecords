@@ -139,7 +139,7 @@ export async function PUT(
     return NextResponse.json(
       {
         result: 'failed',
-        error: `서버에서 에러가 발생했습니다. (${error})`,
+        error: '서버에서 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       { status: 502 }
     );

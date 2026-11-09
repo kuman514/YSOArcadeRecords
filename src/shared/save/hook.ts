@@ -75,10 +75,15 @@ export function useTempSave<T extends object>({
     }
 
     const timeout = setTimeout(async () => {
-      await saveToIndexedDatabase(key, await getParams(), database);
-      toast('임시 저장이 완료되었습니다.', {
-        type: 'success',
-      });
+      try {
+        await saveToIndexedDatabase(key, await getParams(), database);
+      } catch (error) {
+        if (typeof error === 'string') {
+          toast(error, {
+            type: 'error',
+          });
+        }
+      }
     }, delay);
 
     return () => {

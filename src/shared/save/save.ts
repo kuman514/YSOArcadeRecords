@@ -19,7 +19,7 @@ export async function saveToIndexedDatabase<T extends object>(
     throw new Error('오브젝트 스토어가 존재하지 않습니다.');
   }
 
-  console.log('저장 중.', key, value);
+  console.log('저장 중...', key, value);
   await new Promise((resolve, reject) => {
     const getRequest = objectStore.get(key);
     getRequest.onsuccess = () => {
@@ -33,7 +33,8 @@ export async function saveToIndexedDatabase<T extends object>(
           resolve(null);
         };
         addRequest.onerror = () => {
-          reject(`${key} 데이터 신규 생성 실패.`);
+          console.error(`${key} 데이터 신규 생성 실패.`);
+          reject('임시 저장 신규 생성에 실패했습니다.');
         };
       } else {
         console.log(`${key} 존재함. 덮어쓰는 중.`);
@@ -45,12 +46,14 @@ export async function saveToIndexedDatabase<T extends object>(
           resolve(null);
         };
         putRequest.onerror = () => {
-          reject(`${key} 데이터 덮어쓰기 실패.`);
+          console.error(`${key} 데이터 덮어쓰기 실패.`);
+          reject('임시 저장 덮어쓰기에 실패했습니다.');
         };
       }
     };
     getRequest.onerror = () => {
-      reject(`${key} 데이터 검색 실패.`);
+      console.error(`${key} 데이터 검색 실패.`);
+      reject('임시 저장 데이터 검색에 실패했습니다.');
     };
   });
 }

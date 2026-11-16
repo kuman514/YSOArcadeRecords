@@ -20,6 +20,10 @@ export interface LoadingBlockModalState {
 
 export interface ImageEditorModalState {
   type: ModalType.IMAGE_EDITOR;
+  /**
+   * @todo
+   * 여기에 onSave 타입을 정의
+   */
 }
 
 export type ModalState =

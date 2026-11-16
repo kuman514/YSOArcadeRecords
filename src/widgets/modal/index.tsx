@@ -69,6 +69,7 @@ export default function Modal() {
   const renderCloseModalButton = (() => {
     switch (type) {
       case ModalType.IMAGE_VIEWER:
+      case ModalType.IMAGE_EDITOR:
         return (
           <button
             className="fixed left-0 top-0 w-12 h-12 p-2 m-2 cursor-pointer"

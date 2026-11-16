@@ -2,6 +2,7 @@ export enum ModalType {
   OFF = 'off',
   IMAGE_VIEWER = 'image-viewer',
   LOADING_BLOCK = 'loading-block',
+  IMAGE_EDITOR = 'image-editor',
 }
 
 export interface OffModalState {
@@ -17,10 +18,15 @@ export interface LoadingBlockModalState {
   type: ModalType.LOADING_BLOCK;
 }
 
+export interface ImageEditorModalState {
+  type: ModalType.IMAGE_EDITOR;
+}
+
 export type ModalState =
   | OffModalState
   | ImageViewerModalState
-  | LoadingBlockModalState;
+  | LoadingBlockModalState
+  | ImageEditorModalState;
 
 export interface ModalActions {
   setModal: (newModalState: ModalState) => void;

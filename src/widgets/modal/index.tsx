@@ -58,6 +58,12 @@ export default function Modal() {
             <LoadingSvg fill="interit" />
           </div>
         );
+      case ModalType.IMAGE_EDITOR:
+        /**
+         * @todo
+         * 이 쪽에 이미지 편집기 렌더링 넣기
+         */
+        return null;
       default:
         return null;
     }

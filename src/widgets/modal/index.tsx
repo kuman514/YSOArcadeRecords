@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import LoadingSvg from '^/public/icons/loading.svg';
 import ImageViewer from '^/src/features/image-viewer';
+import ImageEditor from '^/src/shared/image-editor';
 import { useModalStore } from '^/src/shared/modal/store';
 import { ModalType } from '^/src/shared/modal/types';
 
@@ -59,11 +60,7 @@ export default function Modal() {
           </div>
         );
       case ModalType.IMAGE_EDITOR:
-        /**
-         * @todo
-         * 이 쪽에 이미지 편집기 렌더링 넣기
-         */
-        return null;
+        return <ImageEditor />;
       default:
         return null;
     }

@@ -1,6 +1,6 @@
 'use client';
 
-import { TouchList, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useModalStore } from '^/src/shared/modal/store';
@@ -8,29 +8,8 @@ import { ModalType } from '^/src/shared/modal/types';
 
 import { DEFAULT_BRUSH_SIZE, MAX_SCALE, MIN_SCALE } from './constants';
 import ImageEditorPalette from './palette';
-import { EditorMode, EditorStroke, Point, Rgb } from './types';
-
-interface Size {
-  w: number;
-  h: number;
-}
-
-function toColorCss(color: Rgb) {
-  return `rgb(${color.r}, ${color.g}, ${color.b})`;
-}
-
-function getTouchDistance(touches: TouchList): number {
-  const horizontal = touches[0].pageX - touches[1].pageX;
-  const vertical = touches[0].pageY - touches[1].pageY;
-  return Math.sqrt(horizontal * horizontal + vertical * vertical);
-}
-
-function getTouchCenter(touches: TouchList): Point {
-  return {
-    x: (touches[0].clientX + touches[1].clientX) / 2,
-    y: (touches[0].clientY + touches[1].clientY) / 2,
-  };
-}
+import { EditorMode, EditorStroke, Point, Rgb, Size } from './types';
+import { getTouchCenter, getTouchDistance, toColorCss } from './utils';
 
 export default function ImageEditor() {
   const imageUrl = useModalStore((state) =>
@@ -136,7 +115,10 @@ export default function ImageEditor() {
     };
   }
 
-  function applyStrokeStyle(ctx: CanvasRenderingContext2D, stroke: EditorStroke) {
+  function applyStrokeStyle(
+    ctx: CanvasRenderingContext2D,
+    stroke: EditorStroke
+  ) {
     ctx.globalCompositeOperation =
       stroke.mode === EditorMode.ERASE ? 'destination-out' : 'source-over';
     ctx.strokeStyle = stroke.color;

@@ -14,6 +14,11 @@ export interface Point {
   y: number;
 }
 
+export interface Size {
+  w: number;
+  h: number;
+}
+
 /**
  * @desc
  * 메멘토 패턴의 각 스냅샷에 해당하는 한 획의 정보.

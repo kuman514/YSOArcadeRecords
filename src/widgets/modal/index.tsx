@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import CloseSvgRepoComSvg from '^/public/icons/close-svgrepo-com.svg';
 import LoadingSvg from '^/public/icons/loading.svg';
 import ImageViewer from '^/src/features/image-viewer';
+import ImageEditor from '^/src/shared/image-editor';
 import { useModalStore } from '^/src/shared/modal/store';
 import { ModalType } from '^/src/shared/modal/types';
 
@@ -58,6 +59,8 @@ export default function Modal() {
             <LoadingSvg fill="interit" />
           </div>
         );
+      case ModalType.IMAGE_EDITOR:
+        return <ImageEditor />;
       default:
         return null;
     }
@@ -66,6 +69,7 @@ export default function Modal() {
   const renderCloseModalButton = (() => {
     switch (type) {
       case ModalType.IMAGE_VIEWER:
+      case ModalType.IMAGE_EDITOR:
         return (
           <button
             className="fixed left-0 top-0 w-12 h-12 p-2 m-2 cursor-pointer"

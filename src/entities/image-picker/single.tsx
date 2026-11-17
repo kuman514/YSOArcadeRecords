@@ -4,6 +4,9 @@ import NextImage from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
+
 import { MAXIMUM_IMAGE_LENGTH_ON_RESIZE } from './constants';
 
 interface Props {
@@ -20,6 +23,7 @@ export default function SingleImagePicker({
   onSelectFile,
 }: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const setModal = useModalStore((state) => state.setModal);
   const [imageUrl, setImageUrl] = useState<string | null>(
     remoteImageUrl ?? null
   );
@@ -74,19 +78,17 @@ export default function SingleImagePicker({
         canvas.height = img.height * scaleFactor;
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            toast(
-              `${file.name} 파일을 리사이징한 이미지 생성에 실패했습니다.`,
-              { type: 'error' }
-            );
-            return;
-          }
-          onSelectFile(new File([blob], ''));
-          toast(`${file.name} 파일을 최적화 처리했습니다.`, {
-            type: 'info',
-          });
-        }, 'image/jpeg');
+        const resizedDataUrl = canvas.toDataURL('image/jpeg');
+        toast(`${file.name} 파일을 최적화 처리했습니다.`, {
+          type: 'info',
+        });
+        setModal({
+          type: ModalType.IMAGE_EDITOR,
+          imageUrl: resizedDataUrl,
+          onSave: (editedImage) => {
+            onSelectFile(editedImage);
+          },
+        });
       };
     };
     fileReader.readAsDataURL(file);

@@ -40,6 +40,16 @@ export default function ImageList({ images, onChangeImages }: Props) {
     onChangeImages(newImages);
   }
 
+  function handleOnEdit(index: number, editedImage: File) {
+    const newImages = Array.from(images);
+    newImages[index] = {
+      ...newImages[index],
+      localFile: editedImage,
+      sourceUrl: undefined,
+    };
+    onChangeImages(newImages);
+  }
+
   return (
     <div
       className="w-full rounded-sm flex justify-center items-center flex-wrap gap-4"
@@ -118,6 +128,9 @@ export default function ImageList({ images, onChangeImages }: Props) {
           elementInfo={image}
           onClickDelete={() => {
             handleOnClickDelete(index);
+          }}
+          onEdit={(editedImage) => {
+            handleOnEdit(index, editedImage);
           }}
         />
       ))}

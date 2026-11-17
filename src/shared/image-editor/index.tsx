@@ -25,6 +25,13 @@ function getTouchDistance(touches: TouchList): number {
   return Math.sqrt(horizontal * horizontal + vertical * vertical);
 }
 
+function getTouchCenter(touches: TouchList): Point {
+  return {
+    x: (touches[0].clientX + touches[1].clientX) / 2,
+    y: (touches[0].clientY + touches[1].clientY) / 2,
+  };
+}
+
 export default function ImageEditor() {
   const imageUrl = useModalStore((state) =>
     state.type === ModalType.IMAGE_EDITOR ? state.imageUrl : ''
@@ -38,6 +45,7 @@ export default function ImageEditor() {
   const [color, setColor] = useState<Rgb>({ r: 0, g: 0, b: 0 });
   const [brushSize, setBrushSize] = useState<number>(DEFAULT_BRUSH_SIZE);
   const [scale, setScale] = useState<number>(1);
+  const [position, setPosition] = useState<Point>({ x: 0, y: 0 });
   const [isUndoable, setIsUndoable] = useState<boolean>(false);
 
   const [imageSize, setImageSize] = useState<Size>({ w: 0, h: 0 });
@@ -52,6 +60,7 @@ export default function ImageEditor() {
   const lastPointRef = useRef<Point | null>(null);
   const isPointerDownRef = useRef<boolean>(false);
   const lastTouchDistRef = useRef<number>(-1);
+  const lastTouchCenterRef = useRef<Point | null>(null);
 
   useEffect(() => {
     if (!imageUrl) {
@@ -235,6 +244,10 @@ export default function ImageEditor() {
     setScale((prev) => Math.min(Math.max(MIN_SCALE, prev + delta), MAX_SCALE));
   }
 
+  function applyPan(deltaX: number, deltaY: number) {
+    setPosition((prev) => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
+  }
+
   function handleSave() {
     const base = baseCanvasRef.current;
     const overlay = overlayCanvasRef.current;
@@ -278,9 +291,22 @@ export default function ImageEditor() {
         ref={containerRef}
         className="flex-1 overflow-hidden flex justify-center items-center touch-none select-none"
         onMouseDown={(event) => {
+          /**
+           * @desc
+           * 마우스 휠 클릭(가운데 버튼)으로는 캔버스를 이동시키며,
+           * 기본 자동 스크롤 동작을 막는다.
+           */
+          if (event.button === 1) {
+            event.preventDefault();
+            return;
+          }
           startStroke(event.clientX, event.clientY);
         }}
         onMouseMove={(event) => {
+          if ((event.buttons & 4) === 4) {
+            applyPan(event.movementX, event.movementY);
+            return;
+          }
           if (event.buttons !== 1) {
             return;
           }
@@ -297,6 +323,7 @@ export default function ImageEditor() {
             currentStrokeRef.current = null;
             lastPointRef.current = null;
             lastTouchDistRef.current = getTouchDistance(event.touches);
+            lastTouchCenterRef.current = getTouchCenter(event.touches);
             return;
           }
           startStroke(event.touches[0].clientX, event.touches[0].clientY);
@@ -304,10 +331,18 @@ export default function ImageEditor() {
         onTouchMove={(event) => {
           if (event.touches.length >= 2) {
             const dist = getTouchDistance(event.touches);
+            const center = getTouchCenter(event.touches);
             if (lastTouchDistRef.current > 0) {
               applyZoom((dist - lastTouchDistRef.current) / 100);
             }
+            if (lastTouchCenterRef.current) {
+              applyPan(
+                center.x - lastTouchCenterRef.current.x,
+                center.y - lastTouchCenterRef.current.y
+              );
+            }
             lastTouchDistRef.current = dist;
+            lastTouchCenterRef.current = center;
             return;
           }
           continueStroke(event.touches[0].clientX, event.touches[0].clientY);
@@ -317,6 +352,7 @@ export default function ImageEditor() {
             endStroke();
           }
           lastTouchDistRef.current = -1;
+          lastTouchCenterRef.current = null;
         }}
       >
         <div
@@ -324,7 +360,7 @@ export default function ImageEditor() {
           style={{
             width: `${displaySize.w}px`,
             height: `${displaySize.h}px`,
-            transform: `scale(${scale})`,
+            transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
           }}
         >
           <canvas

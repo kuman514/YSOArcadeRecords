@@ -3,11 +3,13 @@
 import Button from '^/src/shared/ui/button';
 
 import {
+  COLOR_CHANNELS,
   MAX_BRUSH_SIZE,
   MIN_BRUSH_SIZE,
   REPRESENTATIVE_COLORS,
 } from './constants';
 import { EditorMode, Rgb } from './types';
+import { isSameColor } from './utils';
 
 interface Props {
   mode: EditorMode;
@@ -19,16 +21,6 @@ interface Props {
   onChangeBrushSize: (newBrushSize: number) => void;
   onUndo: () => void;
   onSave: () => void;
-}
-
-const COLOR_CHANNELS: { key: keyof Rgb; label: string }[] = [
-  { key: 'r', label: 'R' },
-  { key: 'g', label: 'G' },
-  { key: 'b', label: 'B' },
-];
-
-function isSameColor(left: Rgb, right: Rgb) {
-  return left.r === right.r && left.g === right.g && left.b === right.b;
 }
 
 export default function ImageEditorPalette({

@@ -45,9 +45,9 @@ export default function ImageEditorPalette({
   const currentColorCss = `rgb(${color.r}, ${color.g}, ${color.b})`;
 
   return (
-    <div className="w-full bg-(--background) text-(--foreground) p-4 flex flex-col gap-6 justify-between items-stretch max-h-[45%] overflow-y-auto">
-      <div className="w-full flex flex-col sm:flex-row gap-6 justify-center items-stretch">
-        <div className="flex flex-col gap-3">
+    <div className="w-full bg-(--background) text-(--foreground) p-4 flex flex-col gap-4 justify-between items-stretch max-h-[45%] overflow-y-auto">
+      <div className="w-full flex flex-col sm:flex-row gap-4 justify-center items-stretch">
+        <div className="flex flex-col gap-2">
           <span className="text-sm font-bold">도구</span>
           <div className="flex flex-row gap-2">
             <Button
@@ -101,9 +101,9 @@ export default function ImageEditorPalette({
           </label>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-row gap-3 justify-between">
-            <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-row gap-2 justify-between">
+            <div className="flex flex-col gap-2">
               <span className="text-sm font-bold">색상</span>
               <div className="flex flex-row flex-wrap gap-2">
                 {REPRESENTATIVE_COLORS.map(({ label, value }) => (
@@ -128,7 +128,7 @@ export default function ImageEditorPalette({
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 items-center">
+            <div className="flex flex-col gap-2 items-center">
               <span className="text-sm font-bold">현재</span>
               <div
                 className="w-8 h-8 rounded-sm border"
@@ -166,11 +166,9 @@ export default function ImageEditorPalette({
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 justify-center items-center">
-        <Button type="button" onClick={onSave}>
-          저장
-        </Button>
-      </div>
+      <Button type="button" onClick={onSave}>
+        저장
+      </Button>
     </div>
   );
 }

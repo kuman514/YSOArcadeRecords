@@ -101,28 +101,41 @@ export default function ImageEditorPalette({
       </div>
 
       <div className="flex flex-col gap-3">
-        <span className="text-sm font-bold">색상</span>
-        <div className="flex flex-row flex-wrap gap-2">
-          {REPRESENTATIVE_COLORS.map(({ label, value }) => (
-            <button
-              key={label}
-              type="button"
-              title={label}
-              aria-label={label}
-              className={`w-8 h-8 rounded-sm border cursor-pointer ${
-                isSameColor(color, value)
-                  ? 'ring-2 ring-offset-2 ring-(--foreground)'
-                  : ''
-              }`}
-              style={{
-                backgroundColor: `rgb(${value.r}, ${value.g}, ${value.b})`,
-              }}
-              onClick={() => {
-                onChangeColor(value);
-              }}
+        <div className="flex flex-row gap-3 justify-between">
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-bold">색상</span>
+            <div className="flex flex-row flex-wrap gap-2">
+              {REPRESENTATIVE_COLORS.map(({ label, value }) => (
+                <button
+                  key={label}
+                  type="button"
+                  title={label}
+                  aria-label={label}
+                  className={`w-8 h-8 rounded-sm border cursor-pointer ${
+                    isSameColor(color, value)
+                      ? 'ring-2 ring-offset-2 ring-(--foreground)'
+                      : ''
+                  }`}
+                  style={{
+                    backgroundColor: `rgb(${value.r}, ${value.g}, ${value.b})`,
+                  }}
+                  onClick={() => {
+                    onChangeColor(value);
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 items-center">
+            <span className="text-sm font-bold">현재</span>
+            <div
+              className="w-8 h-8 rounded-sm border"
+              style={{ backgroundColor: currentColorCss }}
             />
-          ))}
+          </div>
         </div>
+
         <div className="flex flex-col gap-1">
           {COLOR_CHANNELS.map(({ key, label }) => (
             <label
@@ -150,11 +163,6 @@ export default function ImageEditorPalette({
       </div>
 
       <div className="flex flex-col gap-3 justify-center items-center">
-        <span className="text-sm font-bold">현재 색상</span>
-        <div
-          className="w-12 h-12 rounded-sm border"
-          style={{ backgroundColor: currentColorCss }}
-        />
         <Button
           type="button"
           onClick={onSave}

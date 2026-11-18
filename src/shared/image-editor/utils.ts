@@ -18,3 +18,7 @@ export function getTouchCenter(touches: TouchList): Point {
     y: (touches[0].clientY + touches[1].clientY) / 2,
   };
 }
+
+export function isSameColor(left: Rgb, right: Rgb) {
+  return left.r === right.r && left.g === right.g && left.b === right.b;
+}

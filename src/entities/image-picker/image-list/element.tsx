@@ -16,12 +16,14 @@ interface Props {
   elementInfo: ImageListElementValue;
   position: 'first' | 'middle' | 'last' | 'unique';
   onClickDelete: () => void;
+  onEdit: (editedImage: File) => void;
 }
 
 export default function ImageListElement({
   elementInfo,
   position,
   onClickDelete,
+  onEdit,
 }: Props) {
   if (!elementInfo.localFile && !elementInfo.sourceUrl) {
     throw new Error('Each image should have either local file or source URL.');
@@ -66,8 +68,11 @@ export default function ImageListElement({
             return;
           }
           setModal({
-            type: ModalType.IMAGE_VIEWER,
-            imageUrls: [imageUrl],
+            type: ModalType.IMAGE_EDITOR,
+            imageUrl,
+            onSave: (editedImage) => {
+              onEdit(editedImage);
+            },
           });
         }}
       >

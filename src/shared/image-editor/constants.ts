@@ -11,6 +11,12 @@ export const REPRESENTATIVE_COLORS: { label: string; value: Rgb }[] = [
   { label: '보라', value: { r: 150, g: 0, b: 200 } },
 ];
 
+export const COLOR_CHANNELS: { key: keyof Rgb; label: string }[] = [
+  { key: 'r', label: 'R' },
+  { key: 'g', label: 'G' },
+  { key: 'b', label: 'B' },
+];
+
 export const MIN_SCALE = 0.3;
 export const MAX_SCALE = 10;
 

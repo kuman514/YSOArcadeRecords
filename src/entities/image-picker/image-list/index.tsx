@@ -58,11 +58,16 @@ export default function ImageList({ images, onChangeImages }: Props) {
           return;
         }
         draggedItemRef.current = event.target;
-      }}
-      onDragOver={(event) => {
-        event.preventDefault();
+        draggedItemRef.current.style.opacity = '0.5';
       }}
       onDrop={(event) => {
+        event.preventDefault();
+        if (!draggedItemRef.current) {
+          return;
+        }
+        draggedItemRef.current.style.opacity = '1';
+      }}
+      onDragOver={(event) => {
         event.preventDefault();
 
         if (

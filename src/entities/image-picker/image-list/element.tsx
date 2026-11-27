@@ -4,11 +4,11 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
-import { useModalStore } from '^/src/shared/modal/store';
-import { ModalType } from '^/src/shared/modal/types';
 import LeftArrowBackup2SvgRepoComSvg from '^/public/icons/left-arrow-backup-2-svgrepo-com.svg';
 import RightArrowBackup2SvgRepoComSvg from '^/public/icons/right-arrow-backup-2-svgrepo-com.svg';
 import TrashcanSvgRepoComSvg from '^/public/icons/trashcan-svgrepo-com.svg';
+import { useModalStore } from '^/src/shared/modal/store';
+import { ModalType } from '^/src/shared/modal/types';
 
 import { ImageListElementValue } from '../types';
 
